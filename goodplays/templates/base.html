@@ -1,0 +1,86 @@
+<html>
+    <head>
+		<!-- Support for iOS device sizes. -->
+		<meta name="viewport" content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no'>
+
+		{% if title %}
+		<title>{{title}}</title>
+		{% endif %}
+
+		<link rel="stylesheet" type="text/css" href="{{url_for('static', filename='style.css')}}"/>
+		<link rel="shortcut icon" href="{{url_for('static', filename='icon.png')}}"/>
+
+		<script type="text/javascript" src="{{url_for('static', filename='jquery-3.1.0.min.js')}}"></script>
+   
+		<script>
+			$(document).ready(function() {
+				resizeContent();
+				resizeBuffer();
+			});
+
+			$(window).resize(function() {
+				resizeContent();
+				resizeBuffer();
+			});
+
+			$(window).on('orientationchange', function() {
+				resizeContent();
+				resizeBuffer();
+			});
+
+			function resizeBuffer() {
+				// Resizes the title buffer which pushes content down below the floating title bar.
+				$('#title-buffer').height($('#title-bar').outerHeight());
+			}
+
+			function resizeContent() {
+				if ($(window).width() < 700) {
+					// Moves and resizes the links and login information information on a smaller screen.
+					$('#links').addClass('small-screen');
+					$('#user').addClass('small-screen');
+					$('#title').addClass('small-screen');
+				}
+				else {
+					// Moves and resizes the links and login information information on a bigger (or horizontal) screen.
+					$('#links').removeClass('small-screen');
+					$('#user').removeClass('small-screen');
+					$('#title').removeClass('small-screen');
+				}
+			}
+		</script>
+	 </head>
+
+	<body>
+		<div id="title-buffer"></div>
+		<div id="title-bar">
+			<div id="links">
+				{% if link %}
+				<a href="{{link['url']}}">{{link['text']}}</a>
+				{% endif %}
+			</div>
+
+			<div id="user">
+				{% if user %}
+				Logged in as {{user.name}}. <a href="{{ url_for('logout') }}">Log out.</a>
+				{% endif %}
+			</div>
+
+			<div id="title">{{title}}</div>
+		</div>
+
+		{% with messages = get_flashed_messages() %}
+		<div class="messages">
+			{% if messages %}
+			{% for message in messages %}
+			<p>{{ message }}</p>
+			{% endfor %}
+			{% endif %}
+		</div>
+		{% endwith %}
+
+		<div id="content">
+			{% block content %}
+			{% endblock %}
+		</div>
+	</body>
+</html>
