@@ -67,14 +67,11 @@ def login():
         return render_template('login.html', title="Log In", form=form)
 
     if form.validate_on_submit():
-        if app.config.get('BYPASS_LOGIN'):
-            user = forms.username.data
-        else:
-            user = authenticate(form.username.data, form.password.data)
+        user, message = authenticate(form.username.data, form.password.data)
 
         if not user:
-            flash('Login failed.')
-            return render_template('login.html', title="Log In", form=form)
+            flash('Login failed: {}.'.format(message))
+            return render_template('login.html', title='Log In', form=form)
 
         if user and user.is_authenticated:
             db_user = User.query.get(user.id)
