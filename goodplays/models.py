@@ -1,3 +1,5 @@
+from datetime import date
+
 from goodplays import app, db
 
 
@@ -36,20 +38,35 @@ class User(db.Model):
 
 # Configure many-to-many relationship without making a do-nothing class.
 # https://stackoverflow.com/a/23424290
-PlayTag = Table(
+PlayTag = db.Table(
     'PlayTag',
-    Column('id', db.Integer, primary_key=True),
-    Column('play_id', db.Integer, db.ForeignKey('Play.id')),
-    Column('tag_id', db.Integer, db.ForeignKey('Tag.id'))
+    db.Column('id', db.Integer, primary_key=True),
+    db.Column('play_id', db.Integer, db.ForeignKey('Play.id')),
+    db.Column('tag_id', db.Integer, db.ForeignKey('Tag.id'))
 )
 
 
-GamePlatform = Table(
+GamePlatform = db.Table(
     'GamePlatform',
-    Column('id', db.Integer, primary_key=True),
-    Column('game_id', db.Integer, db.ForeignKey('Game.id')),
-    Column('platform_id', db.Integer, db.ForeignKey('Platform.id'))
+    db.Column('id', db.Integer, primary_key=True),
+    db.Column('game_id', db.Integer, db.ForeignKey('Game.id')),
+    db.Column('platform_id', db.Integer, db.ForeignKey('Platform.id'))
 )
+
+
+class Platform(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String, unique=True)
+    games = db.relationship(
+        'Game',
+        backref='platform',
+        secondary=GamePlatform,
+        lazy='dynamic',
+        cascade='all, delete-orphan'
+    )
+
+    def __repr__(self):
+        return '<Platform {}>'.format(self.name)
 
 
 class Game(db.Model):
@@ -79,19 +96,24 @@ class Game(db.Model):
         )
 
 
-class Platform(db.Model):
+# TODO: Seems like there's circular table dependency issue or something.
+# Try to resolve it. If you can't, get rid of the secondaries and create some
+# intermediate link table classes manually.
+
+
+class Tag(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String, unique=True)
-    games = db.relationship(
-        'Game',
-        backref='platform',
-        secondary=GamePlatform,
+    plays = db.relationship(
+        'Play',
+        backref='tag',
+        secondary=PlayTag,
         lazy='dynamic',
         cascade='all, delete-orphan'
     )
 
     def __repr__(self):
-        return '<Platform {}>'.format(self.name)
+        return '<Tag {}>'.format(self.name)
 
 
 class Play(db.Model):
@@ -112,19 +134,4 @@ class Play(db.Model):
 
     def __repr__(self):
         return '<Play {}>'.format(self.name)
-
-
-class Tag(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String, unique=True)
-    plays = db.relationship(
-        'Play',
-        backref='tag',
-        secondary=PlayTag,
-        lazy='dynamic',
-        cascade='all, delete-orphan'
-    )
-
-    def __repr__(self):
-        return '<Tag {}>'.format(self.name)
 
