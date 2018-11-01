@@ -4,6 +4,7 @@ from goodplays import app, db
 
 
 class User(db.Model):
+    __tablename__ = 'User'
     id = db.Column(db.String, primary_key=True)
     name = db.Column(db.String, index=True, unique=True)
     email = db.Column(db.String, index=True)
@@ -55,6 +56,7 @@ GamePlatform = db.Table(
 
 
 class Platform(db.Model):
+    __tablename__ = 'Platform'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String, unique=True)
     games = db.relationship(
@@ -70,6 +72,7 @@ class Platform(db.Model):
 
 
 class Game(db.Model):
+    __tablename__ = 'Game'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String)
     year = db.Column(db.Integer)
@@ -96,12 +99,8 @@ class Game(db.Model):
         )
 
 
-# TODO: Seems like there's circular table dependency issue or something.
-# Try to resolve it. If you can't, get rid of the secondaries and create some
-# intermediate link table classes manually.
-
-
 class Tag(db.Model):
+    __tablename__ = 'Tag'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String, unique=True)
     plays = db.relationship(
@@ -117,6 +116,7 @@ class Tag(db.Model):
 
 
 class Play(db.Model):
+    __tablename__ = 'Play'
     id = db.Column(db.Integer, primary_key=True)
     started = db.Column(db.Date)
     finished = db.Column(db.Date)
@@ -129,9 +129,8 @@ class Play(db.Model):
         lazy='dynamic',
         cascade='all, delete-orphan'
     )
-    game_id = db.Column(db.Integer, db.ForeignKey('game.id'))
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    game_id = db.Column(db.Integer, db.ForeignKey('Game.id'))
+    user_id = db.Column(db.Integer, db.ForeignKey('User.id'))
 
     def __repr__(self):
         return '<Play {}>'.format(self.name)
-

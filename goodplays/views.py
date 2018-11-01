@@ -1,6 +1,5 @@
 from flask import render_template, flash, redirect, session, url_for, request
 from flask_login import login_user, logout_user, current_user, login_required
-import ldap3
 
 from goodplays import app, db, lm
 from goodplays.forms import LoginForm
@@ -21,11 +20,11 @@ def latest():
     Maybe set up a daily task to update this DB? It'll get big...)
     """
     user = current_user
-    games = Game.query. # TODO 10 latest!
+    games = [] #Game.query. # TODO 10 latest!
 
     # TODO Show most recent 10 games added to the DB.
 
-    if not objects:
+    if not games:
         flash("Games don't exist. Good riddance. Thanks, Tauriq!")
 
     return render_template(
@@ -56,7 +55,7 @@ def plays():
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     """
-    Logs the user in using LDAP authentication.
+    Logs the user in
     """
     if current_user is not None and current_user.is_authenticated:
         return redirect(url_for('index'))

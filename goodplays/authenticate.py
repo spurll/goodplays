@@ -2,8 +2,8 @@ from ldap3 import Server, Connection
 from json import loads
 import requests
 
-from template import app
-from template.models import User
+from goodplays import app
+from goodplays.models import User
 
 
 def authenticate(username, password):
