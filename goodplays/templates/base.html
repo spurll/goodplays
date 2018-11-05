@@ -60,12 +60,14 @@
 			</div>
 
 			<div id="user">
-				{% if user %}
+				{% if user and user.is_authenticated %}
 				Logged in as {{user.name}}. <a href="{{ url_for('logout') }}">Log out.</a>
+				{% else %}
+				<a href={{ url_for('login') }}>Log in.</a>
 				{% endif %}
 			</div>
 
-			<div id="title">{{title}}</div>
+			<div id="title"><strong>good</strong>plays</div>
 		</div>
 
 		{% with messages = get_flashed_messages() %}
@@ -78,7 +80,16 @@
 		</div>
 		{% endwith %}
 
+		<div id="search">
+			<form action="search" method="GET" name="search">
+				<div id="search"><input type="search" name="query" /></div>
+				<div id="search-submit"><input type="submit" value="Search" /></div>
+			</form>
+		</div>
+
 		<div id="content">
+			<div class="heading">{{ title }}</div>
+
 			{% block content %}
 			{% endblock %}
 		</div>

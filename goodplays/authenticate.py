@@ -69,3 +69,4 @@ def auth(username, password):
         message = r.text
 
     return user, message
+

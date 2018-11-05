@@ -13,13 +13,37 @@ def index():
     return redirect(url_for("latest"))
 
 
+@app.route('/search')
+def search():
+    """
+    Search the DB for a game.
+    """
+    user = current_user     # TODO login required?
+    print(current_user)
+    query = request.args.get('query')
+
+    games = []
+
+    if not games:
+        flash("Games don't exist. Good riddance. Thanks, Tauriq!")
+
+    return render_template(
+        #"results.html",
+        "latest.html",
+        title="Search Results",
+        user=user,
+        links=None,
+        games=games
+    )
+
+
 @app.route('/latest')
 def latest():
     """
     Shows the 10 most recent games added to the DB. (Or to GiantBomb's DB?
     Maybe set up a daily task to update this DB? It'll get big...)
     """
-    user = current_user
+    user = current_user     # TODO login required?
     games = [] #Game.query. # TODO 10 latest!
 
     # TODO Show most recent 10 games added to the DB.
@@ -57,7 +81,7 @@ def login():
     """
     Logs the user in
     """
-    if current_user is not None and current_user.is_authenticated:
+    if current_user and current_user.is_authenticated:
         return redirect(url_for('index'))
 
     form = LoginForm()
