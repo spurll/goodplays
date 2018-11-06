@@ -87,14 +87,20 @@ def login():
     form = LoginForm()
 
     if request.method == 'GET':
-        return render_template('login.html', title="Log In", form=form)
+        return render_template(
+            'login.html', title="Log In", form=form, hide_search=True,
+            hide_user=True
+        )
 
     if form.validate_on_submit():
         user, message = authenticate(form.username.data, form.password.data)
 
         if not user:
             flash('Login failed: {}.'.format(message))
-            return render_template('login.html', title='Log In', form=form)
+            return render_template(
+                'login.html', title="Log In", form=form, hide_search=True,
+                hide_user=True
+            )
 
         if user and user.is_authenticated:
             db_user = User.query.get(user.id)
@@ -106,7 +112,10 @@ def login():
 
             return redirect(request.args.get('next') or url_for('index'))
 
-    return render_template('login.html', title="Log In", form=form)
+    return render_template(
+        'login.html', title="Log In", form=form, hide_search=True,
+        hide_user=True
+    )
 
 
 @app.route('/logout')

@@ -63,8 +63,7 @@ class Platform(db.Model):
         'Game',
         backref='platform',
         secondary=GamePlatform,
-        lazy='dynamic',
-        cascade='all, delete-orphan'
+        lazy='dynamic'
     )
 
     def __repr__(self):
@@ -83,8 +82,7 @@ class Game(db.Model):
         'Platform',
         backref='game',
         secondary=GamePlatform,
-        lazy='dynamic',
-        cascade='all, delete-orphan'
+        lazy='dynamic'
     )
     plays = db.relationship(
         'Play',
@@ -107,8 +105,7 @@ class Tag(db.Model):
         'Play',
         backref='tag',
         secondary=PlayTag,
-        lazy='dynamic',
-        cascade='all, delete-orphan'
+        lazy='dynamic'
     )
 
     def __repr__(self):
@@ -126,8 +123,7 @@ class Play(db.Model):
         'Tag',
         backref='play',
         secondary=PlayTag,
-        lazy='dynamic',
-        cascade='all, delete-orphan'
+        lazy='dynamic'
     )
     game_id = db.Column(db.Integer, db.ForeignKey('Game.id'))
     user_id = db.Column(db.Integer, db.ForeignKey('User.id'))

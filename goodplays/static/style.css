@@ -68,6 +68,21 @@ tfoot { font-weight: bold; font-variant: small-caps; }
 	padding: 10px;
 }
 
+#search {
+	width: 100%;
+	max-width: 500px;
+	margin: auto;
+	padding-top: 10px;
+}
+
+#search-field {
+	width: 80%;
+}
+
+#search-submit {
+	float: right;
+}
+
 .heading {
 	font-variant: small-caps;
 	text-align: center;
@@ -99,7 +114,24 @@ a:hover { text-decoration: none; color: #ffffff; }
 a:active { text-decoration: none; color: #888888; }
 
 input { color: #ffffff; background-color: transparent; border: solid 1px #444444; }
+
 select { color: #ffffff; background-color: transparent; border: solid 1px #444444; }
+
 select option { background-color: #222222; }
-input[type="text"] { width: 100%; }
-input[type="password"] { width: 100%; }
+
+input[type="text"] {
+	width: 100%;
+}
+
+input[type="password"] {
+	width: 100%;
+}
+
+input[type="search"] {
+	width: 80%;
+}
+
+input#search-submit {
+	width: 20%;
+}
+
