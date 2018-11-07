@@ -53,13 +53,21 @@
 	<body>
 		<div id="title-buffer"></div>
 		<div id="title-bar">
-			<div id="links">
-				{% if link %}
-				<a href="{{link['url']}}">{{link['text']}}</a>
+			<div id="title"><strong>good</strong>plays</div>
+
+			<!-- TODO: Fix resize stuff to accommodate changes here. -->
+
+			<div id="search" class="center">
+				{% if not hide_search %}
+				<form action="search" method="GET" name="search">
+					<!-- <div id="search-field"><input type="search" name="query" placeholder="Search" /></div> -->
+					<input type="search" name="query" placeholder="Search for a game..." />
+					<input type="submit" value="Search" />
+				</form>
 				{% endif %}
 			</div>
 
-			<div id="user">
+			<div id="user" class="center-vertical">
 				{% if not hide_user %}
 				{% if user and user.is_authenticated %}
 				Logged in as {{user.name}}. <a href="{{ url_for('logout') }}">Log out.</a>
@@ -68,19 +76,7 @@
 				{% endif %}
 				{% endif %}
 			</div>
-
-			<div id="title"><strong>good</strong>plays</div>
 		</div>
-
-		{% if not hide_search %}
-		<div id="search">
-			<form action="search" method="GET" name="search">
-				<span id="search-submit"><input type="submit" value="Search" /></span>
-				<span id="search-field"><input type="search" name="query" placeholder="Search" /></span>
-				<!-- <span id="search-field"><input type="search" name="query" placeholder="Search" /></span> -->
-			</form>
-		</div>
-		{% endif %}
 
 		{% with messages = get_flashed_messages() %}
 		<div class="messages">

@@ -32,7 +32,6 @@ def search():
         "latest.html",
         title="Search Results",
         user=user,
-        links=None,
         games=games
     )
 
@@ -52,7 +51,7 @@ def latest():
         flash("Games don't exist. Good riddance. Thanks, Tauriq!")
 
     return render_template(
-        "latest.html", title="Latest Games", user=user, links=None, games=games
+        "latest.html", title="Latest Games", user=user, games=games
     )
 
 
@@ -71,8 +70,7 @@ def plays():
         flash("You don't have any objects.")
 
     return render_template(
-        "view.html", title="View", user=user, links=None, form=form,
-        objects=objects
+        "view.html", title="View", user=user, form=form, objects=objects
     )
 
 
@@ -88,8 +86,7 @@ def login():
 
     if request.method == 'GET':
         return render_template(
-            'login.html', title="Log In", form=form, hide_search=True,
-            hide_user=True
+            'login.html', title="Log In", form=form, hide_user=True
         )
 
     if form.validate_on_submit():
@@ -98,8 +95,7 @@ def login():
         if not user:
             flash('Login failed: {}.'.format(message))
             return render_template(
-                'login.html', title="Log In", form=form, hide_search=True,
-                hide_user=True
+                'login.html', title="Log In", form=form, hide_user=True
             )
 
         if user and user.is_authenticated:
@@ -113,8 +109,7 @@ def login():
             return redirect(request.args.get('next') or url_for('index'))
 
     return render_template(
-        'login.html', title="Log In", form=form, hide_search=True,
-        hide_user=True
+        'login.html', title="Log In", form=form, hide_user=True
     )
 
 

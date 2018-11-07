@@ -46,41 +46,34 @@ tfoot { font-weight: bold; font-variant: small-caps; }
 }
 
 #title {
-	width: 60%;
-	margin: auto;
 	font-size: 150%;
-	text-align: center;
-	padding-top: 10px;
-	padding-bottom: 10px;
-}
-
-#links {
-	width: calc(20% - 20px);
-	float: left;
-	text-align: left;
-	padding: 10px;
-}
-
-#user {
-	width: calc(20% - 20px);
-	float: right;
-	text-align: right;
-	padding: 10px;
+	padding: 10px 20px;
+	display: inline-block;
 }
 
 #search {
-	width: 100%;
-	max-width: 500px;
+	width: 500px;
 	margin: auto;
-	padding-top: 10px;
+	text-align: center;
 }
 
-#search-field {
-	width: 80%;
+#user {
+	text-align: right;
+	padding: 10px 20px;
+	right: 0;
 }
 
-#search-submit {
-	float: right;
+.center {
+	position: absolute;
+	left: 50%;
+	top: 50%;
+	transform: translate(-50%, -50%);
+}
+
+.center-vertical {
+	position: absolute;
+	top: 50%;
+	transform: translateY(-50%);
 }
 
 .heading {
@@ -113,6 +106,10 @@ a:visited { text-decoration: none; color: #888888; }
 a:hover { text-decoration: none; color: #ffffff; }
 a:active { text-decoration: none; color: #888888; }
 
+form {
+	margin: 0;
+}
+
 input { color: #ffffff; background-color: transparent; border: solid 1px #444444; }
 
 select { color: #ffffff; background-color: transparent; border: solid 1px #444444; }
@@ -128,10 +125,10 @@ input[type="password"] {
 }
 
 input[type="search"] {
-	width: 80%;
+	width: 85%;
 }
 
 input#search-submit {
-	width: 20%;
+	right: 0;
 }
 
