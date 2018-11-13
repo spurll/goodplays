@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block content %}
+
+<table id="latest">
+	<thead>
+		<tr>
+			<th class="art"></th>
+			<th class="name">Name</th>
+			<th class="added">Added</th>
+			<th class="platforms">Platforms</th>
+			<th class="rating">Rating</th>
+		</tr>
+	</thead>
+	<tbody>
+		{% for game in games %}
+		<tr id="{{ game.id }}">
+			<td class="art"><img class="art" url="{{ game.art_url if game.art_url else url_for('static', filename='default.png')}}" /></td>
+			<td class="name">{{ game.name }}</td>
+			<td class="added">{{ game.added }}</td>
+			<td class="platforms">{{ ", ".join(game.platforms.all()) }}</td>
+			<td class="rating">{{ "&#9733" * round(game.rating) + "&#9734" * (5 - round(game.rating)) if game.rating else ""}}</td>
+		</tr>
+		{% endfor %}
+	</tbody>
+</table>
+
+{% endblock %}
+

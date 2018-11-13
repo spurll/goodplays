@@ -5,12 +5,13 @@ from goodplays import app, db, lm
 from goodplays.forms import LoginForm
 from goodplays.models import User, Game, Platform, Play, Tag
 from goodplays.authenticate import authenticate
+from goodplays import controller
 
 
 @app.route('/')
 @app.route('/index')
 def index():
-    return redirect(url_for("latest"))
+    return redirect(url_for('latest'))
 
 
 @app.route('/search')
@@ -18,20 +19,19 @@ def search():
     """
     Search the DB for a game.
     """
-    user = current_user     # TODO login required?
-    print(current_user)
     query = request.args.get('query')
 
-    games = []
+    # TODO add a default.png in static/ with a question mark icon
+
+    games = controller.search(query)
 
     if not games:
-        flash("Games don't exist. Good riddance. Thanks, Tauriq!")
+        flash("Games don't exist. Good riddance.")
 
     return render_template(
-        #"results.html",
-        "latest.html",
+        "list.html",
         title="Search Results",
-        user=user,
+        user=current_user,
         games=games
     )
 
@@ -42,16 +42,13 @@ def latest():
     Shows the 10 most recent games added to the DB. (Or to GiantBomb's DB?
     Maybe set up a daily task to update this DB? It'll get big...)
     """
-    user = current_user     # TODO login required?
-    games = [] #Game.query. # TODO 10 latest!
-
-    # TODO Show most recent 10 games added to the DB.
+    games = controller.games()
 
     if not games:
-        flash("Games don't exist. Good riddance. Thanks, Tauriq!")
+        flash("Games don't exist. Good riddance.")
 
     return render_template(
-        "latest.html", title="Latest Games", user=user, games=games
+        "list.html", title="Recently Added", user=current_user, games=games
     )
 
 

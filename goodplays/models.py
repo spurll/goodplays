@@ -77,9 +77,10 @@ class Game(db.Model):
     name = db.Column(db.String)
     year = db.Column(db.Integer)
     added = db.Column(db.Date, default=date.today)
-    giantbomb_uri = db.Column(db.String)       # TODO
-    art_uri = db.Column(db.String)      # TODO: Allow users to upload if blank
-    platforms = db.relationship(        # Dropdown? Should this go in Play?
+    art_url = db.Column(db.String)
+    gb_id = db.Column(db.String)
+    gb_url = db.Column(db.String)
+    platforms = db.relationship(
         'Platform',
         backref='game',
         secondary=GamePlatform,
@@ -95,13 +96,11 @@ class Game(db.Model):
 
     @property
     def rating(self):
-        return (
-            sum(p.rating for p in self.plays) / len(self.plays)
-            if self.plays else None
-        )
+        plays = self.plays.all()
+        return sum(p.rating for p in plays) / len(plays) if plays else None
 
     def __repr__(self):
-        return '<Tag {}{}>'.format(
+        return '<Game {}{}>'.format(
             self.name, ' (' + self.year + ')' if self.year else ''
         )
 
