@@ -14,6 +14,7 @@ class User(db.Model):
         lazy='dynamic',
         cascade='all, delete-orphan'
     )
+    games_added = db.relationship('Game', backref='added_by', lazy='dynamic')
 
     @property
     def is_authenticated(self):
@@ -76,7 +77,7 @@ class Game(db.Model):
     name = db.Column(db.String)
     year = db.Column(db.Integer)
     added = db.Column(db.Date, default=date.today)
-    gb_uri = db.Column(db.String)       # TODO
+    giantbomb_uri = db.Column(db.String)       # TODO
     art_uri = db.Column(db.String)      # TODO: Allow users to upload if blank
     platforms = db.relationship(        # Dropdown? Should this go in Play?
         'Platform',
@@ -90,6 +91,14 @@ class Game(db.Model):
         lazy='dynamic',
         cascade='all, delete-orphan'
     )
+    added_by_id = db.Column(db.String, db.ForeignKey('User.id'), nullable=True)
+
+    @property
+    def rating(self):
+        return (
+            sum(p.rating for p in self.plays) / len(self.plays)
+            if self.plays else None
+        )
 
     def __repr__(self):
         return '<Tag {}{}>'.format(
@@ -118,6 +127,7 @@ class Play(db.Model):
     started = db.Column(db.Date)
     finished = db.Column(db.Date)
     rating = db.Column(db.Integer)
+    completion = db.Column(db.Integer)
     comments = db.Column(db.String)
     tags = db.relationship(
         'Tag',
@@ -127,6 +137,10 @@ class Play(db.Model):
     )
     game_id = db.Column(db.Integer, db.ForeignKey('Game.id'))
     user_id = db.Column(db.Integer, db.ForeignKey('User.id'))
+
+    @property
+    def completed(self):
+        return self.completion >= 100
 
     def __repr__(self):
         return '<Play {}>'.format(self.name)

@@ -56,5 +56,7 @@ This work is licensed under Creative Commons [BY-SA 4.0](http://creativecommons.
 
 JQuery included under the [MIT "Expat" License](https://opensource.org/licenses/MIT).
 
+Search makes use of [Giant Bomb's API](https://www.giantbomb.com/api/). Thanks, [Giant Bomb](https://www.giantbomb.com/)!
+
 Remember: [GitHub is not my CV](https://blog.jcoglan.com/2013/11/15/why-github-is-not-your-cv/).
 

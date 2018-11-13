@@ -5,7 +5,7 @@ from os import urandom, path
 CSRF_ENABLED = True
 SECRET_KEY = urandom(30)
 PROPAGATE_EXCEPTIONS = True
-REMEMBER_COOKIE_NAME = 'goodplays_token'    # Needs to be unique server-wide.
+REMEMBER_COOKIE_NAME = 'goodplays_token'        # Must be unique server-wide.
 
 # SQLAlchemy
 basedir = path.abspath(path.dirname(__file__))
@@ -20,3 +20,6 @@ LDAP_SEARCH_BASE = 'ou=????,dc=????,dc=????'
 
 # Admin
 ADMIN_USERS = ['USER.ID.HERE']
+
+# Giant Bomb API
+GB_API_KEY = 'YOUR_API_KEY'     # Visit https://www.giantbomb.com/api/

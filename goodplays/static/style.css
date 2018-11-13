@@ -125,10 +125,10 @@ input[type="password"] {
 }
 
 input[type="search"] {
-	width: 85%;
+	width: 440;
 }
 
 input#search-submit {
-	right: 0;
+	width: 56px;
 }
 
