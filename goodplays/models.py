@@ -1,6 +1,16 @@
 from datetime import date
+from enum import Enum
 
 from goodplays import app, db
+
+
+class Status(Enum):
+    default = 0
+    interested = 1
+    playing = 2
+    completed = 3
+    hundred_percent = 4
+    abandoned = 5
 
 
 class User(db.Model):
@@ -126,7 +136,7 @@ class Play(db.Model):
     started = db.Column(db.Date)
     finished = db.Column(db.Date)
     rating = db.Column(db.Integer)
-    completion = db.Column(db.Integer)
+    status = db.Column(db.Enum(Status))
     comments = db.Column(db.String)
     tags = db.relationship(
         'Tag',
@@ -136,10 +146,6 @@ class Play(db.Model):
     )
     game_id = db.Column(db.Integer, db.ForeignKey('Game.id'))
     user_id = db.Column(db.Integer, db.ForeignKey('User.id'))
-
-    @property
-    def completed(self):
-        return self.completion >= 100
 
     def __repr__(self):
         return '<Play {}>'.format(self.name)

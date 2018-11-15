@@ -1,5 +1,6 @@
 from goodplays import app, db
 from goodplays.models import User, Game, Play, Platform, Tag
+from goodplays.gb import GiantBomb
 
 
 PAGE_SIZE = app.config.get('PAGE_SIZE', 20)
@@ -96,6 +97,14 @@ def edit_game():
     pass
 
 
+def link_gb(game, gb_id):
+    """
+    Link a game to the Giant Bomb database and update its data accordingly.
+    accordingly.
+    """
+    pass
+
+
 def edit_play():
     pass
 
@@ -121,5 +130,3 @@ def tag():
 
 # Display GB logo, link, and thanks on any page that displays GB content
 # (search results and game display, if there is a gb_url)
-
-#def add_game(
