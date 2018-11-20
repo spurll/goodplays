@@ -13,14 +13,40 @@ import requests
 # TODO: Cache responses, if necessary.
 
 
+GAME_FIELDS = [
+    'id',
+    'name',
+    'platforms',
+    'site_detail_url',
+    'deck',
+    'image',
+    'original_release_date'
+]
+
+PLATFORM_FIELDS = [
+    'id',
+    'name',
+    'company',
+    'abbreviation',
+    'image',
+    'platforms',
+    'site_detail_url',
+    'release_date'
+]
+
+
 class GiantBomb():
     def __init__(self, api_key):
         self.api_key = api_key
         self.history = []
 
     def request(self, url, **kwargs):
-        payload = {'api_key': self.api_key, 'format': 'json', **kwargs}
         headers = {'User-Agent': 'goodplays'}
+        payload = {
+            'api_key': self.api_key,
+            'format': 'json',
+            **kwargs
+        }
 
         if not self.rate_limit(url):
             return {}, 'Too many requests! Please obey the speed limit!'
@@ -60,17 +86,31 @@ class GiantBomb():
 
     def game(self, game_id):
         return self.request(
-            'https://www.giantbomb.com/api/game/{}/'.format(game_id)
+            'https://www.giantbomb.com/api/game/{}/'.format(game_id),
+            field_list=GAME_FIELDS
         )
 
     def games(self, limit=None, offset=None):
         return self.request(
             'https://www.giantbomb.com/api/games/',
-            limit=None, offset=None
+            limit=None, offset=None, field_list=','.join(GAME_FIELDS)
+        )
+
+    def platform(self, platform_id):
+        return self.request(
+            'https://www.giantbomb.com/api/platform/{}/'.format(platform_id),
+            field_list=','.join(PLATFORM_FIELDS)
+        )
+
+    def platforms(self, limit=None, offset=None):
+        return self.request(
+            'https://www.giantbomb.com/api/platforms/',
+            limit=None, offset=None, field_list=','.join(PLATFORM_FIELDS)
         )
 
     def search(self, query, limit=None, offset=None):
         return self.request(
             'https://www.giantbomb.com/api/search/',
-            query=query, limit=limit, offset=offset, resources='game'
+            query=query, limit=limit, offset=offset, resources='game',
+            field_list=','.join(GAME_FIELDS)
         )

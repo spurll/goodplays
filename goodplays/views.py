@@ -61,6 +61,9 @@ def plays():
     user = current_user
     objects = user.objects
 
+    # TODO display status via icon with description as alt/title text (maybe
+    # make it toggleable by clicking); add this to the game/play view, too!
+
     form = TemplateForm()
 
     if not objects:

@@ -8,9 +8,10 @@ class Status(Enum):
     default = 0
     interested = 1
     playing = 2
-    completed = 3
-    hundred_percent = 4
-    abandoned = 5
+    placeholder = 3
+    completed = 4
+    hundred_percent = 5
+    abandoned = 6
 
 
 class User(db.Model):
@@ -70,6 +71,12 @@ class Platform(db.Model):
     __tablename__ = 'Platform'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String, unique=True)
+    company = db.Column(db.String)
+    abbreviation = db.Column(db.String)
+    released = db.Column(db.Date)
+    gb_id = db.Column(db.Integer, unique=True)
+    gb_url = db.Column(db.String)
+    image_url = db.Column(db.String)
     games = db.relationship(
         'Game',
         backref='platform',
@@ -85,11 +92,12 @@ class Game(db.Model):
     __tablename__ = 'Game'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String)
-    year = db.Column(db.Integer)
+    description = db.Column(db.String)
+    released = db.Column(db.Date)
     added = db.Column(db.Date, default=date.today)
-    art_url = db.Column(db.String)
-    gb_id = db.Column(db.String)
+    gb_id = db.Column(db.Integer, unique=True)
     gb_url = db.Column(db.String)
+    image_url = db.Column(db.String)
     platforms = db.relationship(
         'Platform',
         backref='game',
@@ -105,13 +113,17 @@ class Game(db.Model):
     added_by_id = db.Column(db.String, db.ForeignKey('User.id'), nullable=True)
 
     @property
+    def year(self):
+        return self.released.year if self.released else None
+
+    @property
     def rating(self):
         plays = self.plays.all()
         return sum(p.rating for p in plays) / len(plays) if plays else None
 
     def __repr__(self):
         return '<Game {}{}>'.format(
-            self.name, ' (' + self.year + ')' if self.year else ''
+            self.name, ' ({})'.format(self.year) if self.year else ''
         )
 
 

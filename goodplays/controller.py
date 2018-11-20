@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from goodplays import app, db
 from goodplays.models import User, Game, Play, Platform, Tag
 from goodplays.gb import GiantBomb
@@ -5,9 +7,76 @@ from goodplays.gb import GiantBomb
 
 PAGE_SIZE = app.config.get('PAGE_SIZE', 20)
 
+GB = GiantBomb(app.config.get('GB_API_KEY'))
+
+
+def games():
+    return Games.all()
+
 
 def platforms():
     return Platforms.all()
+
+
+def parse_gb_game(gb):
+    if not gb: return None
+
+    platforms = []
+
+    for platform in gb.get('platforms', {}):
+        existing = Platform.query.filter_by(
+            gb_id=platform.get('id')
+        ).one_or_none()
+
+        if existing:
+            platforms.append(existing)
+        else:
+            # TODO: This is very, very slow for games with many releases (e.g.,
+            # Super Mario Bros.) Maybe use stubs?
+            result = platform_gb(platform.get('id'))
+
+            # TODO: This is also dangerous because what if a search results in
+            # multiple games with overlapping platforms? We'll end up with
+            # multiple instances of each platform before any of them are added
+            # to the DB, then when we go to add them we'll get integrity errors
+            if result:
+                platforms.append(result)
+
+    return Game(
+        name=gb.get('name'),
+        description=gb.get('deck'),
+        released=datetime.strptime(
+            gb.get('original_release_date'), '%Y-%m-%d %H:%M:%S'
+        ).date(),
+        gb_id=gb.get('id'),
+        gb_url=gb.get('site_detail_url'),
+        image_url=gb.get('image', {}).get('small_url'),
+        platforms=platforms
+    )
+
+
+def parse_gb_platform(gb):
+    if not gb: return None
+
+    if not gb.get('company'):
+        # Handle company being set to None instead of {} (e.g., for pinball)
+        gb['company'] = {}
+
+    try:
+        # Handle released being set to None (e.g., for pinball)
+        dt = datetime.strptime(gb['release_date'], '%Y-%m-%d %H:%M:%S').date()
+    except:
+        dt = None
+
+    return Platform(
+        name=gb.get('name'),
+        abbreviation=gb.get('abbreviation'),
+        company=gb['company'].get('name'),
+        released=dt,
+        gb_id=gb.get('id'),
+        gb_url=gb.get('site_detail_url'),
+        image_url=gb.get('image', {}).get('small_url')
+    )
 
 
 def games(page=1, order='added'):
@@ -16,7 +85,7 @@ def games(page=1, order='added'):
     elif order == 'name':
         order = Game.name.asc()
     elif order == 'year':
-        order = Game.year.desc()
+        order = Game.released.desc()
     else:
         order = None
 
@@ -55,15 +124,14 @@ def recent_plays(user, page=1, order='started'):
 def search(query):
     results = (
         Game.query
-        .filter_by(name=query)
-        .order_by(Game.year.desc())
+        .filter_by(name=query.strip())
+        .order_by(Game.released.desc())
         .all()
     )
 
-    # TODO: THIS APPEARS TO BE BROKEN
     fuzzy = (
         Game.query
-        .filter(Game.name.like(query.replace(' ', '%') + '%'))
+        .filter(Game.name.like('%' + query.replace(' ', '%') + '%'))
         .order_by(Game.name.asc())
         .all()
     )
@@ -75,20 +143,71 @@ def search(query):
     return results
 
 
+# When searching for a game from the search box, search games in the DB first,
+# then have a separate section with Giant Bomb results. Have a button that
+# will import (via AJAX) the GB result into 
+
+# Display GB logo, link, and thanks on any page that displays GB content
+# (search results and game display, if there is a gb_url)
+
+
 def search_gb(query):
-    pass
+    results, error = GB.search(query, limit=PAGE_SIZE)
+
+    if error:
+        print(error)
+    else:
+        return map(parse_gb_game, results)
 
 
-def add_game(user, **fields):
-    game = Game(**fields)
+def platform_gb(gb_id):
+    results, error = GB.platform(gb_id)
+
+    if error:
+        print(error)
+    else:
+        return parse_gb_platform(results)
+
+
+def platforms_gb(query):
+    """
+    This returns too many results and needs pagination. Basically, don't try
+    to add platforms to the database. Just import games from Giant Bomb and
+    ensure that their platforms are added along with them instead.
+    """
+    results, error = GB.platforms()     # TODO: This returns too many results
+
+    if error:
+        print(error)
+    else:
+        return map(parse_gb_platform, results)
+
+
+def add_game(user, game):
+    """
+    Adds an existing Game object (e.g., from Giant Bomb) to the database.
+    """
     user.games_added.append(game)
+    db.session.add(user)
     db.session.commit()
     return game
 
 
-def add_play(user, **fields):
+def new_game(user, **fields):
+    """
+    Creates a new Game object and adds it to the database.
+    """
+    game = Game(**fields)
+    user.games_added.append(game)
+    db.session.add(user)
+    db.session.commit()
+    return game
+
+
+def new_play(user, **fields):
     play = Play(**fields)
     user.plays.append(play)
+    db.session.add(user)
     db.session.commit()
     return play
 
@@ -97,10 +216,30 @@ def edit_game():
     pass
 
 
-def link_gb(game, gb_id):
+def link_game(game, gb_id):
     """
     Link a game to the Giant Bomb database and update its data accordingly.
-    accordingly.
+    """
+    pass
+
+
+def link_platform(platform, gb_id):
+    """
+    Link a platform to the Giant Bomb database.
+    """
+    pass
+
+
+def update_game(game):
+    """
+    Update a game by fetching its data from the Giant Bomb database.
+    """
+    pass
+
+
+def update_platform(platform):
+    """
+    Update a platform by fetching its data from the Giant Bomb database.
     """
     pass
 
@@ -119,14 +258,3 @@ def play_details(id):
 
 def tag():
     pass
-
-
-# TODO: Include rate limiting in Giant Bomb searches (no more than 200 searches
-# per hour)
-
-# When searching for a game from the search box, search games in the DB first,
-# then have a separate section with Giant Bomb results. Have a button that
-# will import (via AJAX) the GB result into 
-
-# Display GB logo, link, and thanks on any page that displays GB content
-# (search results and game display, if there is a gb_url)
