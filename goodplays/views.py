@@ -14,6 +14,15 @@ def index():
     return redirect(url_for('latest'))
 
 
+# TODO: Maybe games not linked to Giant Bomb can only be viewed by the user
+# who added them?
+
+# TODO: on game details page, "Update" button (for games linked with Giant
+# Bomb)
+
+# TODO: on platform details page, "Update" button (for platforms with a gb_id)
+
+
 @app.route('/search')
 def search():
     """

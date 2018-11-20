@@ -21,6 +21,7 @@ def platforms():
 def parse_gb_game(gb):
     if not gb: return None
 
+    """
     platforms = []
 
     for platform in gb.get('platforms', {}):
@@ -41,6 +42,11 @@ def parse_gb_game(gb):
             # to the DB, then when we go to add them we'll get integrity errors
             if result:
                 platforms.append(result)
+    """
+
+    # Produces incomplete "stub" platforms (e.g., company is missing), but
+    # the alternative is extremely expensive, so just update the stubs later
+    platforms = map(existing_or_parse_platform, gb.get('platforms', {}))
 
     return Game(
         name=gb.get('name'),
@@ -55,7 +61,13 @@ def parse_gb_game(gb):
     )
 
 
+def existing_or_parse_platform(gb):
+    existing = Platform.query.filter_by(gb_id=gb.get('id')).one_or_none()
+    return existing if existing else parse_gb_platform(gb)
+
+
 def parse_gb_platform(gb):
+    print(gb)
     if not gb: return None
 
     if not gb.get('company'):
@@ -216,18 +228,30 @@ def edit_game():
     pass
 
 
-def link_game(game, gb_id):
+def link_game(game, gb_id, update=False):
     """
     Link a game to the Giant Bomb database and update its data accordingly.
     """
-    pass
+    game.gb_id = gb_id
+
+    if update:
+        update_game(game)
+    else:
+        db.session.add(game)
+        db.session.commit()
 
 
-def link_platform(platform, gb_id):
+def link_platform(platform, gb_id, update=False):
     """
     Link a platform to the Giant Bomb database.
     """
-    pass
+    platform.gb_id = gb_id
+
+    if update:
+        update_game(platform)
+    else:
+        db.session.add(platform)
+        db.session.commit()
 
 
 def update_game(game):
