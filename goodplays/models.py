@@ -79,7 +79,7 @@ class Platform(db.Model):
     image_url = db.Column(db.String)
     games = db.relationship(
         'Game',
-        backref='platform',
+        back_populates='platforms',
         secondary=GamePlatform,
         lazy='dynamic'
     )
@@ -100,7 +100,7 @@ class Game(db.Model):
     image_url = db.Column(db.String)
     platforms = db.relationship(
         'Platform',
-        backref='game',
+        back_populates='games',
         secondary=GamePlatform,
         lazy='dynamic'
     )
@@ -133,7 +133,7 @@ class Tag(db.Model):
     name = db.Column(db.String, unique=True)
     plays = db.relationship(
         'Play',
-        backref='tag',
+        back_populates='tags',
         secondary=PlayTag,
         lazy='dynamic'
     )
@@ -152,7 +152,7 @@ class Play(db.Model):
     comments = db.Column(db.String)
     tags = db.relationship(
         'Tag',
-        backref='play',
+        back_populates='plays',
         secondary=PlayTag,
         lazy='dynamic'
     )

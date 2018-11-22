@@ -36,10 +36,6 @@ def parse_gb_game(gb):
             # Super Mario Bros.) Maybe use stubs?
             result = platform_gb(platform.get('id'))
 
-            # TODO: This is also dangerous because what if a search results in
-            # multiple games with overlapping platforms? We'll end up with
-            # multiple instances of each platform before any of them are added
-            # to the DB, then when we go to add them we'll get integrity errors
             if result:
                 platforms.append(result)
     """
@@ -47,6 +43,13 @@ def parse_gb_game(gb):
     # Produces incomplete "stub" platforms (e.g., company is missing), but
     # the alternative is extremely expensive, so just update the stubs later
     platforms = map(existing_or_parse_platform, gb.get('platforms', {}))
+
+    # This may be dangerous: what if a search result returns multiple games
+    # with overlapping platforms? We may end up with multiple instances of each
+    # platform (because it won't be in the DB yet) before any of them are
+    # committed, then end up with integrity/nonunique errors on commit.
+    # (Edit: Turns out that so long as it's all in one session, which it seems
+    # to be, this works fine!)
 
     return Game(
         name=gb.get('name'),
@@ -169,6 +172,7 @@ def search_gb(query):
     if error:
         print(error)
     else:
+        # TODO: Don't map unless you want them added to the session!
         return map(parse_gb_game, results)
 
 
@@ -178,6 +182,7 @@ def platform_gb(gb_id):
     if error:
         print(error)
     else:
+        # TODO: Don't map unless you want them added to the session!
         return parse_gb_platform(results)
 
 
@@ -192,6 +197,7 @@ def platforms_gb(query):
     if error:
         print(error)
     else:
+        # TODO: Don't map unless you want them added to the session!
         return map(parse_gb_platform, results)
 
 

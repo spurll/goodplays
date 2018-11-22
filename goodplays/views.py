@@ -20,6 +20,8 @@ def index():
 # TODO: on game details page, "Update" button (for games linked with Giant
 # Bomb)
 
+# TODO: if game not linked to Giant Bomb, a button to link it
+
 # TODO: on platform details page, "Update" button (for platforms with a gb_id)
 
 
