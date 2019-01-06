@@ -11,7 +11,7 @@ from goodplays import controller
 @app.route('/')
 @app.route('/index')
 def index():
-    return redirect(url_for('latest'))
+    return redirect(url_for('plays' if current_user else 'games'))
 
 
 # TODO: Maybe games not linked to Giant Bomb can only be viewed by the user
@@ -47,19 +47,19 @@ def search():
     )
 
 
-@app.route('/latest')
-def latest():
+@app.route('/games')
+def games():
     """
     Shows the 10 most recent games added to the DB. (Or to GiantBomb's DB?
     Maybe set up a daily task to update this DB? It'll get big...)
     """
-    games = controller.games()
+    g = controller.games()
 
-    if not games:
+    if not g:
         flash("Games don't exist. Good riddance.")
 
     return render_template(
-        "list.html", title="Recently Added", user=current_user, games=games
+        "list.html", title="Recently Added", user=current_user, games=g
     )
 
 
@@ -69,19 +69,16 @@ def plays():
     """
     Displays a user's plays.
     """
-    user = current_user
-    objects = user.objects
+    p = controller.plays(current_user)
 
     # TODO display status via icon with description as alt/title text (maybe
     # make it toggleable by clicking); add this to the game/play view, too!
 
-    form = TemplateForm()
-
-    if not objects:
-        flash("You don't have any objects.")
+    if not p:
+        flash("Games don't exist. Good riddance.")
 
     return render_template(
-        "view.html", title="View", user=user, form=form, objects=objects
+        "view.html", title="View", user=current_user, plays=p
     )
 
 
