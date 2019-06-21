@@ -12,6 +12,12 @@
 		</tr>
 	</thead>
 	<tbody>
+        {% if not games %}
+		<tr>
+            <td class="empty" colspan="5">No games found!</td>
+        </tr>
+        {% endif %}
+
 		{% for game in games %}
 		<tr id="{{ game.id }}">
 			<td class="art"><img class="art small" src="{{ game.image_url if game.image_url else url_for('static', filename='default.png')}}" /></td>

@@ -34,16 +34,18 @@ def search():
 
     # TODO add a default.png in static/ with a question mark icon
 
-    games = controller.search(query)
+    g = controller.search(query)
+    gb = list(controller.search_gb(query))
 
-    if not games:
+    if not g and not gb:
         flash("Games don't exist. Good riddance.")
 
     return render_template(
-        "list.html",
-        title="Search Results",
+        'games.html',
+        title=f'Search: {query}',
         user=current_user,
-        games=games
+        games=g,
+        giantbomb=gb
     )
 
 
@@ -59,7 +61,10 @@ def games():
         flash("Games don't exist. Good riddance.")
 
     return render_template(
-        "list.html", title="Recently Added", user=current_user, games=g
+        'games.html',
+        title='Recently Added',
+        user=current_user,
+        games=g
     )
 
 
@@ -77,9 +82,29 @@ def plays():
     if not p:
         flash("Games don't exist. Good riddance.")
 
+    # TODO this might actually need a different template, since it's displaying
+    # plays not games
     return render_template(
-        "view.html", title="View", user=current_user, plays=p
+        'plays.html',
+        title='Recently Played',
+        user=current_user,
+        plays=p
     )
+
+
+@app.route('/add/{gb_id}')
+@login_required
+def add(gb_id):
+    """
+    Adds a game from Giant Bomb.
+    """
+    game = controller.add_gb(current_user, gb_id)
+
+    if not game:
+        flash(f'No game with ID {gb_id} was found in Giant Bomb\'s database.')
+        return redirect(url_for('games'))
+
+    return redirect(url_for('details', game=game.id))
 
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -94,7 +119,7 @@ def login():
 
     if request.method == 'GET':
         return render_template(
-            'login.html', title="Log In", form=form, hide_user=True
+            'login.html', title='Log In', form=form, hide_user=True
         )
 
     if form.validate_on_submit():
@@ -103,7 +128,7 @@ def login():
         if not user:
             flash('Login failed: {}.'.format(message))
             return render_template(
-                'login.html', title="Log In", form=form, hide_user=True
+                'login.html', title='Log In', form=form, hide_user=True
             )
 
         if user and user.is_authenticated:
@@ -117,7 +142,7 @@ def login():
             return redirect(request.args.get('next') or url_for('index'))
 
     return render_template(
-        'login.html', title="Log In", form=form, hide_user=True
+        'login.html', title='Log In', form=form, hide_user=True
     )
 
 

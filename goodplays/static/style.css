@@ -101,6 +101,13 @@ tfoot { font-weight: bold; font-variant: small-caps; }
 
 tr:nth-child(even) { background-color: #444444; border-color: #444444; }
 
+td.empty { 
+    background-color: #444444;
+    border-color: #444444;
+    text-align: center;
+    font-weight: bold;
+}
+
 a:link { text-decoration: none; color: #888888; }
 a:visited { text-decoration: none; color: #888888; }
 a:hover { text-decoration: none; color: #ffffff; }

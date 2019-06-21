@@ -14,6 +14,10 @@ def games():
     return Games.all()
 
 
+def plays(user):
+    return user.plays.all()
+
+
 def platforms():
     return Platforms.all()
 
@@ -51,12 +55,13 @@ def parse_gb_game(gb):
     # (Edit: Turns out that so long as it's all in one session, which it seems
     # to be, this works fine!)
 
+    released = gb.get('original_release_date')
+
     return Game(
         name=gb.get('name'),
         description=gb.get('deck'),
-        released=datetime.strptime(
-            gb.get('original_release_date'), '%Y-%m-%d %H:%M:%S'
-        ).date(),
+        released=(datetime.strptime(released, '%Y-%m-%d %H:%M:%S').date()
+            if released else None),
         gb_id=gb.get('id'),
         gb_url=gb.get('site_detail_url'),
         image_url=gb.get('image', {}).get('small_url'),
@@ -70,7 +75,7 @@ def existing_or_parse_platform(gb):
 
 
 def parse_gb_platform(gb):
-    print(gb)
+    # print(gb)
     if not gb: return None
 
     if not gb.get('company'):
@@ -209,6 +214,25 @@ def add_game(user, game):
     db.session.add(user)
     db.session.commit()
     return game
+
+
+def add_gb(user, gb_id):
+    """
+    Searches Giant Bomb for the specified ID, creates a corresponding Game
+    object, and adds it to the database.
+    """
+    game = Game.query.filter_by(gb_id=gb_id).one_or_none()
+
+    if game: return game
+
+    results, error = GB.game(gb_id)
+
+    if error:
+        print(error)
+    else:
+        # TODO: Don't parse (?) unless you want them added to the session!
+        game = parse_gb_game(results)
+        return add_game(user, game)
 
 
 def new_game(user, **fields):

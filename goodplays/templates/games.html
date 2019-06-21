@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+{% block content %}
+
+<table id="games">
+	<thead>
+		<tr>
+			<th class="art"></th>
+			<th class="name">Name</th>
+			<th class="released">Released</th>
+			<th class="platforms">Platforms</th>
+			<th class="rating">Rating</th>
+		</tr>
+	</thead>
+	<tbody>
+        {% if not games %}
+		<tr>
+            <td class="empty" colspan="5">No games found!</td>
+        </tr>
+        {% endif %}
+
+		{% for game in games %}
+		<tr id="{{ game.id }}">
+			<td class="art"><img class="art small" src="{{ game.image_url if game.image_url else url_for('static', filename='default.png') }}" /></td>
+			<td class="name">{{ game.name }}</td>
+			<td class="released">{{ game.released }}</td>
+			<td class="platforms">{{ game.platforms|map(attribute="abbreviation")|join(", ") }}</td>
+			<td class="rating">{{ "&#9733" * round(game.rating) + "&#9734" * (5 - round(game.rating)) if game.rating else "" }}</td>
+		</tr>
+		{% endfor %}
+	</tbody>
+</table>
+
+{% if giantbomb %}
+<div class="heading">Giant Bomb</div>
+
+<table id="giantbomb">
+	<thead>
+		<tr>
+			<th class="art"></th>
+			<th class="name">Name</th>
+			<th class="released">Released</th>
+			<th class="platforms">Platforms</th>
+			<th class="rating">Rating</th>
+			<th class="add"></th>
+		</tr>
+	</thead>
+	<tbody>
+        {% if not gb %}
+		<tr>
+            <td class="empty" colspan="5">No games found!</td>
+        </tr>
+        {% endif %}
+
+		{% for game in gb %}
+		<tr id="{{ game.gb_id }}">
+			<td class="art"><img class="art small" src="{{ game.image_url if game.image_url else url_for('static', filename='default.png') }}" /></td>
+			<td class="name">{{ game.name }}</td>
+			<td class="released">{{ game.released }}</td>
+			<td class="platforms">{{ game.platforms|map(attribute="abbreviation")|join(", ") }}</td>
+			<td class="rating">{{ "&#9733" * round(game.rating) + "&#9734" * (5 - round(game.rating)) if game.rating else "" }}</td>
+            <td class="add"><a href="{{ url_for('add', gb_id=game.gb_id) }}">Add</a></td>
+		</tr>
+		{% endfor %}
+	</tbody>
+</table>
+{% endif %}
+
+{% endblock %}
+
