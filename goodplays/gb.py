@@ -90,10 +90,13 @@ class GiantBomb():
             field_list=GAME_FIELDS
         )
 
+    # TODO: When limit and offset=None, consider doing paging here, then
+    # merging the results
+
     def games(self, limit=None, offset=None):
         return self.request(
             'https://www.giantbomb.com/api/games/',
-            limit=None, offset=None, field_list=','.join(GAME_FIELDS)
+            limit=limit, offset=offset, field_list=','.join(GAME_FIELDS)
         )
 
     def platform(self, platform_id):
@@ -105,7 +108,7 @@ class GiantBomb():
     def platforms(self, limit=None, offset=None):
         return self.request(
             'https://www.giantbomb.com/api/platforms/',
-            limit=None, offset=None, field_list=','.join(PLATFORM_FIELDS)
+            limit=limit, offset=offset, field_list=','.join(PLATFORM_FIELDS)
         )
 
     def search(self, query, limit=None, offset=None):

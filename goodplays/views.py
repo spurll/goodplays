@@ -92,7 +92,7 @@ def plays():
     )
 
 
-@app.route('/add/{gb_id}')
+@app.route('/add/<gb_id>')
 @login_required
 def add(gb_id):
     """

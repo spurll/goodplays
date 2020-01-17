@@ -22,6 +22,16 @@ def platforms():
     return Platforms.all()
 
 
+def existing_or_parse_game(gb):
+    existing = Game.query.filter_by(gb_id=gb.get('id')).one_or_none()
+    return existing if existing else parse_gb_game(gb)
+
+
+def existing_or_parse_platform(gb):
+    existing = Platform.query.filter_by(gb_id=gb.get('id')).one_or_none()
+    return existing if existing else parse_gb_platform(gb)
+
+
 def parse_gb_game(gb):
     if not gb: return None
 
@@ -44,9 +54,11 @@ def parse_gb_game(gb):
                 platforms.append(result)
     """
 
-    # Produces incomplete "stub" platforms (e.g., company is missing), but
-    # the alternative is extremely expensive, so just update the stubs later
-    platforms = map(existing_or_parse_platform, gb.get('platforms', {}))
+    # Produces incomplete "stub" platforms (e.g., company and release_date are
+    # missing), but the alternative is extremely expensive, so just update the
+    # stubs later. (Use gb.get(...) or {} because platforms returns None when
+    # the game hasn't actually had a release.)
+    platforms = map(existing_or_parse_platform, gb.get('platforms') or {})
 
     # This may be dangerous: what if a search result returns multiple games
     # with overlapping platforms? We may end up with multiple instances of each
@@ -55,6 +67,8 @@ def parse_gb_game(gb):
     # (Edit: Turns out that so long as it's all in one session, which it seems
     # to be, this works fine!)
 
+    # TODO: I suspect that GB's /search endpoint isn't returning release date
+    # info (usually, anyway); maybe querying for an individual /game will?
     released = gb.get('original_release_date')
 
     return Game(
@@ -69,24 +83,16 @@ def parse_gb_game(gb):
     )
 
 
-def existing_or_parse_platform(gb):
-    existing = Platform.query.filter_by(gb_id=gb.get('id')).one_or_none()
-    return existing if existing else parse_gb_platform(gb)
-
-
 def parse_gb_platform(gb):
-    # print(gb)
     if not gb: return None
 
     if not gb.get('company'):
         # Handle company being set to None instead of {} (e.g., for pinball)
         gb['company'] = {}
 
-    try:
-        # Handle released being set to None (e.g., for pinball)
-        dt = datetime.strptime(gb['release_date'], '%Y-%m-%d %H:%M:%S').date()
-    except:
-        dt = None
+    # Handle released being set to None (e.g., for pinball)
+    dt = datetime.strptime(gb['release_date'], '%Y-%m-%d %H:%M:%S').date() \
+        if gb.get('release_date') else None
 
     return Platform(
         name=gb.get('name'),
@@ -111,10 +117,10 @@ def games(page=1, order='added'):
 
     return (
         Game.query
-        .order_by(order)
-        .limit(PAGE_SIZE)
-        .offset(PAGE_SIZE * (page - 1))
-        .all()
+            .order_by(order)
+            .limit(PAGE_SIZE)
+            .offset(PAGE_SIZE * (page - 1))
+            .all()
     )
 
 
@@ -134,26 +140,26 @@ def recent_plays(user, page=1, order='started'):
 
     return (
         user.plays
-        .order_by(order)
-        .limit(PAGE_SIZE)
-        .offset(PAGE_SIZE * (page - 1))
-        .all()
+            .order_by(order)
+            .limit(PAGE_SIZE)
+            .offset(PAGE_SIZE * (page - 1))
+            .all()
     )
 
 
 def search(query):
     results = (
         Game.query
-        .filter_by(name=query.strip())
-        .order_by(Game.released.desc())
-        .all()
+            .filter_by(name=query.strip())
+            .order_by(Game.released.desc())
+            .all()
     )
 
     fuzzy = (
         Game.query
-        .filter(Game.name.like('%' + query.replace(' ', '%') + '%'))
-        .order_by(Game.name.asc())
-        .all()
+            .filter(Game.name.like('%' + query.replace(' ', '%') + '%'))
+            .order_by(Game.name.asc())
+            .all()
     )
 
     for game in fuzzy:
@@ -165,7 +171,7 @@ def search(query):
 
 # When searching for a game from the search box, search games in the DB first,
 # then have a separate section with Giant Bomb results. Have a button that
-# will import (via AJAX) the GB result into 
+# will import (via AJAX) the GB result into the DB.
 
 # Display GB logo, link, and thanks on any page that displays GB content
 # (search results and game display, if there is a gb_url)
@@ -178,7 +184,7 @@ def search_gb(query):
         print(error)
     else:
         # TODO: Don't map unless you want them added to the session!
-        return map(parse_gb_game, results)
+        return map(existing_or_parse_game, results)
 
 
 def platform_gb(gb_id):
@@ -188,7 +194,7 @@ def platform_gb(gb_id):
         print(error)
     else:
         # TODO: Don't map unless you want them added to the session!
-        return parse_gb_platform(results)
+        return existing_or_parse_platform(results)
 
 
 def platforms_gb(query):
@@ -212,6 +218,7 @@ def add_game(user, game):
     """
     user.games_added.append(game)
     db.session.add(user)
+    db.session.add(game)
     db.session.commit()
     return game
 
@@ -223,7 +230,9 @@ def add_gb(user, gb_id):
     """
     game = Game.query.filter_by(gb_id=gb_id).one_or_none()
 
-    if game: return game
+    if game:
+        print(f'{game} already found. Nothing to do!')
+        return game
 
     results, error = GB.game(gb_id)
 
@@ -231,7 +240,9 @@ def add_gb(user, gb_id):
         print(error)
     else:
         # TODO: Don't parse (?) unless you want them added to the session!
-        game = parse_gb_game(results)
+        print('Parsing game...')
+        game = existing_or_parse_game(results)
+        print('Adding game...')
         return add_game(user, game)
 
 
@@ -288,6 +299,7 @@ def update_game(game):
     """
     Update a game by fetching its data from the Giant Bomb database.
     """
+    # TODO
     pass
 
 
@@ -295,20 +307,25 @@ def update_platform(platform):
     """
     Update a platform by fetching its data from the Giant Bomb database.
     """
+    # TODO
     pass
 
 
 def edit_play():
+    # TODO
     pass
 
 
 def game_details(id):
+    # TODO
     pass
 
 
 def play_details(id):
+    # TODO
     pass
 
 
 def tag():
+    # TODO
     pass
