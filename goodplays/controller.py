@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, date
 
 from goodplays import app, db
 from goodplays.models import User, Game, Play, Platform, Tag
@@ -8,6 +8,10 @@ from goodplays.gb import GiantBomb
 PAGE_SIZE = app.config.get('PAGE_SIZE', 20)
 
 GB = GiantBomb(app.config.get('GB_API_KEY'))
+
+
+# TODO: Display GB logo, link, and thanks on any page that displays GB content
+# (search results and game display, if there is a gb_url)
 
 
 def games():
@@ -35,25 +39,6 @@ def existing_or_parse_platform(gb):
 def parse_gb_game(gb):
     if not gb: return None
 
-    """
-    platforms = []
-
-    for platform in gb.get('platforms', {}):
-        existing = Platform.query.filter_by(
-            gb_id=platform.get('id')
-        ).one_or_none()
-
-        if existing:
-            platforms.append(existing)
-        else:
-            # TODO: This is very, very slow for games with many releases (e.g.,
-            # Super Mario Bros.) Maybe use stubs?
-            result = platform_gb(platform.get('id'))
-
-            if result:
-                platforms.append(result)
-    """
-
     # Produces incomplete "stub" platforms (e.g., company and release_date are
     # missing), but the alternative is extremely expensive, so just update the
     # stubs later. (Use gb.get(...) or {} because platforms returns None when
@@ -67,15 +52,18 @@ def parse_gb_game(gb):
     # (Edit: Turns out that so long as it's all in one session, which it seems
     # to be, this works fine!)
 
-    # TODO: I suspect that GB's /search endpoint isn't returning release date
-    # info (usually, anyway); maybe querying for an individual /game will?
-    released = gb.get('original_release_date')
+    released = date(
+        gb['expected_release_year'],
+        gb['expected_release_month'],
+        gb['expected_release_day']) if (
+            gb.get('expected_release_day') and
+            gb.get('expected_release_month') and
+            gb.get('expected_release_year')) else None
 
     return Game(
         name=gb.get('name'),
         description=gb.get('deck'),
-        released=(datetime.strptime(released, '%Y-%m-%d %H:%M:%S').date()
-            if released else None),
+        released=released,
         gb_id=gb.get('id'),
         gb_url=gb.get('site_detail_url'),
         image_url=gb.get('image', {}).get('small_url'),
@@ -86,19 +74,19 @@ def parse_gb_game(gb):
 def parse_gb_platform(gb):
     if not gb: return None
 
-    if not gb.get('company'):
-        # Handle company being set to None instead of {} (e.g., for pinball)
-        gb['company'] = {}
+    # Handle company being set to None instead of {} (e.g., for pinball)
+    gb['company'] = gb.get('company') or {}
 
     # Handle released being set to None (e.g., for pinball)
-    dt = datetime.strptime(gb['release_date'], '%Y-%m-%d %H:%M:%S').date() \
+    released = datetime.strptime(
+        gb['release_date'], '%Y-%m-%d %H:%M:%S').date() \
         if gb.get('release_date') else None
 
     return Platform(
         name=gb.get('name'),
         abbreviation=gb.get('abbreviation'),
         company=gb['company'].get('name'),
-        released=dt,
+        released=released,
         gb_id=gb.get('id'),
         gb_url=gb.get('site_detail_url'),
         image_url=gb.get('image', {}).get('small_url')
@@ -169,14 +157,6 @@ def search(query):
     return results
 
 
-# When searching for a game from the search box, search games in the DB first,
-# then have a separate section with Giant Bomb results. Have a button that
-# will import (via AJAX) the GB result into the DB.
-
-# Display GB logo, link, and thanks on any page that displays GB content
-# (search results and game display, if there is a gb_url)
-
-
 def search_gb(query):
     results, error = GB.search(query, limit=PAGE_SIZE)
 
@@ -218,7 +198,6 @@ def add_game(user, game):
     """
     user.games_added.append(game)
     db.session.add(user)
-    db.session.add(game)
     db.session.commit()
     return game
 
@@ -240,9 +219,7 @@ def add_gb(user, gb_id):
         print(error)
     else:
         # TODO: Don't parse (?) unless you want them added to the session!
-        print('Parsing game...')
         game = existing_or_parse_game(results)
-        print('Adding game...')
         return add_game(user, game)
 
 

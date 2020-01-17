@@ -20,7 +20,9 @@ GAME_FIELDS = [
     'site_detail_url',
     'deck',
     'image',
-    'original_release_date'
+    'expected_release_day',
+    'expected_release_month',
+    'expected_release_year',
 ]
 
 PLATFORM_FIELDS = [
@@ -54,7 +56,7 @@ class GiantBomb():
         r = requests.get(url, params=payload, headers=headers)
 
         if r.status_code != 200:
-            return {}, 'Request to {} returned {}'.format(url, r.status_code)
+            return {}, f'Request to {url} returned {r.status_code}'
 
         json = r.json()
 
@@ -86,8 +88,8 @@ class GiantBomb():
 
     def game(self, game_id):
         return self.request(
-            'https://www.giantbomb.com/api/game/{}/'.format(game_id),
-            field_list=GAME_FIELDS
+            f'https://www.giantbomb.com/api/game/{game_id}/',
+            field_list=','.join(GAME_FIELDS)
         )
 
     # TODO: When limit and offset=None, consider doing paging here, then
@@ -101,7 +103,7 @@ class GiantBomb():
 
     def platform(self, platform_id):
         return self.request(
-            'https://www.giantbomb.com/api/platform/{}/'.format(platform_id),
+            f'https://www.giantbomb.com/api/platform/{platform_id}/',
             field_list=','.join(PLATFORM_FIELDS)
         )
 
