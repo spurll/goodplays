@@ -31,7 +31,7 @@
 </table>
 
 {% if giantbomb %}
-<div class="heading">Giant Bomb</div>
+<h1>Giant Bomb</h1>
 
 <table id="giantbomb">
 	<thead>
@@ -63,6 +63,11 @@
 		{% endfor %}
 	</tbody>
 </table>
+
+<div>
+    <img id="gb-logo" src="{{ url_for('static', filename='gb.svg')}}" />
+    Some content on this page provided by <a href="https://www.giantbomb.com/">Giant Bomb</a> via their excellent <a href="https://www.giantbomb.com/api/">API</a>. Thanks!
+</div>
 {% endif %}
 
 {% endblock %}

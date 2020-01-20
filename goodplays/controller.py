@@ -14,8 +14,12 @@ GB = GiantBomb(app.config.get('GB_API_KEY'))
 # (search results and game display, if there is a gb_url)
 
 
+def game(id):
+    return Game.query.get(id)
+
+
 def games():
-    return Games.all()
+    return Game.query.all()
 
 
 def plays(user):
@@ -23,7 +27,7 @@ def plays(user):
 
 
 def platforms():
-    return Platforms.all()
+    return Platform.query.all()
 
 
 def existing_or_parse_game(gb):

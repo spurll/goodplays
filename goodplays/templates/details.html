@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div id="game">
+    ...
+    {{ game.platforms | map(attribute="abbreviation") | join(", ") }}
+    <img class="art" src="{{ game.image_url if game.image_url else url_for('static', filename='default.png') }}" />
+</div>
+
+{% if plays %}
+<table id="plays">
+	<thead>
+		<tr>
+			<th class="started">Started</th>
+			<th class="finished">Finished</th>
+			<th class="tags">Tags</th>
+			<th class="comments">Comments</th>
+			<th class="rating">Rating</th>
+		</tr>
+	</thead>
+	<tbody>
+		{% for play in plays %}
+		<tr id="{{ play.id }}">
+			<td class="started">{{ play.started | replace("-", "&#8209;") }}</td>
+            <td class="finished">{{ play.finished | replace("-", "&#8209;") }}</td>
+            <td class="tags">{{ play.tags | join(", ") }}</td>
+            <td class="comments">{{ play.comments }}</td>
+			<td class="rating">{{ "&#9733" * round(game.rating) + "&#9734" * (5 - round(game.rating)) if game.rating else "" }}</td>
+		</tr>
+		{% endfor %}
+	</tbody>
+</table>
+{% endif %}
+
+<div>
+    <img id="gb-logo" src="{{ url_for('static', filename='gb.svg')}}" />
+    Some content on this page provided by <a href="https://www.giantbomb.com/">Giant Bomb</a> via their excellent <a href="https://www.giantbomb.com/api/">API</a>. Thanks!
+</div>
+
+{% endblock %}

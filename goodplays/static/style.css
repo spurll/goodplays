@@ -76,10 +76,18 @@ tfoot { font-weight: bold; font-variant: small-caps; }
 	transform: translateY(-50%);
 }
 
-.heading {
+h1 {
 	font-variant: small-caps;
 	text-align: center;
 	font-size: 150%;
+	padding-top: 5px;
+	padding-bottom: 10px;
+}
+
+h2 {
+	font-variant: small-caps;
+	text-align: center;
+	font-size: 125%;
 	padding-top: 5px;
 	padding-bottom: 10px;
 }

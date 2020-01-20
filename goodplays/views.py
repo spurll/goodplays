@@ -92,6 +92,32 @@ def plays():
     )
 
 
+@app.route('/details/<id>')
+def details():
+    """
+    Shows the 10 most recent games added to the DB. (Or to GiantBomb's DB?
+    Maybe set up a daily task to update this DB? It'll get big...)
+    """
+    g = controller.game(id)
+
+    if not g:
+        flash(f"Unable to find game with ID {id}.")
+        return redirect(url_for('index'))
+
+    return render_template(
+        'details.html',
+        title=game.name,
+        user=current_user,
+        game=game,
+        plays=(
+            user.plays
+                .filter_by(game_id=game.id).order_by()
+                .order_by(Play.started.desc())
+                .all()
+        )
+    )
+
+
 @app.route('/add/<gb_id>')
 @login_required
 def add(gb_id):

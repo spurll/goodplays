@@ -89,7 +89,9 @@
 		{% endwith %}
 
 		<div id="content">
-			<div class="heading">{{ title }}</div>
+            {% if title %}
+			<h1>{{ title }}</h1>
+            {% endif %}
 
 			{% block content %}
 			{% endblock %}
