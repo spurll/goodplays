@@ -21,6 +21,7 @@ table {
 
 th { font-variant: small-caps; }
 td { font-size: 85%; padding: 3px; }
+td.released { white-space: nowrap; }
 tfoot { font-weight: bold; font-variant: small-caps; }
 
 #content {

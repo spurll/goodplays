@@ -22,9 +22,9 @@
 		<tr id="{{ game.id }}">
 			<td class="art"><img class="art small" src="{{ game.image_url if game.image_url else url_for('static', filename='default.png') }}" /></td>
             <td class="name"><a href="{{ url_for('details', id=game.id) }}">{{ game.name }}</a></td>
-			<td class="released">{{ game.released | replace("-", "&#8209;") }}</td>
+			<td class="released">{{ game.released if game.released else "" }}</td>
 			<td class="platforms">{{ game.platforms | map(attribute="abbreviation") | join(", ") }}</td>
-			<td class="rating">{{ "&#9733" * round(game.rating) + "&#9734" * (5 - round(game.rating)) if game.rating else "" }}</td>
+			<td class="rating">{{ "&#9733" * round(game.rating) + "&#9734" * (5 - round(game.rating)) if game.rating else "" | safe }}</td>
 		</tr>
 		{% endfor %}
 	</tbody>
@@ -55,9 +55,9 @@
 		<tr id="{{ game.gb_id }}">
 			<td class="art"><img class="art small" src="{{ game.image_url if game.image_url else url_for('static', filename='default.png') }}" /></td>
             <td class="name"><a href="{{game.gb_url}}">{{ game.name }}</a></td>
-			<td class="released">{{ game.released | replace("-", "&#8209;") }}</td>
+			<td class="released">{{ game.released if game.released }}</td>
 			<td class="platforms">{{ game.platforms | map(attribute="abbreviation") | join(", ") }}</td>
-			<td class="rating">{{ "&#9733" * round(game.rating) + "&#9734" * (5 - round(game.rating)) if game.rating else "" }}</td>
+			<td class="rating">{{ "&#9733" * round(game.rating) + "&#9734" * (5 - round(game.rating)) if game.rating else "" | safe }}</td>
             <td class="add"><a href="{{ url_for('add', gb_id=game.gb_id) }}">Add</a></td>
 		</tr>
 		{% endfor %}
