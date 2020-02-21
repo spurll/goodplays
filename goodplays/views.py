@@ -11,7 +11,8 @@ from goodplays import controller
 @app.route('/')
 @app.route('/index')
 def index():
-    return redirect(url_for('plays' if current_user else 'games'))
+    logged_in = current_user.is_authenticated;
+    return redirect(url_for('plays' if logged_in else 'games'))
 
 
 # TODO: Maybe games not linked to Giant Bomb can only be viewed by the user
@@ -24,6 +25,11 @@ def index():
 
 # TODO: on platform details page, "Update" button (for platforms with a gb_id)
 
+# TODO: NEXT NEXT NEXT
+# Ability to ADD A PLAY on the Details page
+# Released date not importing from GB correctly?
+# Remove "Add" button in search if it's already added!
+
 
 @app.route('/search')
 def search():
@@ -31,8 +37,6 @@ def search():
     Search the DB for a game.
     """
     query = request.args.get('query')
-
-    # TODO add a default.png in static/ with a question mark icon
 
     g = controller.search(query)
     gb = list(controller.search_gb(query))
@@ -93,14 +97,13 @@ def plays():
 
 
 @app.route('/details/<id>')
-def details():
+def details(id):
     """
-    Shows the 10 most recent games added to the DB. (Or to GiantBomb's DB?
-    Maybe set up a daily task to update this DB? It'll get big...)
+    Displays a game's details page.
     """
-    g = controller.game(id)
+    game = controller.game(id)
 
-    if not g:
+    if not game:
         flash(f"Unable to find game with ID {id}.")
         return redirect(url_for('index'))
 
@@ -110,10 +113,11 @@ def details():
         user=current_user,
         game=game,
         plays=(
-            user.plays
+            current_user.plays
                 .filter_by(game_id=game.id).order_by()
                 .order_by(Play.started.desc())
                 .all()
+            if current_user.is_authenticated else None
         )
     )
 
@@ -130,7 +134,7 @@ def add(gb_id):
         flash(f'No game with ID {gb_id} was found in Giant Bomb\'s database.')
         return redirect(url_for('games'))
 
-    return redirect(url_for('details', game=game.id))
+    return redirect(url_for('details', id=game.id))
 
 
 @app.route('/login', methods=['GET', 'POST'])

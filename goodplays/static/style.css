@@ -1,104 +1,112 @@
 body {
-	font-family: serif;
-	color: #ffffff;
-	background-color: #222222;
-	overflow-y: auto;
-	margin: 0px;
+    font-family: serif;
+    color: #ffffff;
+    background-color: #222222;
+    overflow-y: auto;
+    margin: 0px;
 }
 
 p {
-	margin: 5px;
-	text-align: center;
+    margin: 5px;
+    text-align: center; 
+}
+
+p.info {
+    margin-bottom: 10px;
+    text-align: left;
 }
 
 table {
-	width: 100%;
-	margin-top: 5px;
-	margin-bottom: 10px;
-	border: 0px;
-	border-spacing: 0px;
+    width: 100%;
+    margin-top: 5px;
+    margin-bottom: 10px;
+    border: 0px;
+    border-spacing: 0px;
 }
 
+td { font-size: 85%; padding: 5px; }
 th { font-variant: small-caps; }
-td { font-size: 85%; padding: 3px; }
-td.released { white-space: nowrap; }
 tfoot { font-weight: bold; font-variant: small-caps; }
 
 #content {
-	width: 100%;
-	max-width: 700px;
-	margin: auto;
-	padding-top: 10px;
+    width: 100%;
+    max-width: 700px;
+    margin: auto;
+    padding-top: 10px;
 }
 
 #title-buffer {
-	width: 100%;
-	height: 52px;
-	top: 0px;
-	position: static;
+    width: 100%;
+    height: 52px;
+    top: 0px;
+    position: static;
 }
 
 #title-bar {
-	width: 100%;
-	top: 0px;
-	position: fixed;
-	background-color: #111111;
-	border-bottom: solid #444444;
+    width: 100%;
+    top: 0px;
+    position: fixed;
+    background-color: #111111;
+    border-bottom: solid #444444;
 }
 
 #title {
-	font-size: 150%;
-	padding: 10px 20px;
-	display: inline-block;
+    font-size: 150%;
+    padding: 10px 20px;
+    display: inline-block;
+}
+
+#title a {
+    color: #ffffff;
 }
 
 #search {
-	width: 700px;
-	margin: auto;
-	text-align: center;
+    width: 700px;
+    margin: auto;
+    text-align: center;
 }
 
 #user {
-	text-align: right;
-	padding: 10px 20px;
-	right: 0;
+    text-align: right;
+    padding: 10px 20px;
+    right: 0;
 }
 
 .center {
-	position: absolute;
-	left: 50%;
-	top: 50%;
-	transform: translate(-50%, -50%);
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
 }
 
 .center-vertical {
-	position: absolute;
-	top: 50%;
-	transform: translateY(-50%);
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
 }
 
 h1 {
-	font-variant: small-caps;
-	text-align: center;
-	font-size: 150%;
-	padding-top: 5px;
-	padding-bottom: 10px;
+    font-variant: small-caps;
+    text-align: center;
+    font-size: 150%;
+    padding-top: 5px;
+    padding-bottom: 10px;
 }
 
 h2 {
-	font-variant: small-caps;
-	text-align: center;
-	font-size: 125%;
-	padding-top: 5px;
-	padding-bottom: 10px;
+    font-variant: small-caps;
+    text-align: center;
+    font-size: 125%;
+    padding-top: 5px;
+    padding-bottom: 10px;
 }
 
 .small-screen {
-	width: auto;
-	margin: auto;
-	float: none;
-	text-align: center;
-	padding: 2px;
+    width: auto;
+    margin: auto;
+    float: none;
+    text-align: center;
+    padding: 2px;
 }
 
 .messages { font-style: italic; text-align: center; }
@@ -108,7 +116,18 @@ h2 {
 .section { padding-top: 5px; padding-bottom: 10px; }
 .login { max-width: 320px; margin: auto; }
 
-tr:nth-child(even) { background-color: #444444; border-color: #444444; }
+.footer {
+    padding-top: 20px;
+    text-align: center;
+    margin: auto;
+    clear: left;
+}
+
+tr:nth-child(even) { background-color: #303030; border-color: #303030; }
+
+td.released, td.started, td.finished { white-space: nowrap; }
+
+td.art { text-align: center; }
 
 td.empty { 
     background-color: #444444;
@@ -122,19 +141,28 @@ a:visited { text-decoration: none; color: #888888; }
 a:hover { text-decoration: none; color: #ffffff; }
 a:active { text-decoration: none; color: #888888; }
 
-img.art {
-	margin: auto;
-	max-height: 512px;
-	max-width: 512px;
+img.art:not(.small) {
+    margin-right: 20px;
+    float: left;
+    max-height: 256px;
+    max-width: 256px;
 }
 
 img.art.small {
-	max-height: 64px;
-	max-width: 64px;
+    max-height: 64px;
+    max-width: 64px;
+}
+
+object.gb-logo {
+    vertical-align: sub;
+}
+
+svg#gb-logo {
+    fill: white;
 }
 
 form {
-	margin: 0;
+    margin: 0;
 }
 
 input { color: #ffffff; background-color: transparent; border: solid 1px #444444; }
@@ -144,18 +172,21 @@ select { color: #ffffff; background-color: transparent; border: solid 1px #44444
 select option { background-color: #222222; }
 
 input[type="text"] {
-	width: 100%;
+    width: 100%;
 }
 
 input[type="password"] {
-	width: 100%;
+    width: 100%;
 }
 
 input[type="search"] {
-	width: 440;
+    width: 440;
 }
 
 input#search-submit {
-	width: 56px;
+    width: 56px;
 }
 
+p.info span.label {
+    font-weight: bold;
+}

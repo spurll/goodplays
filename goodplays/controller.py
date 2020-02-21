@@ -10,10 +10,6 @@ PAGE_SIZE = app.config.get('PAGE_SIZE', 20)
 GB = GiantBomb(app.config.get('GB_API_KEY'))
 
 
-# TODO: Display GB logo, link, and thanks on any page that displays GB content
-# (search results and game display, if there is a gb_url)
-
-
 def game(id):
     return Game.query.get(id)
 

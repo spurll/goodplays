@@ -2,9 +2,24 @@
 {% block content %}
 
 <div id="game">
-    ...
-    {{ game.platforms | map(attribute="abbreviation") | join(", ") }}
     <img class="art" src="{{ game.image_url if game.image_url else url_for('static', filename='default.png') }}" />
+    <p class="info">
+        <span>{{ game.description }}</span>
+    </p>
+    <p class="info">
+        <span class="label">Released:</span>
+        <span>{{ game.released }}</span>
+    </p>
+    <p class="info">
+        <span class="label">Platforms:</span>
+        <span>{{ game.platforms | map(attribute="name") | join(", ") }}</span>
+    </p>
+    {% if game.rating %}
+    <p class="info">
+        <span class="label">Rating:</span>
+        <span>{{ "&#9733" * round(game.rating) + "&#9734" * (5 - round(game.rating)) if game.rating else "" | safe }}</span>
+    </p>
+    {% endif %}
 </div>
 
 {% if plays %}
@@ -21,20 +36,22 @@
 	<tbody>
 		{% for play in plays %}
 		<tr id="{{ play.id }}">
-			<td class="started">{{ play.started | replace("-", "&#8209;") }}</td>
-            <td class="finished">{{ play.finished | replace("-", "&#8209;") }}</td>
+			<td class="started">{{ play.started }}</td>
+            <td class="finished">{{ play.finished }}</td>
             <td class="tags">{{ play.tags | join(", ") }}</td>
             <td class="comments">{{ play.comments }}</td>
-			<td class="rating">{{ "&#9733" * round(game.rating) + "&#9734" * (5 - round(game.rating)) if game.rating else "" }}</td>
+			<td class="rating">{{ "&#9733" * round(play.rating) + "&#9734" * (5 - round(play.rating)) if play.rating else "" | safe }}</td>
 		</tr>
 		{% endfor %}
 	</tbody>
 </table>
 {% endif %}
 
-<div>
-    <img id="gb-logo" src="{{ url_for('static', filename='gb.svg')}}" />
-    Some content on this page provided by <a href="https://www.giantbomb.com/">Giant Bomb</a> via their excellent <a href="https://www.giantbomb.com/api/">API</a>. Thanks!
+{% if game.gb_id %}
+<div class="footer">
+    <object class="gb-logo" type="image/svg+xml" data="{{ url_for('static', filename='gb.svg')}}">Giant Bomb Logo</object>
+    <span>Some content on this page provided by <a href="https://www.giantbomb.com/">Giant Bomb</a> via their excellent <a href="https://www.giantbomb.com/api/">API</a>. Thanks!</span>
 </div>
+{% endif %}
 
 {% endblock %}
