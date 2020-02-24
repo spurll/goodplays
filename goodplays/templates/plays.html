@@ -18,13 +18,20 @@
         </tr>
         {% endif %}
 
+        <!--
+            TODO: This is for plays, not games!
+            Show the box art, game name, started, completed, status, and rating,
+            with a link to the game details page
+            TODO: Fix colspan above, too!
+        -->
+
 		{% for game in games %}
 		<tr id="{{ game.id }}">
 			<td class="art"><img class="art small" src="{{ game.image_url if game.image_url else url_for('static', filename='default.png')}}" /></td>
 			<td class="name">{{ game.name }}</td>
 			<td class="added">{{ game.added }}</td>
-			<td class="platforms">{{ game.platforms|map(attribute="abbreviation")|join(", ") }}</td>
-			<td class="rating">{{ "&#9733" * round(game.rating) + "&#9734" * (5 - round(game.rating)) if game.rating else ""}}</td>
+			<td class="platforms">{{ game.platforms | map(attribute="abbreviation") | join(", ") }}</td>
+			<td class="rating">{{ game.stars | safe }}</td>
 		</tr>
 		{% endfor %}
 	</tbody>

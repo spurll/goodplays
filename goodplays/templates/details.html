@@ -28,27 +28,42 @@
     {% endif %}
 </div>
 
-{% if plays %}
+{% if user and user.is_authenticated %}
+<form id="add_form" action="{{ url_for('add_play') }}"></form>
+<form id="edit_form" action="{{ url_for('edit_play') }}"></form>
+
 <table id="plays">
 	<thead>
 		<tr>
 			<th class="started">Started</th>
 			<th class="finished">Finished</th>
+			<th class="status">Status</th>
 			<th class="tags">Tags</th>
 			<th class="comments">Comments</th>
 			<th class="rating">Rating</th>
 		</tr>
 	</thead>
 	<tbody>
+		<tr id="new-play">
+			<td class="started">{{ add_form.started(form="add_form") }}</td>
+            <td class="finished">{{ add_form.finished(form="add_form") }}</td>
+            <td class="status">{{ add_form.status(form="add_form") }}</td>
+            <td class="tags">{{ add_form.tags(form="add_form") }}</td>
+            <td class="comments">{{ add_form.comments(form="add_form") }}</td>
+			<td class="rating">{{ add_form.rating(form="add_form")}}</td>
+		</tr>
+        {% if plays %}
 		{% for play in plays %}
 		<tr id="{{ play.id }}">
 			<td class="started">{{ play.started }}</td>
             <td class="finished">{{ play.finished }}</td>
+            <td class="status">{{ play.status }}</td>
             <td class="tags">{{ play.tags | join(", ") }}</td>
             <td class="comments">{{ play.comments }}</td>
-			<td class="rating">{{ "&#9733" * round(play.rating) + "&#9734" * (5 - round(play.rating)) if play.rating else "" | safe }}</td>
+			<td class="rating">{{ play.stars | safe }}</td>
 		</tr>
 		{% endfor %}
+		{% endif %}
 	</tbody>
 </table>
 {% endif %}

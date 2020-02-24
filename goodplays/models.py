@@ -10,7 +10,7 @@ class Status(Enum):
     playing = 2
     placeholder = 3
     completed = 4
-    hundred_percent = 5
+    hundred = 5
     abandoned = 6
 
 
@@ -46,7 +46,7 @@ class User(db.Model):
         return self.id
 
     def __repr__(self):
-        return '<User {}>'.format(self.id)
+        return f'<User {self.id}>'
 
 
 # Configure many-to-many relationship without making a do-nothing class.
@@ -85,7 +85,7 @@ class Platform(db.Model):
     )
 
     def __repr__(self):
-        return '<Platform {}>'.format(self.name)
+        return f'<Platform {self.name}>'
 
 
 class Game(db.Model):
@@ -119,12 +119,17 @@ class Game(db.Model):
     @property
     def rating(self):
         plays = self.plays.all()
-        return sum(p.rating for p in plays) / len(plays) if plays else None
+        return None if not plays else \
+            sum(p.rating for p in plays) / sum(p.rating > 0 for p in plays)
+
+    @property
+    def stars(self):
+        return '' if not self.rating else \
+            '&#9733;' * (self.rating // 2) + '&#9734;' * (self.rating % 2)
 
     def __repr__(self):
-        return '<Game {}{}>'.format(
-            self.name, ' ({})'.format(self.year) if self.year else ''
-        )
+        year = f' ({self.year})' if self.year else ''
+        return f'<Game {self.name}{year}>'
 
 
 class Tag(db.Model):
@@ -139,7 +144,7 @@ class Tag(db.Model):
     )
 
     def __repr__(self):
-        return '<Tag {}>'.format(self.name)
+        return f'<Tag {self.name}>'
 
 
 class Play(db.Model):
@@ -159,5 +164,11 @@ class Play(db.Model):
     game_id = db.Column(db.Integer, db.ForeignKey('Game.id'))
     user_id = db.Column(db.Integer, db.ForeignKey('User.id'))
 
+    @property
+    def stars(self):
+        return '' if not self.rating else \
+            '&#9733;' * (self.rating // 2) + '&#9734;' * (self.rating % 2)
+
     def __repr__(self):
-        return '<Play {}>'.format(self.name)
+        return f'<Play {self.id}>'
+

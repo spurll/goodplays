@@ -24,7 +24,7 @@
             <td class="name"><a href="{{ url_for('details', id=game.id) }}">{{ game.name }}</a></td>
 			<td class="released">{{ game.released if game.released else "" }}</td>
 			<td class="platforms">{{ game.platforms | map(attribute="abbreviation") | join(", ") }}</td>
-			<td class="rating">{{ "&#9733" * round(game.rating) + "&#9734" * (5 - round(game.rating)) if game.rating else "" | safe }}</td>
+			<td class="rating">{{ game.stars | safe }}</td>
 		</tr>
 		{% endfor %}
 	</tbody>
@@ -47,7 +47,7 @@
 	<tbody>
         {% if not giantbomb %}
 		<tr>
-            <td class="empty" colspan="5">No games found!</td>
+            <td class="empty" colspan="6">No games found!</td>
         </tr>
         {% endif %}
 
@@ -57,7 +57,7 @@
             <td class="name"><a href="{{game.gb_url}}">{{ game.name }}</a></td>
 			<td class="released">{{ game.released if game.released }}</td>
 			<td class="platforms">{{ game.platforms | map(attribute="abbreviation") | join(", ") }}</td>
-			<td class="rating">{{ "&#9733" * round(game.rating) + "&#9734" * (5 - round(game.rating)) if game.rating else "" | safe }}</td>
+			<td class="rating">{{ game.stars | safe }}</td>
             <td class="add"><a href="{{ url_for('add', gb_id=game.gb_id) }}">Add</a></td>
 		</tr>
 		{% endfor %}

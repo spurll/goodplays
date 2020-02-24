@@ -2,7 +2,7 @@ from flask import render_template, flash, redirect, session, url_for, request
 from flask_login import login_user, logout_user, current_user, login_required
 
 from goodplays import app, db, lm
-from goodplays.forms import LoginForm
+from goodplays.forms import LoginForm, AddPlayForm, EditPlayForm
 from goodplays.models import User, Game, Platform, Play, Tag
 from goodplays.authenticate import authenticate
 from goodplays import controller
@@ -22,6 +22,7 @@ def index():
 
 # TODO: NEXT NEXT NEXT
 # Ability to ADD A PLAY on the Details page
+# Abiltiy to EDIT A PLAY on the Details page
 # Remove "Add" button in search if it's already added!
 
 
@@ -106,6 +107,8 @@ def details(id):
         title=game.name,
         user=current_user,
         game=game,
+        add_form=AddPlayForm(),
+        edit_form=EditPlayForm(),
         plays=(
             current_user.plays
                 .filter_by(game_id=game.id).order_by()
@@ -129,6 +132,28 @@ def add(gb_id):
         return redirect(url_for('games'))
 
     return redirect(url_for('details', id=game.id))
+
+
+@app.route('/add-play', methods=['POST'])
+@login_required
+def add_play():
+    """
+    Adds a play.
+    """
+    # TODO
+    pass
+    #return redirect(url_for('details', id=play.game.id))
+
+
+@app.route('/edit-play', methods=['POST'])
+@login_required
+def edit_play():
+    """
+    Edits a play.
+    """
+    # TODO
+    pass
+    #return redirect(url_for('details', id=play.game.id))
 
 
 @app.route('/update/<id>')
@@ -166,7 +191,7 @@ def login():
         user, message = authenticate(form.username.data, form.password.data)
 
         if not user:
-            flash('Login failed: {}.'.format(message))
+            flash(f'Login failed: {message}.')
             return render_template(
                 'login.html', title='Log In', form=form, hide_user=True
             )
