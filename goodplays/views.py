@@ -18,16 +18,10 @@ def index():
 # TODO: Maybe games not linked to Giant Bomb can only be viewed by the user
 # who added them?
 
-# TODO: on game details page, "Update" button (for games linked with Giant
-# Bomb)
-
 # TODO: if game not linked to Giant Bomb, a button to link it
-
-# TODO: on platform details page, "Update" button (for platforms with a gb_id)
 
 # TODO: NEXT NEXT NEXT
 # Ability to ADD A PLAY on the Details page
-# Released date not importing from GB correctly?
 # Remove "Add" button in search if it's already added!
 
 
@@ -132,6 +126,22 @@ def add(gb_id):
 
     if not game:
         flash(f'No game with ID {gb_id} was found in Giant Bomb\'s database.')
+        return redirect(url_for('games'))
+
+    return redirect(url_for('details', id=game.id))
+
+
+@app.route('/update/<id>')
+@login_required
+def update(id):
+    """
+    Updates a game with data from Giant Bomb.
+    """
+    game = controller.game(id)
+    controller.update_game(game)
+
+    if not game:
+        flash(f'Unable to update game with ID {id}.')
         return redirect(url_for('games'))
 
     return redirect(url_for('details', id=game.id))

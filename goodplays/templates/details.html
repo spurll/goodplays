@@ -8,7 +8,7 @@
     </p>
     <p class="info">
         <span class="label">Released:</span>
-        <span>{{ game.released }}</span>
+        <span>{{ game.released if game.released else "Unknown" }}</span>
     </p>
     <p class="info">
         <span class="label">Platforms:</span>
@@ -18,6 +18,12 @@
     <p class="info">
         <span class="label">Rating:</span>
         <span>{{ "&#9733" * round(game.rating) + "&#9734" * (5 - round(game.rating)) if game.rating else "" | safe }}</span>
+    </p>
+    {% endif %}
+    {% if game.gb_id %}
+    <p class="info">
+        <span><a class="button" href="{{ url_for('update', id=game.id) }}">Update Details</a></span>
+        <span><a class="button" href="{{ game.gb_url }}">View on Giant Bomb</a></span>
     </p>
     {% endif %}
 </div>

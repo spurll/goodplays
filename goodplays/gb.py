@@ -23,6 +23,7 @@ GAME_FIELDS = [
     'expected_release_day',
     'expected_release_month',
     'expected_release_year',
+    'original_release_date',
 ]
 
 PLATFORM_FIELDS = [

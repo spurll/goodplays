@@ -52,18 +52,10 @@ def parse_gb_game(gb):
     # (Edit: Turns out that so long as it's all in one session, which it seems
     # to be, this works fine!)
 
-    released = date(
-        gb['expected_release_year'],
-        gb['expected_release_month'],
-        gb['expected_release_day']) if (
-            gb.get('expected_release_day') and
-            gb.get('expected_release_month') and
-            gb.get('expected_release_year')) else None
-
     return Game(
         name=gb.get('name'),
         description=gb.get('deck'),
-        released=released,
+        released=release_date(gb),
         gb_id=gb.get('id'),
         gb_url=gb.get('site_detail_url'),
         image_url=gb.get('image', {}).get('small_url'),
@@ -243,6 +235,7 @@ def new_play(user, **fields):
 
 
 def edit_game():
+    # TODO
     pass
 
 
@@ -276,8 +269,24 @@ def update_game(game):
     """
     Update a game by fetching its data from the Giant Bomb database.
     """
-    # TODO
-    pass
+    gb, error = GB.game(game.gb_id)
+
+    if error:
+        print(error)
+        return
+
+    platforms = map(existing_or_parse_platform, gb.get('platforms') or {})
+
+    game.name = gb.get('name') or game.name
+    game.description = gb.get('deck') or game.description
+    game.released = release_date(gb) or game.released
+    game.gb_url = gb.get('site_detail_url') or game.gb_url
+    game.image_url = gb.get('image', {}).get('small_url') or game.image_url
+    game.platforms = platforms or game.platforms
+
+    db.session.commit()
+
+    return game
 
 
 def update_platform(platform):
@@ -306,3 +315,18 @@ def play_details(id):
 def tag():
     # TODO
     pass
+
+
+def release_date(gb):
+    if gb.get('original_release_date'):
+        return datetime.strptime(
+            gb['original_release_date'], '%Y-%m-%d').date()
+
+    return date(
+        gb['expected_release_year'],
+        gb['expected_release_month'],
+        gb['expected_release_day']) if (
+            gb.get('expected_release_day') and
+            gb.get('expected_release_month') and
+            gb.get('expected_release_year')) else None
+

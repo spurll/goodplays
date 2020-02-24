@@ -136,10 +136,24 @@ td.empty {
     font-weight: bold;
 }
 
-a:link { text-decoration: none; color: #888888; }
-a:visited { text-decoration: none; color: #888888; }
-a:hover { text-decoration: none; color: #ffffff; }
-a:active { text-decoration: none; color: #888888; }
+a:link, a:visited, a:active {
+    text-decoration: none;
+    color: #888888;
+}
+
+a:hover {
+    text-decoration: none;
+    color: #ffffff;
+}
+
+a.button {
+    border: 1px solid #888888;
+    padding: 3px 5px;
+}
+
+a.button:hover {
+    border: 1px solid #ffffff;
+}
 
 img.art:not(.small) {
     margin-right: 20px;
@@ -165,9 +179,9 @@ form {
     margin: 0;
 }
 
-input { color: #ffffff; background-color: transparent; border: solid 1px #444444; }
+input { color: #ffffff; background-color: transparent; border: solid 1px #888888; }
 
-select { color: #ffffff; background-color: transparent; border: solid 1px #444444; }
+select { color: #ffffff; background-color: transparent; border: solid 1px #888888; }
 
 select option { background-color: #222222; }
 
@@ -181,10 +195,12 @@ input[type="password"] {
 
 input[type="search"] {
     width: 440;
+    padding: 4px 5px;
 }
 
-input#search-submit {
+a#search-submit {
     width: 56px;
+    vertical-align: middle;
 }
 
 p.info span.label {
