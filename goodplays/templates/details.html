@@ -1,6 +1,43 @@
 {% extends "base.html" %}
 {% block content %}
 
+<script type=text/javascript>
+    $(document).ready(() => {
+        // Enable JQuery UI's date picker.
+        $(".started input").datepicker({dateFormat: "yy-mm-dd"});
+        $(".finished input").datepicker({dateFormat: "yy-mm-dd"});
+
+        /*
+        // Attach functions to form buttons.
+        $('#submit_current').on('click', addCurrent);
+        $('#reset_current').on('click', function() { $('#current_form')[0].reset(); });
+        $('#submit_future').on('click', addFuture);
+        $('#reset_future').on('click', function() { $('#future_form')[0].reset(); });
+
+        // Override form submission (and prevent binding multiple copies of the event listener).
+        // Could probably use JQuery's .one instead of .on to make this simpler...
+        $("#current_form:not(.bound)").addClass("bound").submit(function(e) {
+            addCurrent();
+            return false;
+        });
+        $("#future_form:not(.bound)").addClass("bound").submit(function(e) {
+            addFuture();
+            return false;
+        });
+        */
+
+        // Submit on enter, reset on escape (and prevent binding multiple copies of the event listener)
+        $("#add_form input:not(.bound)").addClass("bound").keydown((e) => {
+            if (e.keyCode == 13) {
+                $('#add_form').submit();
+            }
+            else if (e.keyCode == 27) {
+                $('#add_form')[0].reset();
+            }
+        });
+    })
+</script>
+
 <div id="game">
     <img class="art" src="{{ game.image_url if game.image_url else url_for('static', filename='default.png') }}" />
     <p class="info">
@@ -33,38 +70,44 @@
 <form id="edit_form" action="{{ url_for('edit_play') }}"></form>
 
 <table id="plays">
-	<thead>
-		<tr>
-			<th class="started">Started</th>
-			<th class="finished">Finished</th>
-			<th class="status">Status</th>
-			<th class="tags">Tags</th>
-			<th class="comments">Comments</th>
-			<th class="rating">Rating</th>
-		</tr>
-	</thead>
-	<tbody>
-		<tr id="new-play">
-			<td class="started">{{ add_form.started(form="add_form") }}</td>
+    <thead>
+        <tr>
+            <th class="started">Started</th>
+            <th class="finished">Finished</th>
+            <th class="status">Status</th>
+            <th class="tags">Tags</th>
+            <th class="comments">Comments</th>
+            <th class="rating">Rating</th>
+            <th class="icon"></th>
+            <th class="icon"></th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr id="new-play">
+            <td class="started">{{ add_form.started(form="add_form") }}</td>
             <td class="finished">{{ add_form.finished(form="add_form") }}</td>
             <td class="status">{{ add_form.status(form="add_form") }}</td>
             <td class="tags">{{ add_form.tags(form="add_form") }}</td>
             <td class="comments">{{ add_form.comments(form="add_form") }}</td>
-			<td class="rating">{{ add_form.rating(form="add_form")}}</td>
-		</tr>
+            <td class="rating">{{ add_form.rating(form="add_form")}}</td>
+            <td class="icon"><a id="submit_add" href="#" onclick="$('#add_form').submit()"><img class="icon" src="{{url_for('static', filename='save.png')}}" title="Save" /></a></td>
+            <td class="icon"><a id="clear_add" href="#" onclick="$('#add_form')[0].reset()"><img class="icon" src="{{url_for('static', filename='delete.png')}}" title="Clear" /></a></td>
+        </tr>
         {% if plays %}
-		{% for play in plays %}
-		<tr id="{{ play.id }}">
-			<td class="started">{{ play.started }}</td>
+        {% for play in plays %}
+        <tr id="{{ play.id }}">
+            <td class="started">{{ play.started }}</td>
             <td class="finished">{{ play.finished }}</td>
             <td class="status">{{ play.status }}</td>
             <td class="tags">{{ play.tags | join(", ") }}</td>
             <td class="comments">{{ play.comments }}</td>
-			<td class="rating">{{ play.stars | safe }}</td>
-		</tr>
-		{% endfor %}
-		{% endif %}
-	</tbody>
+            <td class="rating">{{ play.stars | safe }}</td>
+            <td class="icon"></td>
+            <td class="icon"></td>
+        </tr>
+        {% endfor %}
+        {% endif %}
+    </tbody>
 </table>
 {% endif %}
 

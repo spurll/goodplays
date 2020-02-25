@@ -20,10 +20,18 @@ def index():
 
 # TODO: if game not linked to Giant Bomb, a button to link it
 
+# TODO: Remove "Add" button in search if it's already added!
+# Frustratingly difficult to do, since we're using DB models for all.
+# Could restructure our models, or add a "shadow" model with the same interface
+
+# TODO: Can delete a game if you're logged in and the game has no plays
+
 # TODO: NEXT NEXT NEXT
 # Ability to ADD A PLAY on the Details page
 # Abiltiy to EDIT A PLAY on the Details page
-# Remove "Add" button in search if it's already added!
+# Ability to DELETE A PLAY on the Details page
+# Entering a start date flips status to Playing
+# ...entering an end date flips status to Completed
 
 
 @app.route('/search')

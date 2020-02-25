@@ -2,70 +2,70 @@
 {% block content %}
 
 <table id="games">
-	<thead>
-		<tr>
-			<th class="art"></th>
-			<th class="name">Name</th>
-			<th class="released">Released</th>
-			<th class="platforms">Platforms</th>
-			<th class="rating">Rating</th>
-		</tr>
-	</thead>
-	<tbody>
+    <thead>
+        <tr>
+            <th class="art"></th>
+            <th class="name">Name</th>
+            <th class="released">Released</th>
+            <th class="platforms">Platforms</th>
+            <th class="rating">Rating</th>
+        </tr>
+    </thead>
+    <tbody>
         {% if not games %}
-		<tr>
+        <tr>
             <td class="empty" colspan="5">No games found!</td>
         </tr>
         {% endif %}
 
-		{% for game in games %}
-		<tr id="{{ game.id }}">
-			<td class="art"><img class="art small" src="{{ game.image_url if game.image_url else url_for('static', filename='default.png') }}" /></td>
-            <td class="name"><a href="{{ url_for('details', id=game.id) }}">{{ game.name }}</a></td>
-			<td class="released">{{ game.released if game.released else "" }}</td>
-			<td class="platforms">{{ game.platforms | map(attribute="abbreviation") | join(", ") }}</td>
-			<td class="rating">{{ game.stars | safe }}</td>
-		</tr>
-		{% endfor %}
-	</tbody>
+        {% for game in games %}
+        <tr id={{ game.id }}>
+            <td class="art"><img class="art small" src={{ game.image_url if game.image_url else url_for('static', filename='default.png') }} /></td>
+            <td class="name"><a href={{ url_for('details', id=game.id) }}>{{ game.name }}</a></td>
+            <td class="released">{{ game.released if game.released else "" }}</td>
+            <td class="platforms">{{ game.platforms | map(attribute="abbreviation") | join(", ") }}</td>
+            <td class="rating">{{ game.stars | safe }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
 </table>
 
 {% if giantbomb %}
 <h1>Giant Bomb</h1>
 
 <table id="giantbomb">
-	<thead>
-		<tr>
-			<th class="art"></th>
-			<th class="name">Name</th>
-			<th class="released">Released</th>
-			<th class="platforms">Platforms</th>
-			<th class="rating">Rating</th>
-			<th class="add"></th>
-		</tr>
-	</thead>
-	<tbody>
+    <thead>
+        <tr>
+            <th class="art"></th>
+            <th class="name">Name</th>
+            <th class="released">Released</th>
+            <th class="platforms">Platforms</th>
+            <th class="rating">Rating</th>
+            <th class="add"></th>
+        </tr>
+    </thead>
+    <tbody>
         {% if not giantbomb %}
-		<tr>
+        <tr>
             <td class="empty" colspan="6">No games found!</td>
         </tr>
         {% endif %}
 
-		{% for game in giantbomb %}
-		<tr id="{{ game.gb_id }}">
-			<td class="art"><img class="art small" src="{{ game.image_url if game.image_url else url_for('static', filename='default.png') }}" /></td>
-            <td class="name"><a href="{{game.gb_url}}">{{ game.name }}</a></td>
-			<td class="released">{{ game.released if game.released }}</td>
-			<td class="platforms">{{ game.platforms | map(attribute="abbreviation") | join(", ") }}</td>
-			<td class="rating">{{ game.stars | safe }}</td>
-            <td class="add"><a href="{{ url_for('add', gb_id=game.gb_id) }}">Add</a></td>
-		</tr>
-		{% endfor %}
-	</tbody>
+        {% for game in giantbomb %}
+        <tr id={{ game.gb_id }}>
+            <td class="art"><img class="art small" src={{ game.image_url if game.image_url else url_for('static', filename='default.png') }} /></td>
+            <td class="name"><a href={{ game.gb_url }}>{{ game.name }}</a></td>
+            <td class="released">{{ game.released if game.released }}</td>
+            <td class="platforms">{{ game.platforms | map(attribute="abbreviation") | join(", ") }}</td>
+            <td class="rating">{{ game.stars | safe }}</td>
+            <td class="add"><a href={{ url_for('add', gb_id=game.gb_id) }}><img class="icon" src={{ url_for('static', filename='add.png') }} title="Import from Giant Bomb" /></a></td>
+        </tr>
+        {% endfor %}
+    </tbody>
 </table>
 
 <div class="footer">
-    <object class="gb-logo" type="image/svg+xml" data="{{ url_for('static', filename='gb.svg')}}">Giant Bomb Logo</object>
+    <object class="gb-logo" type="image/svg+xml" data={{ url_for('static', filename='gb.svg')}}>Giant Bomb Logo</object>
     <span>Some content on this page provided by <a href="https://www.giantbomb.com/">Giant Bomb</a> via their excellent <a href="https://www.giantbomb.com/api/">API</a>. Thanks!</span>
 </div>
 {% endif %}

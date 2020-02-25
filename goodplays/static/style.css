@@ -24,9 +24,23 @@ table {
     border-spacing: 0px;
 }
 
+table#plays {
+    padding-top: 10px;
+}
+
+table.ui-datepicker-calendar th {
+    color: #000000;
+}
+
+table:not(.ui-datepicker-calendar) tr:nth-child(even) { background-color: #444444; border-color: #444444; }
+
 td { font-size: 85%; padding: 5px; }
 th { font-variant: small-caps; }
 tfoot { font-weight: bold; font-variant: small-caps; }
+
+.ui-datepicker { background-color: #111111; }
+.ui-state-highlight { background-color: #dddddd !important; border-color: #000000 !important; color: #000000 !important; }
+.ui-state-active { background-color: #888888 !important; border-color: #000000 !important; color: #ffffff !important; }
 
 #content {
     width: 100%;
@@ -123,7 +137,10 @@ h2 {
     clear: left;
 }
 
-tr:nth-child(even) { background-color: #303030; border-color: #303030; }
+table:not(.ui-datepicker-calendar) tr:nth-child(even) {
+    background-color: #303030;
+    border-color: #303030;
+}
 
 td.released, td.started, td.finished { white-space: nowrap; }
 
@@ -165,6 +182,11 @@ img.art:not(.small) {
 img.art.small {
     max-height: 64px;
     max-width: 64px;
+}
+
+img.icon {
+    width: 24px;
+    height: 24px;
 }
 
 object.gb-logo {

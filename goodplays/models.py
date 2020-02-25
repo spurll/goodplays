@@ -124,8 +124,8 @@ class Game(db.Model):
 
     @property
     def stars(self):
-        return '' if not self.rating else \
-            '&#9733;' * (self.rating // 2) + '&#9734;' * (self.rating % 2)
+        return u'\u2605' * round(self.rating / 2) + \
+            u'\u2606' * round(5 - self.rating / 2) if self.rating else ''
 
     def __repr__(self):
         year = f' ({self.year})' if self.year else ''
@@ -166,8 +166,8 @@ class Play(db.Model):
 
     @property
     def stars(self):
-        return '' if not self.rating else \
-            '&#9733;' * (self.rating // 2) + '&#9734;' * (self.rating % 2)
+        return u'\u2605' * round(self.rating / 2) + \
+            u'\u2606' * round(5 - self.rating / 2) if self.rating else ''
 
     def __repr__(self):
         return f'<Play {self.id}>'

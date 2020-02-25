@@ -53,7 +53,7 @@ Written by Gem Newman. [Website](http://spurll.com) | [GitHub](https://github.co
 
 This work is licensed under Creative Commons [BY-SA 4.0](http://creativecommons.org/licenses/by-sa/4.0/).
 
-JQuery included under the [MIT "Expat" License](https://opensource.org/licenses/MIT).
+JQuery and JQuery UI elements included under the [MIT "Expat" License](https://opensource.org/licenses/MIT).
 
 Search makes use of [Giant Bomb's API](https://www.giantbomb.com/api/). Thanks, [Giant Bomb](https://www.giantbomb.com/)!
 
