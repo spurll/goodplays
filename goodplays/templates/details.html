@@ -3,31 +3,17 @@
 
 <script type=text/javascript>
     $(document).ready(() => {
+        const inputs = $("tr#new-play input");
+        const dates = $(".started input,.finished input");
+        const started = $("tr#new-play .started input");
+        const finished = $("tr#new-play .finished input");
+        const status = $("tr#new-play .status select");
+
         // Enable JQuery UI's date picker.
-        $(".started input").datepicker({dateFormat: "yy-mm-dd"});
-        $(".finished input").datepicker({dateFormat: "yy-mm-dd"});
-
-        /*
-        // Attach functions to form buttons.
-        $('#submit_current').on('click', addCurrent);
-        $('#reset_current').on('click', function() { $('#current_form')[0].reset(); });
-        $('#submit_future').on('click', addFuture);
-        $('#reset_future').on('click', function() { $('#future_form')[0].reset(); });
-
-        // Override form submission (and prevent binding multiple copies of the event listener).
-        // Could probably use JQuery's .one instead of .on to make this simpler...
-        $("#current_form:not(.bound)").addClass("bound").submit(function(e) {
-            addCurrent();
-            return false;
-        });
-        $("#future_form:not(.bound)").addClass("bound").submit(function(e) {
-            addFuture();
-            return false;
-        });
-        */
+        dates.datepicker({dateFormat: "yy-mm-dd"});
 
         // Submit on enter, reset on escape (and prevent binding multiple copies of the event listener)
-        $("#add_form input:not(.bound)").addClass("bound").keydown((e) => {
+        inputs.keydown((e) => {
             if (e.keyCode == 13) {
                 $('#add_form').submit();
             }
@@ -35,6 +21,31 @@
                 $('#add_form')[0].reset();
             }
         });
+
+        // When started is set, automatically set status to "Playing"
+        started.change((e) => {
+            if (started.val() && status.val() === "interested") {
+                status.val("playing");
+            }
+        });
+
+        // When finished is set, automatically set status to "Completed"
+        finished.change((e) => {
+            if (finished.val() && status.val() !== "hundred") {
+                status.val("completed");
+            }
+        });
+
+        function edit(id) {
+        }
+
+        function delete(id) {
+            if (!window.confirm('Delete this record?')) {
+                return false;
+            }
+
+            window.location.href = `{{ url_for('delete_play') }}?id={id}`
+        }
     })
 </script>
 
@@ -54,7 +65,7 @@
     {% if game.rating %}
     <p class="info">
         <span class="label">Rating:</span>
-        <span>{{ "&#9733" * round(game.rating) + "&#9734" * (5 - round(game.rating)) if game.rating else "" | safe }}</span>
+        <span>{{ game.stars }}</span>
     </p>
     {% endif %}
     {% if game.gb_id %}
@@ -66,8 +77,8 @@
 </div>
 
 {% if user and user.is_authenticated %}
-<form id="add_form" action="{{ url_for('add_play') }}"></form>
-<form id="edit_form" action="{{ url_for('edit_play') }}"></form>
+<form id="add_form" action="{{ url_for('add_play', game_id=game.id) }}" method="POST">{{ add_form.csrf_token }}</form>
+<form id="edit_form" action="{{ url_for('edit_play') }}" method="POST">{{ edit_form.csrf_token }}</form>
 
 <table id="plays">
     <thead>
@@ -96,14 +107,14 @@
         {% if plays %}
         {% for play in plays %}
         <tr id="{{ play.id }}">
-            <td class="started">{{ play.started }}</td>
-            <td class="finished">{{ play.finished }}</td>
+            <td class="started">{{ play.started if play.started else "" }}</td>
+            <td class="finished">{{ play.finished if play.finished else "" }}</td>
             <td class="status">{{ play.status }}</td>
             <td class="tags">{{ play.tags | join(", ") }}</td>
             <td class="comments">{{ play.comments }}</td>
-            <td class="rating">{{ play.stars | safe }}</td>
-            <td class="icon"></td>
-            <td class="icon"></td>
+            <td class="rating">{{ play.stars }}</td>
+            <td class="icon"><a id="edit_{{ play.id }}" href="#" onclick="edit({{ play.id }})"><img class="icon" src="{{url_for('static', filename='edit.png')}}" title="Edit" /></a></td>
+            <td class="icon"><a id="delete_{{ play.id }}" href="#" onclick="delete({{ play.id }})"><img class="icon" src="{{url_for('static', filename='delete.png')}}" title="Delete" /></a></td>
         </tr>
         {% endfor %}
         {% endif %}

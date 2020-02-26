@@ -26,6 +26,19 @@ def platforms():
     return Platform.query.all()
 
 
+def tags():
+    return Tag.query.all()
+
+
+def map_tags(names):
+    return [
+        Tag.query.filter_by(name=name.strip().lower()).one_or_none()
+        or Tag(name=name.strip().lower())
+        for name in names
+        if name.strip().lower()
+    ]
+
+
 def existing_or_parse_game(gb):
     existing = Game.query.filter_by(gb_id=gb.get('id')).one_or_none()
     return existing if existing else parse_gb_game(gb)
@@ -232,6 +245,11 @@ def new_play(user, **fields):
     db.session.add(user)
     db.session.commit()
     return play
+
+
+def delete_play(play):
+    db.session.delete(play)
+    db.session.commit()
 
 
 def edit_game():

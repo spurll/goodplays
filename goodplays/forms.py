@@ -1,7 +1,7 @@
 from flask_wtf import FlaskForm
 from wtforms import TextField, BooleanField, HiddenField, PasswordField, DateField, SelectField
 from wtforms.fields.html5 import IntegerField
-from wtforms.validators import Required, NumberRange
+from wtforms.validators import Required, NumberRange, Optional
 
 from goodplays.models import Status
 
@@ -13,18 +13,12 @@ class LoginForm(FlaskForm):
 
 
 class AddPlayForm(FlaskForm):
-    started = DateField('Started')
-    finished = DateField('Finished')
-    status = SelectField('Status', choices=[
-        (Status.interested, 'Interested'),
-        (Status.playing, 'Playing'),
-        (Status.completed, 'Completed'),
-        (Status.hundred, '100%'),
-        (Status.abandoned, 'Abandoned'),
-    ])
+    started = DateField('Started', format='%Y-%m-%d', validators=[Optional()])
+    finished = DateField('Finished', format='%Y-%m-%d', validators=[Optional()])
+    status = SelectField('Status', coerce=Status.coerce, choices=Status.choices())
     tags = TextField('Tags')
     comments = TextField('Comments')
-    rating = SelectField('Rating', choices=[
+    rating = SelectField('Rating', coerce=int, choices=[
         (0, ''),
         (2, u'\u2605' + u'\u2606' * 4),
         (4, u'\u2605' * 2 + u'\u2606' * 3),
@@ -36,18 +30,12 @@ class AddPlayForm(FlaskForm):
 
 class EditPlayForm(FlaskForm):
     id = HiddenField('ID', validators=[Required()])
-    started = DateField('Started')
-    finished = DateField('Finished')
-    status = SelectField('Status', choices=[
-        (Status.interested, 'Interested'),
-        (Status.playing, 'Playing'),
-        (Status.completed, 'Completed'),
-        (Status.hundred, '100%'),
-        (Status.abandoned, 'Abandoned'),
-    ])
+    started = DateField('Started', format='%Y-%m-%d', validators=[Optional()])
+    finished = DateField('Finished', format='%Y-%m-%d', validators=[Optional()])
+    status = SelectField('Status', coerce=Status.coerce, choices=Status.choices())
     tags = TextField('Tags')
     comments = TextField('Comments')
-    rating = SelectField('Rating', choices=[
+    rating = SelectField('Rating', coerce=int, choices=[
         (0, ''),
         (2, u'\u2605' + u'\u2606' * 4),
         (4, u'\u2605' * 2 + u'\u2606' * 3),

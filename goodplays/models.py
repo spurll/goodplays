@@ -13,6 +13,24 @@ class Status(Enum):
     hundred = 5
     abandoned = 6
 
+    @classmethod
+    def choices(cls):
+        return [
+            (cls.interested, 'Interested'),
+            (cls.playing, 'Playing'),
+            (cls.completed, 'Completed'),
+            (cls.hundred, '100%'),
+            (cls.abandoned, 'Abandoned'),
+        ]
+
+    @classmethod
+    def coerce(cls, item):
+        return item if isinstance(item, cls) else \
+            cls[item] if item is not None else None
+
+    def __str__(self):
+        return str(self.name)
+
 
 class User(db.Model):
     __tablename__ = 'User'
@@ -118,9 +136,8 @@ class Game(db.Model):
 
     @property
     def rating(self):
-        plays = self.plays.all()
-        return None if not plays else \
-            sum(p.rating for p in plays) / sum(p.rating > 0 for p in plays)
+        plays = self.plays.filter(Play.rating > 0).all()
+        return None if not plays else sum(p.rating for p in plays) / len(plays)
 
     @property
     def stars(self):

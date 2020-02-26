@@ -3,7 +3,7 @@ from flask_login import login_user, logout_user, current_user, login_required
 
 from goodplays import app, db, lm
 from goodplays.forms import LoginForm, AddPlayForm, EditPlayForm
-from goodplays.models import User, Game, Platform, Play, Tag
+from goodplays.models import User, Game, Platform, Play, Tag, Status
 from goodplays.authenticate import authenticate
 from goodplays import controller
 
@@ -26,12 +26,13 @@ def index():
 
 # TODO: Can delete a game if you're logged in and the game has no plays
 
+# TODO: Whenever tags are displayed, they're links! click on a link to bring up
+# all games that have plays that have been tagged with that tag?
+
 # TODO: NEXT NEXT NEXT
-# Ability to ADD A PLAY on the Details page
-# Abiltiy to EDIT A PLAY on the Details page
-# Ability to DELETE A PLAY on the Details page
-# Entering a start date flips status to Playing
-# ...entering an end date flips status to Completed
+# Ability to DELETE A PLAY on the Details page (broken)
+# Abiltiy to EDIT A PLAY on the Details page (not implemented)
+# Tags not working?
 
 
 @app.route('/search')
@@ -117,13 +118,10 @@ def details(id):
         game=game,
         add_form=AddPlayForm(),
         edit_form=EditPlayForm(),
-        plays=(
-            current_user.plays
-                .filter_by(game_id=game.id).order_by()
-                .order_by(Play.started.desc())
-                .all()
-            if current_user.is_authenticated else None
-        )
+        plays=current_user.plays
+            .filter_by(game_id=game.id).order_by()
+            .order_by(Play.started.desc())
+            .all() if current_user.is_authenticated else None
     )
 
 
@@ -142,15 +140,43 @@ def add(gb_id):
     return redirect(url_for('details', id=game.id))
 
 
-@app.route('/add-play', methods=['POST'])
+@app.route('/add-play/<game_id>', methods=['POST'])
 @login_required
-def add_play():
+def add_play(game_id):
     """
     Adds a play.
     """
-    # TODO
-    pass
-    #return redirect(url_for('details', id=play.game.id))
+    form = AddPlayForm()
+
+    if form.validate_on_submit():
+        controller.new_play(
+            current_user,
+            game_id=game_id,
+            started=form.started.data,
+            finished=form.finished.data,
+            status=form.status.data,
+            rating=form.rating.data,
+            comments=form.comments.data,
+            tags=controller.map_tags(form.tags.data.split(','))
+        )
+    else:
+        print(form.errors)
+        flash(form.errors)
+
+    return redirect(url_for('details', id=game_id))
+
+
+@app.route('/delete-play', methods=['GET'])
+@login_required
+def delete_play(id):
+    """
+    Deletes a play.
+    """
+    play = current_user.plays.get(id)
+    game = play.game
+    controller.delete_play(play)
+
+    return redirect(url_for('details', id=game.id))
 
 
 @app.route('/edit-play', methods=['POST'])
@@ -159,7 +185,6 @@ def edit_play():
     """
     Edits a play.
     """
-    # TODO
     pass
     #return redirect(url_for('details', id=play.game.id))
 
