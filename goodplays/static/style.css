@@ -32,7 +32,10 @@ table.ui-datepicker-calendar th {
     color: #000000;
 }
 
-table:not(.ui-datepicker-calendar) tr:nth-child(even) { background-color: #444444; border-color: #444444; }
+table:not(.ui-datepicker-calendar) tr:nth-child(even) {
+    background-color: #444444;
+    border-color: #444444;
+}
 
 td { font-size: 85%; padding: 5px; }
 th { font-variant: small-caps; }
@@ -167,7 +170,15 @@ table:not(.ui-datepicker-calendar) tr:nth-child(even) {
     border-color: #303030;
 }
 
-td.released, td.started, td.finished { white-space: nowrap; }
+td.rating {
+    text-align: center;
+}
+
+td.released, td.started, td.finished {
+    white-space: nowrap;
+    text-align: center;
+    width: 80px;
+}
 
 td.art { text-align: center; }
 
@@ -226,9 +237,19 @@ form {
     margin: 0;
 }
 
-input { color: #ffffff; background-color: transparent; border: solid 1px #888888; }
+input {
+    color: #ffffff;
+    background-color: transparent;
+    border: solid 1px #888888;
+    padding: 2px 4px;
+}
 
-select { color: #ffffff; background-color: transparent; border: solid 1px #888888; }
+select {
+    color: #ffffff;
+    background-color: transparent;
+    border: solid 1px #888888;
+    padding: 1px;
+}
 
 select option { background-color: #222222; }
 

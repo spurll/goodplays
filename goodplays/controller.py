@@ -51,7 +51,7 @@ def map_tags(names):
 
 def existing_or_parse_game(gb):
     existing = Game.query.filter_by(gb_id=gb.get('id')).one_or_none()
-    return existing if existing else parse_gb_game(gb)
+    return (existing, True) if existing else (parse_gb_game(gb), False)
 
 
 def existing_or_parse_platform(gb):
@@ -234,7 +234,7 @@ def add_gb(user, gb_id):
         print(error)
     else:
         # TODO: Don't parse (?) unless you want them added to the session!
-        game = existing_or_parse_game(results)
+        game = existing_or_parse_game(results)[0]
         return add_game(user, game)
 
 

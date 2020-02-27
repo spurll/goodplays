@@ -24,7 +24,7 @@
             <td class="name"><a href={{ url_for('details', id=game.id) }}>{{ game.name }}</a></td>
             <td class="released">{{ game.released if game.released else "" }}</td>
             <td class="platforms">{{ game.platforms | map(attribute="abbreviation") | join(", ") }}</td>
-            <td class="rating">{{ game.stars | safe }}</td>
+            <td class="rating">{{ game.stars }}</td>
         </tr>
         {% endfor %}
     </tbody>
@@ -51,14 +51,18 @@
         </tr>
         {% endif %}
 
-        {% for game in giantbomb %}
+        {% for game, in_db in giantbomb %}
         <tr id={{ game.gb_id }}>
             <td class="art"><img class="art small" src={{ game.image_url if game.image_url else url_for('static', filename='default.png') }} /></td>
             <td class="name"><a href={{ game.gb_url }}>{{ game.name }}</a></td>
             <td class="released">{{ game.released if game.released }}</td>
             <td class="platforms">{{ game.platforms | map(attribute="abbreviation") | join(", ") }}</td>
             <td class="rating">{{ game.stars | safe }}</td>
-            <td class="add"><a href={{ url_for('add', gb_id=game.gb_id) }}><img class="icon" src={{ url_for('static', filename='add.png') }} title="Import from Giant Bomb" /></a></td>
+            <td class="add">
+                {% if not in_db %}
+                <a href={{ url_for('add', gb_id=game.gb_id) }}><img class="icon" src={{ url_for('static', filename='add.png') }} title="Import from Giant Bomb" /></a>
+                {% endif %}
+            </td>
         </tr>
         {% endfor %}
     </tbody>

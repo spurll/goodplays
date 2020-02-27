@@ -77,8 +77,8 @@
 </div>
 
 {% if user and user.is_authenticated %}
-<form id="add_form" action="{{ url_for('add_play', game_id=game.id) }}" method="POST">{{ add_form.hidden_tag() }}</form>
-<form id="edit_form" action="{{ url_for('edit_play') }}" method="POST">{{ edit_form.hidden_tag() }}</form>
+<form id="add_form" action="{{ url_for('add_play', game_id=game.id) }}" method="POST" autocomplete="off">{{ add_form.hidden_tag() }}</form>
+<form id="edit_form" action="{{ url_for('edit_play') }}" method="POST" autocomplete="off">{{ edit_form.hidden_tag() }}</form>
 
 <table id="plays">
     <thead>
@@ -109,8 +109,8 @@
         <tr id="{{ play.id }}">
             <td class="started">{{ play.started if play.started else "" }}</td>
             <td class="finished">{{ play.finished if play.finished else "" }}</td>
-            <td class="status">{{ play.status }}</td>
-            <td class="tags">{{ play.tags | join(", ") }}</td>
+            <td class="status">{{ play.status.pretty() }}</td>
+            <td class="tags">{{ play.tags | map(attribute='name') | join(", ") }}</td>
             <td class="comments">{{ play.comments }}</td>
             <td class="rating">{{ play.stars }}</td>
             <td class="icon"><a id="edit_{{ play.id }}" href="#" onclick="editPlay({{ play.id }})"><img class="icon" src="{{url_for('static', filename='edit.png')}}" title="Edit" /></a></td>

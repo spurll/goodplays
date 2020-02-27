@@ -16,7 +16,7 @@ class Status(Enum):
     @classmethod
     def choices(cls):
         return [
-            (str(item), item.pretty())
+            (item, item.pretty())
             for item in (
                 cls.interested, cls.playing, cls.completed, cls.hundred,
                 cls.abandoned
@@ -139,6 +139,7 @@ class Game(db.Model):
 
     @property
     def rating(self):
+        if not self in db.session: return None
         plays = self.plays.filter(Play.rating > 0).all()
         return None if not plays else sum(p.rating for p in plays) / len(plays)
 

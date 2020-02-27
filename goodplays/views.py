@@ -18,11 +18,7 @@ def index():
 # TODO: Maybe games not linked to Giant Bomb can only be viewed by the user
 # who added them?
 
-# TODO: if game not linked to Giant Bomb, a button to link it
-
-# TODO: Remove "Add" button in search if it's already added!
-# Frustratingly difficult to do, since we're using DB models for all.
-# Could restructure our models, or add a "shadow" model with the same interface
+# TODO: If game not linked to Giant Bomb, a button to link it
 
 # TODO: Can delete a game if you're logged in and the game has no plays
 
@@ -31,8 +27,6 @@ def index():
 
 # TODO: NEXT NEXT NEXT
 # Abiltiy to EDIT A PLAY on the Details page (not implemented)
-# Tags not working?
-# Hundred status not working?
 
 
 @app.route('/search')
@@ -43,7 +37,7 @@ def search():
     query = request.args.get('query')
 
     g = controller.search(query)
-    gb = list(controller.search_gb(query))
+    gb = controller.search_gb(query)
 
     if not g and not gb:
         flash("Games don't exist. Good riddance.")
