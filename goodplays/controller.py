@@ -5,9 +5,8 @@ from goodplays.models import User, Game, Play, Platform, Tag
 from goodplays.gb import GiantBomb
 
 
-PAGE_SIZE = app.config.get('PAGE_SIZE', 20)
-
 GB = GiantBomb(app.config.get('GB_API_KEY'))
+PAGE_SIZE = app.config.get('PAGE_SIZE', 20)
 
 
 def game(id):
@@ -108,7 +107,7 @@ def parse_gb_platform(gb):
     )
 
 
-def games(page=1, order='added'):
+def recent_games(page=1, order='added'):
     if order == 'added':
         order = Game.added.desc()
     elif order == 'name':
@@ -129,21 +128,21 @@ def games(page=1, order='added'):
 
 def recent_plays(user, page=1, order='started'):
     if order == 'started':
-        order = Play.started.desc()
+        order = (Play.started.desc(), Play.finished.desc())
     elif order == 'finished':
-        order = Play.finished.desc()
+        order = (Play.finished.desc(), Play.started.desc())
     elif order == 'name':
         order = Play.game.name.asc()
     elif order == 'rating':
-        order = Play.rating.desc()
-    elif order == 'completion':
-        order = Play.completion.desc()
+        order = (Play.rating.desc(), Play.game.name.asc())
+    elif order == 'status':
+        order = (Play.status.desc(), Play.started.desc(), Play.finished.desc())
     else:
         order = None
 
     return (
         user.plays
-            .order_by(order)
+            .order_by(*order)
             .limit(PAGE_SIZE)
             .offset(PAGE_SIZE * (page - 1))
             .all()

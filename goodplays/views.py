@@ -28,6 +28,9 @@ def index():
 # TODO: NEXT NEXT NEXT
 # Abiltiy to EDIT A PLAY on the Details page (not implemented)
 
+# TODO display status via icon with description as alt/title text (maybe
+# make it toggleable by clicking); add this to the game/play view, too!
+
 
 @app.route('/search')
 def search():
@@ -54,13 +57,9 @@ def search():
 @app.route('/games')
 def games():
     """
-    Shows the 10 most recent games added to the DB. (Or to GiantBomb's DB?
-    Maybe set up a daily task to update this DB? It'll get big...)
+    Shows the 20 most recent games added to the DB.
     """
-    g = controller.games()
-
-    if not g:
-        flash("Games don't exist. Good riddance.")
+    g = controller.recent_games()
 
     return render_template(
         'games.html',
@@ -74,18 +73,11 @@ def games():
 @login_required
 def plays():
     """
-    Displays a user's plays.
+    Displays a user's 20 most recent plays.
     """
-    p = controller.plays(current_user)
+    page = int(request.args.get('page', '1'))
+    p = controller.recent_plays(current_user, page)
 
-    # TODO display status via icon with description as alt/title text (maybe
-    # make it toggleable by clicking); add this to the game/play view, too!
-
-    if not p:
-        flash("Games don't exist. Good riddance.")
-
-    # TODO this might actually need a different template, since it's displaying
-    # plays not games
     return render_template(
         'plays.html',
         title='Recently Played',
