@@ -1,7 +1,18 @@
 {% extends "base.html" %}
 {% block content %}
 
-<script type=text/javascript>
+<script type="text/javascript">
+    function editPlay(id) {
+    }
+
+    function deletePlay(id) {
+        if (!window.confirm('Delete this record?')) {
+            return false;
+        }
+
+        window.location.href = `{{ url_for('delete_play') }}?id=${id}`
+    }
+
     $(document).ready(() => {
         const inputs = $("tr#new-play input");
         const dates = $(".started input,.finished input");
@@ -12,7 +23,7 @@
         // Enable JQuery UI's date picker.
         dates.datepicker({dateFormat: "yy-mm-dd"});
 
-        // Submit on enter, reset on escape (and prevent binding multiple copies of the event listener)
+        // Submit on enter, reset on escape
         inputs.keydown((e) => {
             if (e.keyCode == 13) {
                 $('#add_form').submit();
@@ -35,17 +46,6 @@
                 status.val("completed");
             }
         });
-
-        function edit(id) {
-        }
-
-        function delete(id) {
-            if (!window.confirm('Delete this record?')) {
-                return false;
-            }
-
-            window.location.href = `{{ url_for('delete_play') }}?id={id}`
-        }
     })
 </script>
 
@@ -77,8 +77,8 @@
 </div>
 
 {% if user and user.is_authenticated %}
-<form id="add_form" action="{{ url_for('add_play', game_id=game.id) }}" method="POST">{{ add_form.csrf_token }}</form>
-<form id="edit_form" action="{{ url_for('edit_play') }}" method="POST">{{ edit_form.csrf_token }}</form>
+<form id="add_form" action="{{ url_for('add_play', game_id=game.id) }}" method="POST">{{ add_form.hidden_tag() }}</form>
+<form id="edit_form" action="{{ url_for('edit_play') }}" method="POST">{{ edit_form.hidden_tag() }}</form>
 
 <table id="plays">
     <thead>
@@ -113,8 +113,8 @@
             <td class="tags">{{ play.tags | join(", ") }}</td>
             <td class="comments">{{ play.comments }}</td>
             <td class="rating">{{ play.stars }}</td>
-            <td class="icon"><a id="edit_{{ play.id }}" href="#" onclick="edit({{ play.id }})"><img class="icon" src="{{url_for('static', filename='edit.png')}}" title="Edit" /></a></td>
-            <td class="icon"><a id="delete_{{ play.id }}" href="#" onclick="delete({{ play.id }})"><img class="icon" src="{{url_for('static', filename='delete.png')}}" title="Delete" /></a></td>
+            <td class="icon"><a id="edit_{{ play.id }}" href="#" onclick="editPlay({{ play.id }})"><img class="icon" src="{{url_for('static', filename='edit.png')}}" title="Edit" /></a></td>
+            <td class="icon"><a id="delete_{{ play.id }}" href="#" onclick="deletePlay({{ play.id }})"><img class="icon" src="{{url_for('static', filename='delete.png')}}" title="Delete" /></a></td>
         </tr>
         {% endfor %}
         {% endif %}

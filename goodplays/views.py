@@ -30,9 +30,9 @@ def index():
 # all games that have plays that have been tagged with that tag?
 
 # TODO: NEXT NEXT NEXT
-# Ability to DELETE A PLAY on the Details page (broken)
 # Abiltiy to EDIT A PLAY on the Details page (not implemented)
 # Tags not working?
+# Hundred status not working?
 
 
 @app.route('/search')
@@ -118,10 +118,7 @@ def details(id):
         game=game,
         add_form=AddPlayForm(),
         edit_form=EditPlayForm(),
-        plays=current_user.plays
-            .filter_by(game_id=game.id).order_by()
-            .order_by(Play.started.desc())
-            .all() if current_user.is_authenticated else None
+        plays=controller.plays(current_user, game.id)
     )
 
 
@@ -168,11 +165,12 @@ def add_play(game_id):
 
 @app.route('/delete-play', methods=['GET'])
 @login_required
-def delete_play(id):
+def delete_play():
     """
     Deletes a play.
     """
-    play = current_user.plays.get(id)
+    id = int(request.args.get('id'))
+    play = current_user.plays.filter_by(id=id).one()
     game = play.game
     controller.delete_play(play)
 

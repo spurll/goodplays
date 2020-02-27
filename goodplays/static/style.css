@@ -128,7 +128,32 @@ h2 {
 .narrow { width: 40%; top: 0px; }
 .right { float: right; text-align: right; }
 .section { padding-top: 5px; padding-bottom: 10px; }
-.login { max-width: 320px; margin: auto; }
+
+.login {
+    max-width: 320px;
+    margin: auto;
+}
+
+.login form div {
+    height: 30px;
+}
+
+.login label {
+    width: 40%;
+    display: inline-block;
+}
+
+.login input[type="text"], .login input[type="password"] {
+    width: 60%;
+}
+
+.login input[type="checkbox"] {
+    margin: 7px 10px 0 0;
+}
+
+.login a.button {
+    float: right;
+}
 
 .footer {
     padding-top: 20px;

@@ -16,17 +16,20 @@ class Status(Enum):
     @classmethod
     def choices(cls):
         return [
-            (cls.interested, 'Interested'),
-            (cls.playing, 'Playing'),
-            (cls.completed, 'Completed'),
-            (cls.hundred, '100%'),
-            (cls.abandoned, 'Abandoned'),
+            (str(item), item.pretty())
+            for item in (
+                cls.interested, cls.playing, cls.completed, cls.hundred,
+                cls.abandoned
+            )
         ]
 
     @classmethod
     def coerce(cls, item):
         return item if isinstance(item, cls) else \
             cls[item] if item is not None else None
+
+    def pretty(self):
+        return '100%' if self == Status.hundred else self.name.capitalize()
 
     def __str__(self):
         return str(self.name)

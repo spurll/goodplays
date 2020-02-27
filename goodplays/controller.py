@@ -18,8 +18,18 @@ def games():
     return Game.query.all()
 
 
-def plays(user):
-    return user.plays.all()
+def plays(user, game_id=None):
+    if not user.is_authenticated:
+        return None
+
+    query = user.plays
+
+    if game_id is not None:
+        query = query.filter_by(game_id=game_id)
+
+    query = query.order_by(Play.started.desc(), Play.finished.desc())
+
+    return query.all()
 
 
 def platforms():
