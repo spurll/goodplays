@@ -1,6 +1,6 @@
 body {
     font-family: serif;
-    color: #ffffff;
+    color: #cccccc;
     background-color: #222222;
     overflow-y: auto;
     margin: 0px;
@@ -38,8 +38,7 @@ table:not(.ui-datepicker-calendar) tr:nth-child(even) {
 }
 
 td { font-size: 85%; padding: 5px; }
-th { font-variant: small-caps; }
-tfoot { font-weight: bold; font-variant: small-caps; }
+th { font-weight: bold; }
 
 .ui-datepicker { background-color: #111111; }
 .ui-state-highlight { background-color: #dddddd !important; border-color: #000000 !important; color: #000000 !important; }
@@ -73,10 +72,6 @@ tfoot { font-weight: bold; font-variant: small-caps; }
     display: inline-block;
 }
 
-#title a {
-    color: #ffffff;
-}
-
 #search {
     width: 700px;
     margin: auto;
@@ -103,19 +98,77 @@ tfoot { font-weight: bold; font-variant: small-caps; }
 }
 
 h1 {
-    font-variant: small-caps;
     text-align: center;
-    font-size: 150%;
-    padding-top: 5px;
-    padding-bottom: 10px;
+    font-size: 140%;
+    padding: 5px 0 10px;
 }
 
 h2 {
-    font-variant: small-caps;
     text-align: center;
-    font-size: 125%;
-    padding-top: 5px;
+    font-size: 100%;
+}
+
+:not(.tabs) h1, :not(.tabs) h2 {
+    font-weight: bold;
+}
+
+.tabs h1, .tabs h2 {
+    font-weight: normal;
+    text-align: left;
+    padding-bottom: 0;
+    white-space: nowrap;
+}
+
+.tabs h1 li.selected {
+    border-left: 1px solid #cccccc;
+    border-top: 1px solid #cccccc;
+    border-right: 1px solid #cccccc;
+}
+
+.tabs h1 li:not(.selected) {
+    border-bottom: 1px solid #cccccc;
+}
+
+.tabs h2 li.selected {
+    border-bottom: 1px solid #cccccc;
+}
+
+.tabs h1 li:last-child {
+    width: 100%;
+}
+
+.tabs ul {
+    display: flex;
+    list-style: none;
+    padding: 0;
+}
+
+.tabs h1 li {
+    padding: 5px 15px;
+    margin-left: 0;
+    margin-right: 0;
+}
+
+.tabs h2 li {
+    padding: 5px;
+    margin-left: 0;
+    margin-right: 20px;
+}
+
+.tabs h1 span {
+    padding: 10px;
+}
+
+.tabs h2 span {
+    padding-right: 15px;
+}
+
+div.tabs {
     padding-bottom: 10px;
+}
+
+h1 .selected, h2 .selected {
+    font-weight: bold;
 }
 
 .small-screen {
@@ -170,6 +223,10 @@ table:not(.ui-datepicker-calendar) tr:nth-child(even) {
     border-color: #303030;
 }
 
+td.name {
+    font-weight: bold;
+}
+
 td.rating {
     text-align: center;
 }
@@ -191,21 +248,21 @@ td.empty {
 
 a:link, a:visited, a:active {
     text-decoration: none;
-    color: #888888;
+    color: #ffffff;
 }
 
 a:hover {
     text-decoration: none;
-    color: #ffffff;
+    color: #cccccc;
 }
 
 a.button {
-    border: 1px solid #888888;
+    border: 1px solid #ffffff;
     padding: 3px 5px;
 }
 
 a.button:hover {
-    border: 1px solid #ffffff;
+    border: 1px solid #cccccc;
 }
 
 img.art:not(.small) {
@@ -240,14 +297,14 @@ form {
 input {
     color: #ffffff;
     background-color: transparent;
-    border: solid 1px #888888;
+    border: solid 1px #cccccc;
     padding: 2px 4px;
 }
 
 select {
     color: #ffffff;
     background-color: transparent;
-    border: solid 1px #888888;
+    border: solid 1px #cccccc;
     padding: 1px;
 }
 

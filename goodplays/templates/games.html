@@ -1,6 +1,32 @@
 {% extends "base.html" %}
 {% block content %}
 
+<div class="tabs">
+    <h1>
+        <ul>
+            <li class="selected"><a href={{ url_for('games') }}>Games</a></li>
+            <li><a href={{ url_for('plays') }}>Plays</a></li>
+            <li>&nbsp;</li>
+        </ul>
+    </h1>
+    <h2>
+        <ul>
+            <li class={{ 'selected' if sort == 'added' else '' }}>
+                <a href={{ url_for('games', sort='added') }}>Recently Added</a>
+            </li>
+            <li class={{ 'selected' if sort == 'released' else '' }}>
+                <a href={{ url_for('games', sort='released') }}>Recently Released</a>
+            </li>
+            <li class={{ 'selected' if sort == 'name' else '' }}>
+                <a href={{ url_for('games', sort='name') }}>Alphabetical</a>
+            </li>
+            {% if search %}
+            <li class="selected">Search: {{ search }}</li>
+            {% endif %}
+        </ul>
+    </h2>
+</div>
+
 <table id="games">
     <thead>
         <tr>
@@ -31,7 +57,7 @@
 </table>
 
 {% if giantbomb %}
-<h1>Giant Bomb</h1>
+<h1>Results from Giant Bomb</h1>
 
 <table id="giantbomb">
     <thead>
@@ -45,12 +71,6 @@
         </tr>
     </thead>
     <tbody>
-        {% if not giantbomb %}
-        <tr>
-            <td class="empty" colspan="6">No games found!</td>
-        </tr>
-        {% endif %}
-
         {% for game, in_db in giantbomb %}
         <tr id={{ game.gb_id }}>
             <td class="art"><img class="art small" src={{ game.image_url if game.image_url else url_for('static', filename='default.png') }} /></td>

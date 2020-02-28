@@ -49,6 +49,17 @@
     })
 </script>
 
+<div class="tabs">
+    <h1>
+        <ul>
+            <li><a href={{ url_for('games') }}>Games</a></li>
+            <li><a href={{ url_for('plays') }}>Plays</a></li>
+            <li class="selected"><a href={{ url_for('details', id=game.id) }}>{{ game.name }}</a></li>
+            <li>&nbsp;</li>
+        </ul>
+    </h1>
+</div>
+
 <div id="game">
     <img class="art" src="{{ game.image_url if game.image_url else url_for('static', filename='default.png') }}" />
     <p class="info">

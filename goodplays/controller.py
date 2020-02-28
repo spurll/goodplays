@@ -1,7 +1,7 @@
 from datetime import datetime, date
 
 from goodplays import app, db
-from goodplays.models import User, Game, Play, Platform, Tag
+from goodplays.models import User, Game, Play, Platform, Tag, Status
 from goodplays.gb import GiantBomb
 
 
@@ -13,22 +13,14 @@ def game(id):
     return Game.query.get(id)
 
 
-def games():
-    return Game.query.all()
-
-
-def plays(user, game_id=None):
+def game_plays(user, game_id):
     if not user.is_authenticated:
         return None
 
-    query = user.plays
-
-    if game_id is not None:
-        query = query.filter_by(game_id=game_id)
-
-    query = query.order_by(Play.started.desc(), Play.finished.desc())
-
-    return query.all()
+    return user.plays \
+        .filter_by(game_id=game_id) \
+        .order_by(Play.started.desc(), Play.finished.desc()) \
+        .all()
 
 
 def platforms():
@@ -92,9 +84,8 @@ def parse_gb_platform(gb):
     gb['company'] = gb.get('company') or {}
 
     # Handle released being set to None (e.g., for pinball)
-    released = datetime.strptime(
-        gb['release_date'], '%Y-%m-%d %H:%M:%S').date() \
-        if gb.get('release_date') else None
+    released = datetime.strptime(gb['release_date'],
+        '%Y-%m-%d %H:%M:%S').date() if gb.get('release_date') else None
 
     return Platform(
         name=gb.get('name'),
@@ -107,62 +98,52 @@ def parse_gb_platform(gb):
     )
 
 
-def recent_games(page=1, order='added'):
-    if order == 'added':
-        order = Game.added.desc()
-    elif order == 'name':
-        order = Game.name.asc()
-    elif order == 'year':
-        order = Game.released.desc()
+def games(sort='added', page=1):
+    if sort == 'added':
+        sort = Game.added.desc()
+    elif sort == 'released':
+        sort = Game.released.desc()
+    elif sort == 'name':
+        sort = Game.name.asc()
     else:
-        order = None
+        sort = None
 
-    return (
-        Game.query
-            .order_by(order)
-            .limit(PAGE_SIZE)
-            .offset(PAGE_SIZE * (page - 1))
-            .all()
-    )
+    return Game.query \
+        .order_by(sort) \
+        .limit(PAGE_SIZE) \
+        .offset(PAGE_SIZE * (page - 1)) \
+        .all()
 
 
-def recent_plays(user, page=1, order='started'):
-    if order == 'started':
-        order = (Play.started.desc(), Play.finished.desc())
-    elif order == 'finished':
-        order = (Play.finished.desc(), Play.started.desc())
-    elif order == 'name':
-        order = Play.game.name.asc()
-    elif order == 'rating':
-        order = (Play.rating.desc(), Play.game.name.asc())
-    elif order == 'status':
-        order = (Play.status.desc(), Play.started.desc(), Play.finished.desc())
+def plays(user, status=None, page=1):
+    query = user.plays
+
+    if status == Status.interested:
+        query = query.filter_by(status=status) \
+            .join(Play.game) \
+            .order_by(Game.name.asc())
+    elif status in (Status.playing, Status.abandoned):
+        query = query.filter_by(status=status).order_by(Play.started.desc())
+    elif status in (Status.completed, Status.hundred):
+        query = query.filter_by(status=status).order_by(Play.finished.desc())
     else:
-        order = None
+        query = user.plays.order_by(Play.finished.desc(), Play.started.desc())
 
-    return (
-        user.plays
-            .order_by(*order)
-            .limit(PAGE_SIZE)
-            .offset(PAGE_SIZE * (page - 1))
-            .all()
-    )
+    return query.limit(PAGE_SIZE) \
+        .offset(PAGE_SIZE * (page - 1)) \
+        .all()
 
 
 def search(query):
-    results = (
-        Game.query
-            .filter_by(name=query.strip())
-            .order_by(Game.released.desc())
-            .all()
-    )
+    results = Game.query \
+        .filter_by(name=query.strip()) \
+        .order_by(Game.released.desc()) \
+        .all()
 
-    fuzzy = (
-        Game.query
-            .filter(Game.name.like('%' + query.replace(' ', '%') + '%'))
-            .order_by(Game.name.asc())
-            .all()
-    )
+    fuzzy = Game.query \
+        .filter(Game.name.like('%' + query.replace(' ', '%') + '%')) \
+        .order_by(Game.name.asc()) \
+        .all()
 
     for game in fuzzy:
         if len(results) >= PAGE_SIZE: break
@@ -178,7 +159,7 @@ def search_gb(query):
         print(error)
     else:
         # TODO: Don't map unless you want them added to the session!
-        return map(existing_or_parse_game, results)
+        return list(map(existing_or_parse_game, results))
 
 
 def platform_gb(gb_id):

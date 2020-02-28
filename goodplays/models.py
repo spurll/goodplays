@@ -15,12 +15,13 @@ class Status(Enum):
 
     @classmethod
     def choices(cls):
+        return [(item, item.pretty()) for item in cls.in_use()]
+
+    @classmethod
+    def in_use(cls):
         return [
-            (item, item.pretty())
-            for item in (
-                cls.interested, cls.playing, cls.completed, cls.hundred,
-                cls.abandoned
-            )
+            cls.interested, cls.playing, cls.completed, cls.hundred,
+            cls.abandoned
         ]
 
     @classmethod

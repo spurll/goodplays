@@ -25,11 +25,15 @@ def index():
 # TODO: Whenever tags are displayed, they're links! click on a link to bring up
 # all games that have plays that have been tagged with that tag?
 
-# TODO: NEXT NEXT NEXT
-# Abiltiy to EDIT A PLAY on the Details page (not implemented)
-
 # TODO display status via icon with description as alt/title text (maybe
 # make it toggleable by clicking); add this to the game/play view, too!
+
+# TODO Fix resize stuff in base.html
+
+# TODO Add pagination.
+
+# TODO: NEXT NEXT NEXT
+# Abiltiy to EDIT A PLAY on the Details page (not implemented)
 
 
 @app.route('/search')
@@ -42,13 +46,11 @@ def search():
     g = controller.search(query)
     gb = controller.search_gb(query)
 
-    if not g and not gb:
-        flash("Games don't exist. Good riddance.")
-
     return render_template(
         'games.html',
         title=f'Search: {query}',
         user=current_user,
+        search=query,
         games=g,
         giantbomb=gb
     )
@@ -59,13 +61,18 @@ def games():
     """
     Shows the 20 most recent games added to the DB.
     """
-    g = controller.recent_games()
+    sort = request.args.get('sort', 'added')
+    page = int(request.args.get('page', '1'))
+
+    g = controller.games(sort, page)
 
     return render_template(
         'games.html',
-        title='Recently Added',
+        title='Games',
         user=current_user,
-        games=g
+        games=g,
+        sort=sort,
+        page=page
     )
 
 
@@ -75,18 +82,28 @@ def plays():
     """
     Displays a user's 20 most recent plays.
     """
+    status = Status.coerce(request.args.get('status'))
     page = int(request.args.get('page', '1'))
-    p = controller.recent_plays(current_user, page)
+
+    p = controller.plays(current_user, status, page)
+
+    statuses = [
+        {'name': s, 'pretty': s.pretty(), 'selected': status == s}
+        for s in Status.in_use()
+    ]
 
     return render_template(
         'plays.html',
-        title='Recently Played',
+        title='Plays',
         user=current_user,
-        plays=p
+        plays=p,
+        status=status,
+        statuses=statuses,
+        page=page
     )
 
 
-@app.route('/details/<id>')
+@app.route('/details/<int:id>')
 def details(id):
     """
     Displays a game's details page.
@@ -104,7 +121,7 @@ def details(id):
         game=game,
         add_form=AddPlayForm(),
         edit_form=EditPlayForm(),
-        plays=controller.plays(current_user, game.id)
+        plays=controller.game_plays(current_user, game.id)
     )
 
 
@@ -200,18 +217,16 @@ def login():
     form = LoginForm()
 
     if request.method == 'GET':
-        return render_template(
-            'login.html', title='Log In', form=form, hide_user=True
-        )
+        return render_template('login.html', title='Log In', form=form,
+            hide_user=True)
 
     if form.validate_on_submit():
         user, message = authenticate(form.username.data, form.password.data)
 
         if not user:
             flash(f'Login failed: {message}.')
-            return render_template(
-                'login.html', title='Log In', form=form, hide_user=True
-            )
+            return render_template('login.html', title='Log In', form=form,
+                hide_user=True)
 
         if user and user.is_authenticated:
             db_user = User.query.get(user.id)
@@ -223,9 +238,8 @@ def login():
 
             return redirect(request.args.get('next') or url_for('index'))
 
-    return render_template(
-        'login.html', title='Log In', form=form, hide_user=True
-    )
+    return render_template('login.html', title='Log In', form=form,
+        hide_user=True)
 
 
 @app.route('/logout')

@@ -1,6 +1,28 @@
 {% extends "base.html" %}
 {% block content %}
 
+<div class="tabs">
+    <h1>
+        <ul>
+            <li><a href={{ url_for('games') }}>Games</a></li>
+            <li class="selected"><a href={{ url_for('plays') }}>Plays</a></li>
+            <li>&nbsp;</li>
+        </ul>
+    </h1>
+    <h2>
+        <ul>
+            <li class={{ 'selected' if status == None else '' }}>
+                <a href={{ url_for('plays') }}>All</a>
+            </li>
+            {% for s in statuses %}
+            <li class={{ 'selected' if s['selected'] else '' }}>
+                <a href={{ url_for('plays', status=s['name']) }}>{{ s['pretty'] }}</a>
+            </li>
+            {% endfor %}
+        </ul>
+    </h2>
+</div>
+
 <table id="latest">
     <thead>
         <tr>
