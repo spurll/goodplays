@@ -158,7 +158,6 @@ def search_gb(query):
     if error:
         print(error)
     else:
-        # TODO: Don't map unless you want them added to the session!
         return list(map(existing_or_parse_game, results))
 
 
@@ -168,7 +167,6 @@ def platform_gb(gb_id):
     if error:
         print(error)
     else:
-        # TODO: Don't map unless you want them added to the session!
         return existing_or_parse_platform(results)
 
 
@@ -183,7 +181,6 @@ def platforms_gb(query):
     if error:
         print(error)
     else:
-        # TODO: Don't map unless you want them added to the session!
         return map(parse_gb_platform, results)
 
 
@@ -213,7 +210,6 @@ def add_gb(user, gb_id):
     if error:
         print(error)
     else:
-        # TODO: Don't parse (?) unless you want them added to the session!
         game = existing_or_parse_game(results)[0]
         return add_game(user, game)
 
@@ -308,19 +304,6 @@ def update_game(game):
     db.session.commit()
 
     return game
-
-
-def update_platform(platform):
-    """
-    Update a platform by fetching its data from the Giant Bomb database.
-    """
-    # TODO
-    pass
-
-
-def tag():
-    # TODO
-    pass
 
 
 def release_date(gb):

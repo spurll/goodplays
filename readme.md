@@ -39,12 +39,19 @@ Bugs and Feature Requests
 Feature Requests
 ----------------
 
-None
+* Whenever tags are displayed, make them links to bring up all games that have plays with that tag
+* Icon idea: NES controller?
+* Allow users to add games not in Giant Bomb:
+    * Only viewable by the user who added it?
+    * Button to link it to Giant Bomb?
+* Ability to delete a game (if logged in and it has no plays)
+* Ability to edit a game (if logged in and not linked to GB)
 
 Known Bugs
 ----------
 
-None
+* Page resizing in base.html needs to be reworked
+* There's no pagination for search results, displaying games, or displaying plays (most important)
 
 License Information
 ===================

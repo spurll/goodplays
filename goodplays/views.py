@@ -15,26 +15,6 @@ def index():
     return redirect(url_for('plays' if logged_in else 'games'))
 
 
-# TODO: Maybe games not linked to Giant Bomb can only be viewed by the user
-# who added them?
-
-# TODO: If game not linked to Giant Bomb, a button to link it
-
-# TODO: Can delete a game if you're logged in and the game has no plays
-
-# TODO: Whenever tags are displayed, they're links! click on a link to bring up
-# all games that have plays that have been tagged with that tag?
-
-# TODO: display status via icon with description as alt/title text (maybe
-# make it toggleable by clicking); add this to the game/play view, too!
-
-# TODO: Fix resize stuff in base.html
-
-# TODO: Add pagination.
-
-# TODO: Icon idea: NES controller?
-
-
 @app.route('/search')
 def search():
     """
