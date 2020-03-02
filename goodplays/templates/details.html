@@ -2,7 +2,56 @@
 {% block content %}
 
 <script type="text/javascript">
+    function convertStatus(status) {
+        if (status === "100%") return "hundred";
+        return status.toLowerCase();
+    }
+
+    function convertStars(stars) {
+        return (stars.match(/★/g) || []).length * 2
+    }
+
+    function today() {
+        const date = new Date();
+
+        const year = date.getFullYear();
+        const month = ((date.getMonth() < 9) && "0" || "") + (date.getMonth() + 1);
+        const day = ((date.getDate() < 10) && "0" || "") + date.getDate();
+
+        return `${year}-${month}-${day}`
+    }
+
     function editPlay(id) {
+        // Hide the row with this ID (but show all other hidden rows first!)
+        const displayRow = $(`tr#${id}`);
+        $("tr").show();
+        displayRow.hide();
+
+        // Set the edit row's values
+        $("#edit-id").val(id);
+        $("#edit-started").val(displayRow.find(".started").text());
+        $("#edit-finished").val(displayRow.find(".finished").text());
+        $("#edit-status").val(convertStatus(displayRow.find(".status").text()));
+        $("#edit-tags").val(displayRow.find(".tags").text());
+        $("#edit-comments").val(displayRow.find(".comments").text());
+        $("#edit-rating").val(convertStars(displayRow.find(".rating").text()));
+
+        // Move the edit row (and buffer row, to ensure highlights don't change)
+        const editRow = $("tr#edit-play");
+        const bufferRow = $("tr#edit-buffer");
+        displayRow.after(bufferRow);
+        bufferRow.after(editRow);
+        editRow.show();
+    }
+
+    function cancelEdit() {
+        // Show all hidden rows
+        $("tr").show();
+
+        // Hide and reset the edit row
+        const editRow = $(`tr#edit-play`);
+        editRow.hide();
+        $('#edit_form')[0].reset();
     }
 
     function deletePlay(id) {
@@ -14,17 +63,23 @@
     }
 
     $(document).ready(() => {
-        const inputs = $("tr#new-play input");
-        const dates = $(".started input,.finished input");
-        const started = $("tr#new-play .started input");
-        const finished = $("tr#new-play .finished input");
-        const status = $("tr#new-play .status select");
+        const dates = $(".started input, .finished input");
+
+        const addInputs = $("tr#new-play input");
+        const addStarted = $("input#add-started");
+        const addFinished = $("input#add-finished");
+        const addStatus = $("select#add-status");
+
+        const editInputs = $("tr#edit-play input");
+        const editStarted = $("input#edit-started");
+        const editFinished = $("input#edit-finished");
+        const editStatus = $("select#edit-status");
 
         // Enable JQuery UI's date picker.
         dates.datepicker({dateFormat: "yy-mm-dd"});
 
         // Submit on enter, reset on escape
-        inputs.keydown((e) => {
+        addInputs.keydown((e) => {
             if (e.keyCode == 13) {
                 $('#add_form').submit();
             }
@@ -33,19 +88,54 @@
             }
         });
 
+        // Submit on enter, cancel on escape
+        editInputs.keydown((e) => {
+            if (e.keyCode == 13) {
+                $('#edit_form').submit();
+            }
+            else if (e.keyCode == 27) {
+                cancelEdit();
+            }
+        });
+
         // When started is set, automatically set status to "Playing"
-        started.change((e) => {
-            if (started.val() && status.val() === "interested") {
-                status.val("playing");
+        addStarted.change((e) => {
+            if (addStarted.val() && addStatus.val() === "interested") {
+                addStatus.val("playing");
+            }
+        });
+
+        editStarted.change((e) => {
+            if (editStarted.val() && editStatus.val() === "interested") {
+                editStatus.val("playing");
             }
         });
 
         // When finished is set, automatically set status to "Completed"
-        finished.change((e) => {
-            if (finished.val() && status.val() !== "hundred") {
-                status.val("completed");
+        addFinished.change((e) => {
+            if (addFinished.val() && addStatus.val() !== "hundred") {
+                addStatus.val("completed");
             }
         });
+
+        editFinished.change((e) => {
+            if (editFinished.val() && editStatus.val() !== "hundred") {
+                editStatus.val("completed");
+            }
+        });
+
+        // When status is set to Completed (or 100%), set finished to today
+        addStatus.change((e) => {
+            if (addStatus.val() === "completed" || addStatus.val() === "hundred") {
+                addFinished.val(today())
+            }
+        })
+
+        editStatus.change((e) => {
+            if (editStatus.val() === "completed" || editStatus.val() === "hundred") {
+                editFinished.val(today())
+            }
+        })
     })
 </script>
 
@@ -80,7 +170,7 @@
     </p>
     {% endif %}
     {% if game.gb_id %}
-    <p class="info">
+    <p class="info links">
         <span><a class="button" href="{{ url_for('update', id=game.id) }}">Update Details</a></span>
         <span><a class="button" href="{{ game.gb_url }}">View on Giant Bomb</a></span>
     </p>
@@ -88,8 +178,13 @@
 </div>
 
 {% if user and user.is_authenticated %}
-<form id="add_form" action="{{ url_for('add_play', game_id=game.id) }}" method="POST" autocomplete="off">{{ add_form.hidden_tag() }}</form>
-<form id="edit_form" action="{{ url_for('edit_play') }}" method="POST" autocomplete="off">{{ edit_form.hidden_tag() }}</form>
+<form id="add_form" action="{{ url_for('add_play', game_id=game.id) }}" method="POST" autocomplete="off">
+    {{ add_form.hidden_tag() }}
+</form>
+
+<form id="edit_form" action="{{ url_for('edit_play') }}" method="POST" autocomplete="off">
+    {{ edit_form.hidden_tag() }}
+</form>
 
 <table id="plays">
     <thead>
@@ -112,9 +207,20 @@
             <td class="tags">{{ add_form.tags(form="add_form") }}</td>
             <td class="comments">{{ add_form.comments(form="add_form") }}</td>
             <td class="rating">{{ add_form.rating(form="add_form")}}</td>
-            <td class="icon"><a id="submit_add" href="#" onclick="$('#add_form').submit()"><img class="icon" src="{{url_for('static', filename='save.png')}}" title="Save" /></a></td>
-            <td class="icon"><a id="clear_add" href="#" onclick="$('#add_form')[0].reset()"><img class="icon" src="{{url_for('static', filename='delete.png')}}" title="Clear" /></a></td>
+            <td class="save icon"><a id="submit_add" href="#" onclick="$('#add_form').submit()"><img class="icon" src="{{url_for('static', filename='save.png')}}" title="Save" /></a></td>
+            <td class="clear icon"><a id="clear_add" href="#" onclick="$('#add_form')[0].reset()"><img class="icon" src="{{url_for('static', filename='delete.png')}}" title="Clear" /></a></td>
         </tr>
+        <tr id="edit-play" hidden="true">
+            <td class="started">{{ edit_form.started(form="edit_form") }}</td>
+            <td class="finished">{{ edit_form.finished(form="edit_form") }}</td>
+            <td class="status">{{ edit_form.status(form="edit_form") }}</td>
+            <td class="tags">{{ edit_form.tags(form="edit_form") }}</td>
+            <td class="comments">{{ edit_form.comments(form="edit_form") }}</td>
+            <td class="rating">{{ edit_form.rating(form="edit_form")}}</td>
+            <td class="save icon"><a id="submit_edit" href="#" onclick="$('#edit_form').submit()"><img class="icon" src="{{url_for('static', filename='save.png')}}" title="Save" /></a></td>
+            <td class="cancel icon"><a id="cancel_edit" href="#" onclick="cancelEdit()"><img class="icon" src="{{url_for('static', filename='delete.png')}}" title="Cancel" /></a></td>
+        </tr>
+        <tr id="edit-buffer" hidden="true"></tr>
         {% if plays %}
         {% for play in plays %}
         <tr id="{{ play.id }}">
@@ -124,8 +230,8 @@
             <td class="tags">{{ play.tags | map(attribute='name') | join(", ") }}</td>
             <td class="comments">{{ play.comments }}</td>
             <td class="rating">{{ play.stars }}</td>
-            <td class="icon"><a id="edit_{{ play.id }}" href="#" onclick="editPlay({{ play.id }})"><img class="icon" src="{{url_for('static', filename='edit.png')}}" title="Edit" /></a></td>
-            <td class="icon"><a id="delete_{{ play.id }}" href="#" onclick="deletePlay({{ play.id }})"><img class="icon" src="{{url_for('static', filename='delete.png')}}" title="Delete" /></a></td>
+            <td class="edit icon"><a id="edit_{{ play.id }}" href="#" onclick="editPlay({{ play.id }})"><img class="icon" src="{{url_for('static', filename='edit.png')}}" title="Edit" /></a></td>
+            <td class="delete icon"><a id="delete_{{ play.id }}" href="#" onclick="deletePlay({{ play.id }})"><img class="icon" src="{{url_for('static', filename='delete.png')}}" title="Delete" /></a></td>
         </tr>
         {% endfor %}
         {% endif %}

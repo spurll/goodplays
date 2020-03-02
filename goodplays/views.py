@@ -25,15 +25,14 @@ def index():
 # TODO: Whenever tags are displayed, they're links! click on a link to bring up
 # all games that have plays that have been tagged with that tag?
 
-# TODO display status via icon with description as alt/title text (maybe
+# TODO: display status via icon with description as alt/title text (maybe
 # make it toggleable by clicking); add this to the game/play view, too!
 
-# TODO Fix resize stuff in base.html
+# TODO: Fix resize stuff in base.html
 
-# TODO Add pagination.
+# TODO: Add pagination.
 
-# TODO: NEXT NEXT NEXT
-# Abiltiy to EDIT A PLAY on the Details page (not implemented)
+# TODO: Icon idea: NES controller?
 
 
 @app.route('/search')
@@ -186,8 +185,25 @@ def edit_play():
     """
     Edits a play.
     """
-    pass
-    #return redirect(url_for('details', id=play.game.id))
+    form = EditPlayForm()
+    id = int(form.id.data)
+    play = current_user.plays.filter_by(id=id).one()
+
+    if form.validate_on_submit():
+        controller.edit_play(
+            play,
+            started=form.started.data,
+            finished=form.finished.data,
+            status=form.status.data,
+            rating=form.rating.data,
+            comments=form.comments.data,
+            tags=controller.map_tags(form.tags.data.split(','))
+        )
+    else:
+        print(form.errors)
+        flash(form.errors)
+
+    return redirect(url_for('details', id=play.game.id))
 
 
 @app.route('/update/<id>')

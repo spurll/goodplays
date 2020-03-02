@@ -13,12 +13,15 @@ class LoginForm(FlaskForm):
 
 
 class AddPlayForm(FlaskForm):
-    started = DateField('Started', format='%Y-%m-%d', validators=[Optional()])
-    finished = DateField('Finished', format='%Y-%m-%d', validators=[Optional()])
-    status = SelectField('Status', coerce=Status.coerce, choices=Status.choices())
-    tags = TextField('Tags')
-    comments = TextField('Comments')
-    rating = SelectField('Rating', coerce=int, choices=[
+    started = DateField('Started', id='add-started', format='%Y-%m-%d',
+        validators=[Optional()])
+    finished = DateField('Finished', id='add-finished', format='%Y-%m-%d',
+        validators=[Optional()])
+    status = SelectField('Status', id='add-status', coerce=Status.coerce,
+        choices=Status.choices())
+    tags = TextField('Tags', id='add-tags')
+    comments = TextField('Comments', id='add-comments')
+    rating = SelectField('Rating', id='add-rating', coerce=int, choices=[
         (0, ''),
         (2, u'\u2605' + u'\u2606' * 4),
         (4, u'\u2605' * 2 + u'\u2606' * 3),
@@ -29,13 +32,16 @@ class AddPlayForm(FlaskForm):
 
 
 class EditPlayForm(FlaskForm):
-    id = HiddenField('ID', validators=[Required()])
-    started = DateField('Started', format='%Y-%m-%d', validators=[Optional()])
-    finished = DateField('Finished', format='%Y-%m-%d', validators=[Optional()])
-    status = SelectField('Status', coerce=Status.coerce, choices=Status.choices())
-    tags = TextField('Tags')
-    comments = TextField('Comments')
-    rating = SelectField('Rating', coerce=int, choices=[
+    id = HiddenField('ID', id='edit-id', validators=[Required()])
+    started = DateField('Started', id='edit-started', format='%Y-%m-%d',
+        validators=[Optional()])
+    finished = DateField('Finished', id='edit-finished', format='%Y-%m-%d',
+        validators=[Optional()])
+    status = SelectField('Status', id='edit-status', coerce=Status.coerce,
+        choices=Status.choices())
+    tags = TextField('Tags', id='edit-tags')
+    comments = TextField('Comments', id='edit-comments')
+    rating = SelectField('Rating', id='edit-rating', coerce=int, choices=[
         (0, ''),
         (2, u'\u2605' + u'\u2606' * 4),
         (4, u'\u2605' * 2 + u'\u2606' * 3),

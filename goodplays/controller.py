@@ -230,6 +230,9 @@ def new_game(user, **fields):
 
 
 def new_play(user, **fields):
+    """
+    Creates a new Play object and adds it to the database.
+    """
     play = Play(**fields)
     user.plays.append(play)
     db.session.add(user)
@@ -245,6 +248,16 @@ def delete_play(play):
 def edit_game():
     # TODO
     pass
+
+
+def edit_play(play, started, finished, status, rating, comments, tags):
+    play.started = started
+    play.finished = finished
+    play.status = status
+    play.rating = rating
+    play.comments = comments
+    play.tags = tags
+    db.session.commit()
 
 
 def link_game(game, gb_id, update=False):
@@ -301,21 +314,6 @@ def update_platform(platform):
     """
     Update a platform by fetching its data from the Giant Bomb database.
     """
-    # TODO
-    pass
-
-
-def edit_play():
-    # TODO
-    pass
-
-
-def game_details(id):
-    # TODO
-    pass
-
-
-def play_details(id):
     # TODO
     pass
 
