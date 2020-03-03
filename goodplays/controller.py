@@ -127,7 +127,7 @@ def plays(user, status=None, page=1):
     elif status in (Status.completed, Status.hundred):
         query = query.filter_by(status=status).order_by(Play.finished.desc())
     else:
-        query = user.plays.order_by(Play.finished.desc(), Play.started.desc())
+        query = user.plays.order_by(Play.started.desc(), Play.finished.desc())
 
     return query.limit(PAGE_SIZE) \
         .offset(PAGE_SIZE * (page - 1)) \
