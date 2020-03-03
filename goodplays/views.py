@@ -2,7 +2,7 @@ from flask import render_template, flash, redirect, session, url_for, request
 from flask_login import login_user, logout_user, current_user, login_required
 
 from goodplays import app, db, lm
-from goodplays.forms import LoginForm, AddPlayForm, EditPlayForm
+from goodplays.forms import LoginForm, AddPlayForm, EditPlayForm, EditGameForm
 from goodplays.models import User, Game, Platform, Play, Tag, Status
 from goodplays.authenticate import authenticate
 from goodplays import controller
@@ -89,6 +89,9 @@ def details(id):
     """
     game = controller.game(id)
 
+    # TODO: If logged in, show edit button
+    # TODO: If logged in and the game has no plays, show delete button
+
     if not game:
         flash(f"Unable to find game with ID {id}.")
         return redirect(url_for('index'))
@@ -104,9 +107,60 @@ def details(id):
     )
 
 
+@app.route('/add')
+@login_required
+def add():
+    """
+    Adds a new game to the database.
+    """
+    game = controller.new_game(current_user)
+    return redirect(url_for('edit', id=game.id))
+
+@app.route('/edit/<int:id>', methods=['GET', 'POST'])
+@login_required
+def edit(id):
+    """
+    Adds a new game to the database.
+    """
+    game = controller.game(id)
+
+    # Initialize with current data, if any
+    form = EditGameForm(
+        name=game.name,
+        image_url=game.image_url,
+        description=game.description,
+        released=game.released,
+        platforms=[p.id for p in game.platforms]
+    )
+
+    if form.validate_on_submit():
+        controller.edit_game(
+            game=game,
+            name=form.name.data,
+            released=form.released.data,
+            image_url=form.image_url.data,
+            description=form.description.data,
+            platforms=controller.map_platforms(form.platforms.data)
+        )
+
+        return redirect(url_for('details', id=id))
+
+    else:
+        print(form.errors)
+        flash(form.errors)
+
+    return render_template(
+        'edit.html',
+        user=current_user,
+        title='Edit Game',
+        game=game,
+        form=form
+    )
+
+
 @app.route('/add/<gb_id>')
 @login_required
-def add(gb_id):
+def add_gb(gb_id):
     """
     Adds a game from Giant Bomb.
     """
@@ -119,7 +173,7 @@ def add(gb_id):
     return redirect(url_for('details', id=game.id))
 
 
-@app.route('/add-play/<game_id>', methods=['POST'])
+@app.route('/add-play/<int:game_id>', methods=['POST'])
 @login_required
 def add_play(game_id):
     """
@@ -138,6 +192,7 @@ def add_play(game_id):
             comments=form.comments.data,
             tags=controller.map_tags(form.tags.data.split(','))
         )
+
     else:
         print(form.errors)
         flash(form.errors)
@@ -179,6 +234,7 @@ def edit_play():
             comments=form.comments.data,
             tags=controller.map_tags(form.tags.data.split(','))
         )
+
     else:
         print(form.errors)
         flash(form.errors)
@@ -186,7 +242,7 @@ def edit_play():
     return redirect(url_for('details', id=play.game.id))
 
 
-@app.route('/update/<id>')
+@app.route('/update/<int:id>')
 @login_required
 def update(id):
     """

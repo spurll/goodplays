@@ -1,15 +1,27 @@
 from flask_wtf import FlaskForm
-from wtforms import TextField, BooleanField, HiddenField, PasswordField, DateField, SelectField
+from wtforms import TextField, BooleanField, HiddenField, PasswordField, \
+    DateField, SelectField, SelectMultipleField, TextAreaField
 from wtforms.fields.html5 import IntegerField
 from wtforms.validators import Required, NumberRange, Optional
 
-from goodplays.models import Status
+from goodplays.models import Status, Platform
 
 
 class LoginForm(FlaskForm):
     username = TextField('Username', validators=[Required()])
     password = PasswordField('Password', validators=[Required()])
     remember = BooleanField('Remember Me', default=False)
+
+
+class EditGameForm(FlaskForm):
+    name = TextField('Name', validators=[Required()])
+    image_url = TextField('Image URL')
+    description = TextAreaField('Description')
+    released = DateField('Released', format='%Y-%m-%d',
+        validators=[Optional()])
+    platforms = SelectMultipleField('Platforms', coerce=int, choices=[
+        (p.id, p.name) for p in Platform.query.order_by(Platform.name).all()
+    ])
 
 
 class AddPlayForm(FlaskForm):

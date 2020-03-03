@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+{% block content %}
+
+<script type="text/javascript">
+    $(document).ready(() => {
+        const dates = $("input#released");
+        const inputs = $("input");
+
+        // Enable JQuery UI's date picker.
+        dates.datepicker({dateFormat: "yy-mm-dd"});
+
+        // Submit on enter
+        inputs.keydown((e) => {
+            if (e.keyCode == 13) {
+                $('#form').submit();
+            }
+        });
+    });
+</script>
+
+<div class="tabs">
+    <h1>
+        <ul>
+            <li><a href={{ url_for('games') }}>Games</a></li>
+            <li><a href={{ url_for('plays') }}>Plays</a></li>
+            <li class="selected"><a href={{ url_for('edit', id=game.id) }}>Edit Game</a></li>
+            <li>&nbsp;</li>
+        </ul>
+    </h1>
+</div>
+
+<div id="edit">
+    <img class="art" src="{{ game.image_url if game.image_url else url_for('static', filename='default.png') }}" />
+    <form id="form" action="" method="POST" autocomplete="off">
+        {{ form.hidden_tag() }}
+
+        <p class="info">
+            <span class="label">{{ form.name.label }}:</span>
+            <span>{{ form.name }}</span>
+        </p>
+        <p class="info">
+            <span class="label">{{ form.image_url.label }}:</span>
+            <span>{{ form.image_url }}</span>
+        </p>
+        <p class="info">
+            <span class="label">{{ form.description.label }}:</span>
+            <span>{{ form.description }}</span>
+        </p>
+        <p class="info">
+            <span class="label">{{ form.released.label }}:</span>
+            <span>{{ form.released }}</span>
+        </p>
+        <p class="info">
+            <span class="label">{{ form.platforms.label }}:</span>
+            <span>{{ form.platforms }}</span>
+        </p>
+        <p class="info links">
+            <span><a class="button" href="#" onclick="$('#form').submit()">Save Details</a></span>
+        </p>
+    </form>
+</div>
+
+{% if game.gb_id %}
+<div class="footer">
+    <object class="gb-logo" type="image/svg+xml" data="{{ url_for('static', filename='gb.svg')}}">Giant Bomb Logo</object>
+    <span>Some content on this page provided by <a href="https://www.giantbomb.com/">Giant Bomb</a> via their excellent <a href="https://www.giantbomb.com/api/">API</a>. Thanks!</span>
+</div>
+{% endif %}
+
+{% endblock %}

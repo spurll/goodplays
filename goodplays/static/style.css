@@ -75,7 +75,7 @@ th { font-weight: bold; }
 }
 
 #title {
-    font-size: 150%;
+    font-size: 22px;
     padding: 10px 20px;
     display: inline-block;
 }
@@ -107,13 +107,13 @@ th { font-weight: bold; }
 
 h1 {
     text-align: center;
-    font-size: 140%;
+    font-size: 22px;
     padding: 5px 0 10px;
 }
 
 h2 {
     text-align: center;
-    font-size: 100%;
+    font-size: 16px;
 }
 
 :not(.tabs) h1, :not(.tabs) h2 {
@@ -143,6 +143,7 @@ h2 {
 
 .tabs h1 li:last-child {
     width: 100%;
+    text-align: right;
 }
 
 .tabs ul {
@@ -273,6 +274,10 @@ a.button:hover {
     border: 1px solid #cccccc;
 }
 
+.normal {
+    font-size: 16px;
+}
+
 img.art:not(.small) {
     margin: 0 20px 20px 0;
     float: left;
@@ -302,7 +307,7 @@ form {
     margin: 0;
 }
 
-input {
+input, textarea {
     color: #ffffff;
     background-color: transparent;
     border: solid 1px #cccccc;
@@ -318,12 +323,22 @@ select {
 
 select option { background-color: #222222; }
 
-input[type="text"] {
-    width: 100%;
+.info input, .info textarea, .info select {
+    width: 300px;
 }
 
-input[type="password"] {
-    width: 100%;
+td input {
+	width: 100%;
+}
+
+textarea {
+	font-family: unset;
+}
+
+#edit p.info span.label {
+    width: 110px;
+    display: inline-block;
+    vertical-align: top;
 }
 
 input[type="search"] {

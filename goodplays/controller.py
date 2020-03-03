@@ -31,6 +31,10 @@ def tags():
     return Tag.query.all()
 
 
+def map_platforms(ids):
+    return Platform.query.filter(Platform.id.in_(ids)).all()
+
+
 def map_tags(names):
     return [
         Tag.query.filter_by(name=name.strip().lower()).one_or_none()
@@ -241,9 +245,19 @@ def delete_play(play):
     db.session.commit()
 
 
-def edit_game():
-    # TODO
-    pass
+def delete_game(game):
+    if not game.plays:
+        db.session.delete(game)
+        db.session.commit()
+
+
+def edit_game(game, name, released, image_url, description, platforms):
+    game.name = name
+    game.released = released
+    game.image_url = image_url
+    game.description = description
+    game.platforms = platforms
+    db.session.commit()
 
 
 def edit_play(play, started, finished, status, rating, comments, tags):
