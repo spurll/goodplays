@@ -46,6 +46,7 @@ Feature Requests
     * Button to link it to Giant Bomb?
 * Ability to delete a game (if logged in and it has no plays)
 * Ability to edit a game (if logged in and not linked to GB)
+* User management (sign up page, place to change email address, forgot password link)
 
 Known Bugs
 ----------

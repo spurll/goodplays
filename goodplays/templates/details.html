@@ -124,6 +124,19 @@
             }
         });
 
+        // When status is set to Playing, set started to today
+        addStatus.change((e) => {
+            if (addStatus.val() === "playing") {
+                addStarted.val(today())
+            }
+        })
+
+        editStatus.change((e) => {
+            if (editStatus.val() === "playing") {
+                editStarted.val(today())
+            }
+        })
+
         // When status is set to Completed (or 100%), set finished to today
         addStatus.change((e) => {
             if (addStatus.val() === "completed" || addStatus.val() === "hundred") {
