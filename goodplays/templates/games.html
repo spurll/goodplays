@@ -80,7 +80,7 @@
             <td class="rating">{{ game.stars | safe }}</td>
             <td class="add">
                 {% if not in_db %}
-                <a href={{ url_for('add', gb_id=game.gb_id) }}><img class="icon" src={{ url_for('static', filename='add.png') }} title="Import from Giant Bomb" /></a>
+                <a href={{ url_for('add_gb', gb_id=game.gb_id) }}><img class="icon" src={{ url_for('static', filename='add.png') }} title="Import from Giant Bomb" /></a>
                 {% endif %}
             </td>
         </tr>
