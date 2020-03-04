@@ -38,7 +38,7 @@ def search():
 @app.route('/games')
 def games():
     """
-    Shows the 20 most recent games added to the DB.
+    Shows the 20 most recent games added to the DB
     """
     sort = request.args.get('sort', 'added')
     page = int(request.args.get('page', '1'))
@@ -51,7 +51,8 @@ def games():
         user=current_user,
         games=g,
         sort=sort,
-        page=page
+        page=page,
+        more=len(g) == controller.PAGE_SIZE
     )
 
 
@@ -59,7 +60,7 @@ def games():
 @login_required
 def plays():
     """
-    Displays a user's 20 most recent plays.
+    Displays a user's 20 most recent plays
     """
     status = Status.coerce(request.args.get('status'))
     page = int(request.args.get('page', '1'))
@@ -78,14 +79,15 @@ def plays():
         plays=p,
         status=status,
         statuses=statuses,
-        page=page
+        page=page,
+        more=len(p) == controller.PAGE_SIZE
     )
 
 
 @app.route('/details/<int:id>')
 def details(id):
     """
-    Displays a game's details page.
+    Displays a game's details page
     """
     game = controller.game(id)
 
@@ -162,7 +164,7 @@ def edit(id):
 @login_required
 def add_gb(gb_id):
     """
-    Adds a game from Giant Bomb.
+    Adds a game from Giant Bomb
     """
     game = controller.add_gb(current_user, gb_id)
 
@@ -177,7 +179,7 @@ def add_gb(gb_id):
 @login_required
 def add_play(game_id):
     """
-    Adds a play.
+    Adds a play
     """
     form = AddPlayForm()
 
@@ -204,7 +206,7 @@ def add_play(game_id):
 @login_required
 def delete_play():
     """
-    Deletes a play.
+    Deletes a play
     """
     id = int(request.args.get('id'))
     play = current_user.plays.filter_by(id=id).one()
@@ -218,7 +220,7 @@ def delete_play():
 @login_required
 def edit_play():
     """
-    Edits a play.
+    Edits a play
     """
     form = EditPlayForm()
     id = int(form.id.data)
@@ -246,7 +248,7 @@ def edit_play():
 @login_required
 def update(id):
     """
-    Updates a game with data from Giant Bomb.
+    Updates a game with data from Giant Bomb
     """
     game = controller.game(id)
     controller.update_game(game)
