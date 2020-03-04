@@ -104,16 +104,16 @@ def parse_gb_platform(gb):
 
 def games(sort='added', page=1):
     if sort == 'added':
-        sort = Game.added.desc()
+        sort = (Game.added.desc(), Game.id.desc())
     elif sort == 'released':
-        sort = Game.released.desc()
+        sort = (Game.released.desc(),)
     elif sort == 'name':
-        sort = Game.name.asc()
+        sort = (Game.name.asc(),)
     else:
         sort = None
 
     return Game.query \
-        .order_by(sort) \
+        .order_by(*sort) \
         .limit(PAGE_SIZE) \
         .offset(PAGE_SIZE * (page - 1)) \
         .all()
@@ -126,10 +126,13 @@ def plays(user, status=None, page=1):
         query = query.filter_by(status=status) \
             .join(Play.game) \
             .order_by(Game.name.asc())
+
     elif status in (Status.playing, Status.abandoned):
         query = query.filter_by(status=status).order_by(Play.started.desc())
+
     elif status in (Status.completed, Status.hundred):
         query = query.filter_by(status=status).order_by(Play.finished.desc())
+
     else:
         query = user.plays.order_by(Play.started.desc(), Play.finished.desc())
 
@@ -246,7 +249,7 @@ def delete_play(play):
 
 
 def delete_game(game):
-    if not game.plays:
+    if not game.plays.count():
         db.session.delete(game)
         db.session.commit()
 

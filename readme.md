@@ -41,11 +41,10 @@ Feature Requests
 
 * Whenever tags are displayed, make them links to bring up all games that have plays with that tag
 * Icon idea: NES controller?
+* Better page titles (include "goodplays")
 * Allow users to add games not in Giant Bomb:
     * Only viewable by the user who added it?
     * Button to link it to Giant Bomb?
-* Ability to delete a game (if logged in and it has no plays)
-* Ability to edit a game (if logged in and not linked to GB)
 * User management (sign up page, place to change email address, forgot password link)
 
 Known Bugs

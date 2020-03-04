@@ -6,9 +6,12 @@
         <ul>
             <li class="selected"><a href={{ url_for('games') }}>Games</a></li>
             <li><a href={{ url_for('plays') }}>Plays</a></li>
-			<li><a class="button normal" href={{ url_for('add') }}>New Game</a></li>
+			<li>&nbsp;</li>
         </ul>
     </h1>
+    {% if can_add %}
+    <a class="button right" href={{ url_for('add') }}>New Game</a>
+    {% endif %}
     <h2>
         <ul>
             <li class={{ 'selected' if sort == 'added' else '' }}>

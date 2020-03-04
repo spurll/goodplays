@@ -9,7 +9,6 @@ from goodplays import controller
 
 
 @app.route('/')
-@app.route('/index')
 def index():
     logged_in = current_user.is_authenticated;
     return redirect(url_for('plays' if logged_in else 'games'))
@@ -52,7 +51,8 @@ def games():
         games=g,
         sort=sort,
         page=page,
-        more=len(g) == controller.PAGE_SIZE
+        more=len(g) == controller.PAGE_SIZE,
+        can_add = current_user.is_authenticated
     )
 
 
@@ -91,9 +91,6 @@ def details(id):
     """
     game = controller.game(id)
 
-    # TODO: If logged in, show edit button
-    # TODO: If logged in and the game has no plays, show delete button
-
     if not game:
         flash(f"Unable to find game with ID {id}.")
         return redirect(url_for('index'))
@@ -105,7 +102,9 @@ def details(id):
         game=game,
         add_form=AddPlayForm(),
         edit_form=EditPlayForm(),
-        plays=controller.game_plays(current_user, game.id)
+        plays=controller.game_plays(current_user, game.id),
+        can_edit=current_user.is_authenticated,
+        can_delete=current_user.is_authenticated and not game.plays.count(),
     )
 
 
@@ -117,6 +116,7 @@ def add():
     """
     game = controller.new_game(current_user)
     return redirect(url_for('edit', id=game.id))
+
 
 @app.route('/edit/<int:id>', methods=['GET', 'POST'])
 @login_required
@@ -147,7 +147,7 @@ def edit(id):
 
         return redirect(url_for('details', id=id))
 
-    else:
+    elif form.errors:
         print(form.errors)
         flash(form.errors)
 
@@ -200,6 +200,18 @@ def add_play(game_id):
         flash(form.errors)
 
     return redirect(url_for('details', id=game_id))
+
+
+@app.route('/delete/<int:id>', methods=['GET'])
+@login_required
+def delete(id):
+    """
+    Deletes a game
+    """
+    game = controller.game(id)
+    controller.delete_game(game)
+
+    return redirect(url_for('games'))
 
 
 @app.route('/delete-play', methods=['GET'])

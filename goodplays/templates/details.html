@@ -42,6 +42,9 @@
         displayRow.after(bufferRow);
         bufferRow.after(editRow);
         editRow.show();
+
+        // Set focus on status input
+        $("#edit-status").focus();
     }
 
     function cancelEdit() {
@@ -54,23 +57,31 @@
         $('#edit_form')[0].reset();
     }
 
-    function deletePlay(id) {
-        if (!window.confirm('Delete this record?')) {
-            return false;
+    function deleteGame() {
+        if (!window.confirm('Delete this game?')) {
+            return;
         }
 
-        window.location.href = `{{ url_for('delete_play') }}?id=${id}`
+        window.location.href = "{{ url_for('delete', id=game.id) }}";
+    }
+
+    function deletePlay(id) {
+        if (!window.confirm('Delete this record?')) {
+            return;
+        }
+
+        window.location.href = `{{ url_for('delete_play') }}?id=${id}`;
     }
 
     $(document).ready(() => {
         const dates = $(".started input, .finished input");
 
-        const addInputs = $("tr#new-play input");
+        const addInputs = $("tr#new-play input, tr#new-play select");
         const addStarted = $("input#add-started");
         const addFinished = $("input#add-finished");
         const addStatus = $("select#add-status");
 
-        const editInputs = $("tr#edit-play input");
+        const editInputs = $("tr#edit-play input, tr#edit-play select");
         const editStarted = $("input#edit-started");
         const editFinished = $("input#edit-finished");
         const editStatus = $("select#edit-status");
@@ -182,12 +193,18 @@
         <span>{{ game.stars }}</span>
     </p>
     {% endif %}
-    {% if game.gb_id %}
     <p class="info links">
-        <span><a class="button" href="{{ url_for('update', id=game.id) }}">Update Details</a></span>
+        {% if game.gb_id %}
+        <span><a class="button" href="{{ url_for('update', id=game.id) }}">Refresh Data</a></span>
         <span><a class="button" href="{{ game.gb_url }}">View on Giant Bomb</a></span>
+        {% endif %}
+        {% if can_edit %}
+        <span><a class="button" href="{{ url_for('edit', id=game.id) }}">Edit</a></span>
+        {% endif %}
+        {% if can_delete %}
+        <span><a class="button" href="#" onclick="deleteGame(); return false;">Delete</a></span>
+        {% endif %}
     </p>
-    {% endif %}
 </div>
 
 {% if user and user.is_authenticated %}
@@ -220,8 +237,8 @@
             <td class="tags">{{ add_form.tags(form="add_form") }}</td>
             <td class="comments">{{ add_form.comments(form="add_form") }}</td>
             <td class="rating">{{ add_form.rating(form="add_form")}}</td>
-            <td class="save icon"><a id="submit_add" href="#" onclick="$('#add_form').submit()"><img class="icon" src="{{url_for('static', filename='save.png')}}" title="Save" /></a></td>
-            <td class="clear icon"><a id="clear_add" href="#" onclick="$('#add_form')[0].reset()"><img class="icon" src="{{url_for('static', filename='delete.png')}}" title="Clear" /></a></td>
+            <td class="save icon"><a id="submit_add" href="#" onclick="$('#add_form').submit(); return false;"><img class="icon" src="{{url_for('static', filename='save.png')}}" title="Save" /></a></td>
+            <td class="clear icon"><a id="clear_add" href="#" onclick="$('#add_form')[0].reset(); return false;"><img class="icon" src="{{url_for('static', filename='delete.png')}}" title="Clear" /></a></td>
         </tr>
         <tr id="edit-play" hidden="true">
             <td class="started">{{ edit_form.started(form="edit_form") }}</td>
@@ -230,8 +247,8 @@
             <td class="tags">{{ edit_form.tags(form="edit_form") }}</td>
             <td class="comments">{{ edit_form.comments(form="edit_form") }}</td>
             <td class="rating">{{ edit_form.rating(form="edit_form")}}</td>
-            <td class="save icon"><a id="submit_edit" href="#" onclick="$('#edit_form').submit()"><img class="icon" src="{{url_for('static', filename='save.png')}}" title="Save" /></a></td>
-            <td class="cancel icon"><a id="cancel_edit" href="#" onclick="cancelEdit()"><img class="icon" src="{{url_for('static', filename='delete.png')}}" title="Cancel" /></a></td>
+            <td class="save icon"><a id="submit_edit" href="#" onclick="$('#edit_form').submit(); return false;"><img class="icon" src="{{url_for('static', filename='save.png')}}" title="Save" /></a></td>
+            <td class="cancel icon"><a id="cancel_edit" href="#" onclick="cancelEdit(); return false;"><img class="icon" src="{{url_for('static', filename='delete.png')}}" title="Cancel" /></a></td>
         </tr>
         <tr id="edit-buffer" hidden="true"></tr>
         {% if plays %}
@@ -243,8 +260,8 @@
             <td class="tags">{{ play.tags | map(attribute='name') | join(", ") }}</td>
             <td class="comments">{{ play.comments }}</td>
             <td class="rating">{{ play.stars }}</td>
-            <td class="edit icon"><a id="edit_{{ play.id }}" href="#" onclick="editPlay({{ play.id }})"><img class="icon" src="{{url_for('static', filename='edit.png')}}" title="Edit" /></a></td>
-            <td class="delete icon"><a id="delete_{{ play.id }}" href="#" onclick="deletePlay({{ play.id }})"><img class="icon" src="{{url_for('static', filename='delete.png')}}" title="Delete" /></a></td>
+            <td class="edit icon"><a id="edit_{{ play.id }}" href="#" onclick="editPlay({{ play.id }}); return false;"><img class="icon" src="{{url_for('static', filename='edit.png')}}" title="Edit" /></a></td>
+            <td class="delete icon"><a id="delete_{{ play.id }}" href="#" onclick="deletePlay({{ play.id }}); return false;"><img class="icon" src="{{url_for('static', filename='delete.png')}}" title="Delete" /></a></td>
         </tr>
         {% endfor %}
         {% endif %}
