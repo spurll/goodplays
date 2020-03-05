@@ -16,10 +16,6 @@ p.info {
     text-align: left;
 }
 
-p.info.links {
-    margin-top: 15px;
-}
-
 p.info span.label {
     font-weight: bold;
 }
@@ -47,6 +43,8 @@ table:not(.ui-datepicker-calendar) tr:nth-child(even) {
 
 td { font-size: 85%; padding: 5px; }
 th { font-weight: bold; }
+
+.small-screen td { font-size: 65%; padding: 5px; }
 
 .ui-datepicker { background-color: #111111; }
 .ui-state-highlight { background-color: #dddddd !important; border-color: #000000 !important; color: #000000 !important; }
@@ -77,19 +75,48 @@ th { font-weight: bold; }
 #title {
     font-size: 22px;
     padding: 10px 20px;
-    display: inline-block;
+    justify-content: left;
 }
 
 #search {
-    width: 700px;
     margin: auto;
     text-align: center;
 }
 
+.flex-container {
+    display: flex;
+}
+
+.flex-box {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+}
+
+.flex-box:first-child > span { margin-right: auto; }
+
+.flex-box:last-child > span { margin-left: auto; }
+
 #user {
-    text-align: right;
-    padding: 10px 20px;
-    right: 0;
+    padding: 10px;
+}
+
+input[type="search"] {
+    width: 350;
+    padding: 4px 5px;
+}
+
+.small-screen input[type="search"] {
+    width: auto;
+    padding: 1px 4px 2px;
+}
+
+.small-screen {
+    font-size: 70%;
+}
+
+.small-screen #current-user {
+    display: none;
 }
 
 .center {
@@ -180,14 +207,6 @@ h1 .selected, h2 .selected {
     font-weight: bold;
 }
 
-.small-screen {
-    width: auto;
-    margin: auto;
-    float: none;
-    text-align: center;
-    padding: 2px;
-}
-
 .messages { font-style: italic; text-align: center; }
 .wide { width: 60%; top: 0px; }
 .narrow { width: 40%; top: 0px; }
@@ -268,14 +287,14 @@ a:hover {
 a.button {
     border: 1px solid #ffffff;
     padding: 3px 5px;
+    white-space: nowrap;
+    display: inline-block;
+    margin-top: 5px;
+    margin-bottom: 5px;
 }
 
 a.button:hover {
     border: 1px solid #cccccc;
-}
-
-.normal {
-    font-size: 16px;
 }
 
 img.art:not(.small) {
@@ -328,25 +347,15 @@ select option { background-color: #222222; }
 }
 
 td input {
-	width: 100%;
+    width: 100%;
 }
 
 textarea {
-	font-family: unset;
+    font-family: unset;
 }
 
 #edit p.info span.label {
     width: 110px;
     display: inline-block;
     vertical-align: top;
-}
-
-input[type="search"] {
-    width: 440;
-    padding: 4px 5px;
-}
-
-a#search-submit {
-    width: 56px;
-    vertical-align: middle;
 }
