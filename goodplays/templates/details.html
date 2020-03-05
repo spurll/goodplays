@@ -137,26 +137,26 @@
 
         // When status is set to Playing, set started to today
         addStatus.change((e) => {
-            if (addStatus.val() === "playing") {
+            if (addStatus.val() === "playing" && !addStarted.val()) {
                 addStarted.val(today())
             }
         })
 
         editStatus.change((e) => {
-            if (editStatus.val() === "playing") {
+            if (editStatus.val() === "playing" && !editStarted.val()) {
                 editStarted.val(today())
             }
         })
 
         // When status is set to Completed (or 100%), set finished to today
         addStatus.change((e) => {
-            if (addStatus.val() === "completed" || addStatus.val() === "hundred") {
+            if ((addStatus.val() === "completed" || addStatus.val() === "hundred") && !addFinished.val()) {
                 addFinished.val(today())
             }
         })
 
         editStatus.change((e) => {
-            if (editStatus.val() === "completed" || editStatus.val() === "hundred") {
+            if ((editStatus.val() === "completed" || editStatus.val() === "hundred") && !editFinished.val()) {
                 editFinished.val(today())
             }
         })
