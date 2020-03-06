@@ -45,6 +45,7 @@ td { font-size: 85%; padding: 5px; }
 th { font-weight: bold; }
 
 .small-screen td { font-size: 65%; padding: 5px; }
+.small-screen th { font-size: 65%; padding: 5px; }
 
 .ui-datepicker { background-color: #111111; }
 .ui-state-highlight { background-color: #dddddd !important; border-color: #000000 !important; color: #000000 !important; }
@@ -190,12 +191,12 @@ h2 {
     margin-right: 20px;
 }
 
-.tabs h1 span {
-    padding: 10px;
+.small-screen .tabs h2 li {
+    margin-right: 5px;
 }
 
-.tabs h2 span {
-    padding-right: 15px;
+.tabs h1 span {
+    padding: 10px;
 }
 
 div.tabs {
@@ -264,13 +265,19 @@ td.released, td.started, td.finished {
     width: 80px;
 }
 
-td.art { text-align: center; }
+td.art {
+    text-align: center;
+}
 
 td.empty { 
     background-color: #444444;
     border-color: #444444;
     text-align: center;
     font-weight: bold;
+}
+
+.small-screen th.platforms, .small-screen td.platforms {
+    display: none;
 }
 
 a:link, a:visited, a:active {
@@ -306,6 +313,11 @@ img.art:not(.small) {
 img.art.small {
     max-height: 64px;
     max-width: 64px;
+}
+
+.small-screen img.art.small {
+    max-height: 32px;
+    max-width: 32px;
 }
 
 img.icon {
