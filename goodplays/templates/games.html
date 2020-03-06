@@ -60,7 +60,7 @@
 </table>
 
 <div class="pages">
-    {% if page > 1 %}
+    {% if page and page > 1 %}
     <div id="previous"><a class="button" href={{ url_for('games', page=page - 1) }}>Previous Page</a></div>
     {% endif %}
 
