@@ -50,13 +50,6 @@ th { font-weight: bold; }
 .ui-state-highlight { background-color: #dddddd !important; border-color: #000000 !important; color: #000000 !important; }
 .ui-state-active { background-color: #888888 !important; border-color: #000000 !important; color: #ffffff !important; }
 
-#content {
-    width: 100%;
-    max-width: 700px;
-    margin: auto;
-    padding-top: 10px;
-}
-
 #title-buffer {
     width: 100%;
     height: 52px;
@@ -70,35 +63,24 @@ th { font-weight: bold; }
     position: fixed;
     background-color: #111111;
     border-bottom: solid #444444;
+    display: flex;
 }
 
 #title {
     font-size: 22px;
     padding: 10px 20px;
-    justify-content: left;
+    height: 37px;
+    line-height: 37px;
+}
+
+.small-screen #title {
+    padding: 10px 5px;
 }
 
 #search {
     margin: auto;
     text-align: center;
-}
-
-.flex-container {
-    display: flex;
-}
-
-.flex-box {
-    flex: 1;
-    display: flex;
-    justify-content: center;
-}
-
-.flex-box:first-child > span { margin-right: auto; }
-
-.flex-box:last-child > span { margin-left: auto; }
-
-#user {
-    padding: 10px;
+    white-space: nowrap;
 }
 
 input[type="search"] {
@@ -111,36 +93,53 @@ input[type="search"] {
     padding: 1px 4px 2px;
 }
 
-.small-screen {
-    font-size: 70%;
-}
-
 .small-screen #current-user {
     display: none;
 }
 
-.center {
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
+#user {
+    padding: 10px 20px;
+    text-align: right;
+    white-space: nowrap;
 }
 
-.center-vertical {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
+.small-screen #user {
+    padding: 13px 5px;
+}
+
+.flex-container {
+    display: flex;
+}
+
+.flex-box {
+    flex: 1;
+    display: flex;
+}
+
+.flex-box:first-child > span { margin-right: auto; }
+
+.flex-box:last-child > span { margin-left: auto; }
+
+.small-screen {
+    font-size: 70%;
+}
+
+#content {
+    width: 100%;
+    max-width: 900px;
+    margin: auto;
+    padding-top: 10px;
 }
 
 h1 {
     text-align: center;
-    font-size: 22px;
+    font-size: 140%;
     padding: 5px 0 10px;
 }
 
 h2 {
     text-align: center;
-    font-size: 16px;
+    font-size: 100%;
 }
 
 :not(.tabs) h1, :not(.tabs) h2 {

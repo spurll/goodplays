@@ -39,18 +39,15 @@ Bugs and Feature Requests
 Feature Requests
 ----------------
 
-* Whenever tags are displayed, make them links to bring up all games that have plays with that tag
 * Icon idea: NES controller?
 * Better page titles (include "goodplays")
-* Allow users to add games not in Giant Bomb:
-    * Only viewable by the user who added it?
-    * Button to link it to Giant Bomb?
+* Whenever tags are displayed, make them links to bring up all games that have plays with that tag
+* For games not in Giant Bomb, provide a way to link them to Giant Bomb?
 * User management (sign up page, place to change email address, forgot password link)
 
 Known Bugs
 ----------
 
-* Page resizing in base.html needs to be reworked
 * There's no pagination for search results, displaying games, or displaying plays (most important)
 
 License Information
