@@ -153,8 +153,11 @@ def search(query):
         .all()
 
     for game in fuzzy:
-        if len(results) >= PAGE_SIZE: break
-        if game not in results: results.append(game)
+        if len(results) >= PAGE_SIZE:
+            break
+
+        if game not in results:
+            results.append(game)
 
     return results
 

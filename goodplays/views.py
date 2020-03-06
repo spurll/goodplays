@@ -21,12 +21,15 @@ def search():
     """
     query = request.args.get('query')
 
+    if not query:
+        return redirect(url_for('games'))
+
     g = controller.search(query)
     gb = controller.search_gb(query)
 
     return render_template(
         'games.html',
-        title=f'Search: {query}',
+        title=f'Search: {query} | Goodplays',
         user=current_user,
         search=query,
         games=g,
@@ -46,7 +49,7 @@ def games():
 
     return render_template(
         'games.html',
-        title='Games',
+        title='Goodplays',
         user=current_user,
         games=g,
         sort=sort,
@@ -74,7 +77,7 @@ def plays():
 
     return render_template(
         'plays.html',
-        title='Plays',
+        title='Goodplays',
         user=current_user,
         plays=p,
         status=status,
@@ -97,7 +100,7 @@ def details(id):
 
     return render_template(
         'details.html',
-        title=game.name,
+        title=f'{game.name} | Goodplays',
         user=current_user,
         game=game,
         add_form=AddPlayForm(),
@@ -154,7 +157,7 @@ def edit(id):
     return render_template(
         'edit.html',
         user=current_user,
-        title='Edit Game',
+        title='Edit Game | Goodplays',
         game=game,
         form=form
     )
@@ -283,16 +286,16 @@ def login():
     form = LoginForm()
 
     if request.method == 'GET':
-        return render_template('login.html', title='Log In', form=form,
-            hide_user=True)
+        return render_template('login.html', title='Log In | Goodplays',
+            form=form, hide_user=True)
 
     if form.validate_on_submit():
         user, message = authenticate(form.username.data, form.password.data)
 
         if not user:
             flash(f'Login failed: {message}.')
-            return render_template('login.html', title='Log In', form=form,
-                hide_user=True)
+            return render_template('login.html', title='Log In | Goodplays',
+                form=form, hide_user=True)
 
         if user and user.is_authenticated:
             db_user = User.query.get(user.id)
@@ -304,7 +307,7 @@ def login():
 
             return redirect(request.args.get('next') or url_for('index'))
 
-    return render_template('login.html', title='Log In', form=form,
+    return render_template('login.html', title='Log In | Goodplays', form=form,
         hide_user=True)
 
 

@@ -127,7 +127,7 @@ input[type="search"] {
 
 #content {
     width: 100%;
-    max-width: 900px;
+    max-width: 800px;
     margin: auto;
     padding-top: 10px;
 }
@@ -208,6 +208,8 @@ h1 .selected, h2 .selected {
 }
 
 .messages { font-style: italic; text-align: center; }
+.messages p { margin-top: 20px; }
+
 .wide { width: 60%; top: 0px; }
 .narrow { width: 40%; top: 0px; }
 .right { float: right; text-align: right; margin-right: 0; }
@@ -236,6 +238,18 @@ h1 .selected, h2 .selected {
 }
 
 .login a.button {
+    float: right;
+}
+
+.pages {
+    padding-top: 10px;
+}
+
+.pages #previous {
+    float: left;
+}
+
+.pages #next {
     float: right;
 }
 
