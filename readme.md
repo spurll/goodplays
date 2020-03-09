@@ -39,14 +39,14 @@ Bugs and Feature Requests
 Feature Requests
 ----------------
 
+* User management (change email address, forgot password)
 * Whenever tags are displayed, make them links to bring up all games that have plays with that tag
 * For games not in Giant Bomb, provide a way to link them to Giant Bomb?
-* User management (sign up page, place to change email address, forgot password link)
 
 Known Bugs
 ----------
 
-Nothing major!
+* Sign up and other user management functions are not supported for LDAP
 
 License Information
 ===================

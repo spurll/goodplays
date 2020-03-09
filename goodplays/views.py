@@ -1,11 +1,13 @@
 from flask import render_template, flash, redirect, session, url_for, request
 from flask_login import login_user, logout_user, current_user, login_required
+from urllib.parse import urljoin
+import requests
 
-from goodplays import app, db, lm
-from goodplays.forms import LoginForm, AddPlayForm, EditPlayForm, EditGameForm
+from goodplays import app, db, lm, controller
 from goodplays.models import User, Game, Platform, Play, Tag, Status
 from goodplays.authenticate import authenticate
-from goodplays import controller
+from goodplays.forms import LoginForm, SignupForm, AddPlayForm, EditPlayForm, \
+    EditGameForm
 
 
 @app.route('/')
@@ -138,7 +140,7 @@ def edit(id):
         platforms=[p.id for p in game.platforms]
     )
 
-    if form.validate_on_submit():
+    if request.method == 'POST' and form.validate_on_submit():
         controller.edit_game(
             game=game,
             name=form.name.data,
@@ -275,6 +277,41 @@ def update(id):
     return redirect(url_for('details', id=game.id))
 
 
+@app.route('/signup', methods=['GET', 'POST'])
+def signup():
+    form = SignupForm()
+
+    if request.method == 'POST' and form.validate_on_submit():
+        payload = {
+            'id': form.username.data,
+            'email': form.email.data,
+            'password': form.password.data,
+            'name': form.name.data,
+            'next': url_for('login', _external=True)
+        }
+
+        url = urljoin(request.base_url, '/auth/new')
+        r = requests.post(url, json=payload)
+
+        if r.status_code == 200:
+            flash('Success! Please check your email to complete signup.')
+            return redirect(url_for('login'))
+
+        else:
+            flash(f'Signup failed: {r.text}.')
+
+    elif form.errors:
+        print(form.errors)
+        flash(form.errors)
+
+    return render_template(
+        'signup.html',
+        title='Sign Up | Goodplays',
+        form=form,
+        hide_user=True
+    )
+
+
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     """
@@ -285,20 +322,12 @@ def login():
 
     form = LoginForm()
 
-    if request.method == 'GET':
-        return render_template('login.html', title='Log In | Goodplays',
-            form=form, hide_user=True)
-
-    if form.validate_on_submit():
+    if request.method == 'POST' and form.validate_on_submit():
         user, message = authenticate(form.username.data, form.password.data)
-
-        if not user:
-            flash(f'Login failed: {message}.')
-            return render_template('login.html', title='Log In | Goodplays',
-                form=form, hide_user=True)
 
         if user and user.is_authenticated:
             db_user = User.query.get(user.id)
+
             if db_user is None:
                 db.session.add(user)
                 db.session.commit()
@@ -307,8 +336,14 @@ def login():
 
             return redirect(request.args.get('next') or url_for('index'))
 
-    return render_template('login.html', title='Log In | Goodplays', form=form,
-        hide_user=True)
+        flash(f'Login failed: {message}.')
+
+    return render_template(
+        'login.html',
+        title='Log In | Goodplays',
+        form=form,
+        hide_user=True
+    )
 
 
 @app.route('/logout')

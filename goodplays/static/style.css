@@ -82,6 +82,7 @@ th { font-weight: bold; }
     margin: auto;
     text-align: center;
     white-space: nowrap;
+    justify-content: center;
 }
 
 input[type="search"] {
@@ -207,7 +208,7 @@ h1 .selected, h2 .selected {
     font-weight: bold;
 }
 
-.messages { font-style: italic; text-align: center; }
+.messages { text-align: center; color: #aa3333; }
 .messages p { margin-top: 20px; }
 
 .wide { width: 60%; top: 0px; }
@@ -220,7 +221,7 @@ h1 .selected, h2 .selected {
     margin: auto;
 }
 
-.login form div {
+.login form div, .signup form div {
     height: 30px;
 }
 
@@ -237,8 +238,34 @@ h1 .selected, h2 .selected {
     margin: 7px 10px 0 0;
 }
 
-.login a.button {
+.signup {
+    max-width: 400px;
+    margin: auto;
+}
+
+.signup label {
+    width: 40%;
+    display: inline-block;
+}
+
+.signup input[type="text"], .signup input[type="password"] {
+    width: 60%;
+}
+
+.login form a.button, .signup form a.button {
     float: right;
+}
+
+.login p:first-of-type, .signup p:first-of-type {
+    margin-top: 40px;
+}
+
+input.invalid {
+    border-color: #aa3333;
+}
+
+p.invalid-message {
+    color: #aa3333;
 }
 
 .pages {

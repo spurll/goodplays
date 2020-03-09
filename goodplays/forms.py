@@ -2,15 +2,23 @@ from flask_wtf import FlaskForm
 from wtforms import TextField, BooleanField, HiddenField, PasswordField, \
     DateField, SelectField, SelectMultipleField, TextAreaField
 from wtforms.fields.html5 import IntegerField
-from wtforms.validators import Required, NumberRange, Optional
+from wtforms.validators import Required, Optional, Email, EqualTo, Length
 
 from goodplays.models import Status, Platform
 
 
 class LoginForm(FlaskForm):
-    username = TextField('Username', validators=[Required()])
-    password = PasswordField('Password', validators=[Required()])
+    username = TextField('Username:', validators=[Required()])
+    password = PasswordField('Password:', validators=[Required()])
     remember = BooleanField('Remember Me', default=False)
+
+
+class SignupForm(FlaskForm):
+    email = TextField('Email:', validators=[Email()])
+    name = TextField('Display Name:', validators=[Required()])
+    username = TextField('Username:', validators=[Required()])
+    password = PasswordField('Password:', validators=[Length(min=16)])
+    confirm = PasswordField('Confirm Password:', validators=[EqualTo('password')])
 
 
 class EditGameForm(FlaskForm):

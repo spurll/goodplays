@@ -1,0 +1,99 @@
+{% extends "base.html" %}
+{% block content %}
+
+<script type="text/javascript">
+    function submit() {
+        const invalid = $('p.invalid-message');
+        invalid.empty();
+
+        if (!check_length('#email')) {
+            invalid.append("<p>An email address is required for signup confirmation.</p>");
+        }
+
+        if (!check_length('#username')) {
+            invalid.append("<p>A username is required.</p>");
+        }
+
+        if (!check_length('#name')) {
+            invalid.append("<p>A display name is required. I don't care if it's your real name (and your real name is whatever you want it to be anyway).</p>");
+        }
+
+        if (!check_length('#password', 16)) {
+            invalid.append("<p>Your password must be at least 16 characters.</p>");
+        }
+
+        if (!check_match()) {
+            invalid.append("<p>The passwords entered must match.</p>");
+        }
+
+        if (!invalid.children().length) {
+            $('#signup-form').submit();
+        }
+    }
+
+    function check_length(selector, min=1) {
+        const field = $(selector);
+
+        if (field.val().length >= min) {
+            field.removeClass("invalid");
+            return true;
+        }
+
+        field.addClass("invalid");
+        return false;
+    }
+
+    function check_match() {
+        const password = $('#password');
+        const conf = $('#confirm');
+
+        if (password.val() === conf.val()) {
+            conf.removeClass("invalid");
+            return true;
+        }
+
+        conf.addClass("invalid");
+        return false;
+    }
+
+    $(document).ready(() => {
+        // Submit on enter (required since there's no "submit" input element)
+        $('#signup-form input').keydown((e) => {
+            if (e.keyCode == 13) {
+                submit()
+            }
+        });
+
+        $('#email').change(() => check_length('#email'));
+        $('#name').change(() => check_length('#name'));
+        $('#username').change(() => check_length('#username'));
+        $('#password').change(() => check_length('#password', 16) && (!$('#confirm').val() || check_match()));
+        $('#confirm').change(() => check_match());
+    });
+</script>
+
+<h1>Sign Up</h1>
+
+<div class="signup">
+    <form id="signup-form" action="" method="POST" name="signup-form">
+        {{ form.hidden_tag() }}
+
+        <div class="email">{{ form.email.label }}{{ form.email(autofocus=True) }}</div>
+        <div class="name">{{ form.name.label }}{{ form.name }}</div>
+        <div class="username">{{ form.username.label }}{{ form.username }}</div>
+        <div class="password">{{ form.password.label }}{{ form.password }}</div>
+        <div class="password">{{ form.confirm.label }}{{ form.confirm }}</div>
+        <div class="submit">
+            <a href="#" class="button" onclick="submit(); return false;">Sign Up</a>
+        </div>
+    </form>
+    <p class="invalid-message"></p>
+</div>
+
+<div class="login">
+    <p>Already have an account?</p>
+    <p><a class="button" href={{ url_for("login") }}>Log In!</a></p>
+</div>
+
+{% endblock %}
+
