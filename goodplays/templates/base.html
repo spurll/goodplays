@@ -36,13 +36,20 @@
             }
 
             function resizeContent() {
-                if ($(window).width() < 800) {
+                const width = $(window).width();
+
+                if (width < 700) {
                     // Moves and resizes the links and login information information on a smaller screen.
                     $('body').addClass('small-screen');
+                    $('body').removeClass('medium-screen');
+                }
+                else if (width < 900) {
+                    $('body').addClass('medium-screen');
+                    $('body').removeClass('small-screen');
                 }
                 else {
                     // Moves and resizes the links and login information information on a bigger (or horizontal) screen.
-                    $('body').removeClass('small-screen');
+                    $('body').removeClass('small-screen medium-screen');
                 }
             }
         </script>
@@ -59,7 +66,7 @@
                 {% if not hide_search %}
                 <form id="search-form" action={{ url_for('search') }} method="GET" name="search">
                     <input type="search" name="query" placeholder="Search for a game..." />
-                    <a class="button" id="search-submit" href="#" onclick="$('#search-form').submit()">Search</a>
+                    <a class="button" id="search-submit" href="#" onclick="$('#search-form').submit(); return false;">Search</a>
                 </form>
                 {% endif %}
             </div>

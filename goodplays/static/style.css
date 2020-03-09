@@ -95,7 +95,7 @@ input[type="search"] {
     padding: 1px 4px 2px;
 }
 
-.small-screen #current-user {
+.small-screen #current-user, .medium-screen #current-user {
     display: none;
 }
 
@@ -128,7 +128,7 @@ input[type="search"] {
 
 #content {
     width: 100%;
-    max-width: 800px;
+    max-width: 700px;
     margin: auto;
     padding-top: 10px;
 }
@@ -303,6 +303,11 @@ td.rating {
 td.released, td.started, td.finished {
     white-space: nowrap;
     text-align: center;
+}
+
+body:not(.small-screen) td.released,
+body:not(.small-screen) td.started,
+body:not(.small-screen) td.finished {
     width: 80px;
 }
 
@@ -318,6 +323,14 @@ td.empty {
 }
 
 .small-screen th.platforms, .small-screen td.platforms {
+    display: none;
+}
+
+.small-screen th.tags, .small-screen td.tags {
+    display: none;
+}
+
+.small-screen th.comments, .small-screen td.comments {
     display: none;
 }
 
