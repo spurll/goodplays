@@ -185,7 +185,7 @@
     </p>
     <p class="info">
         <span class="label">Platforms:</span>
-        <span>{{ game.platforms | map(attribute="name") | join(", ") }}</span>
+        <span>{{ (game.platforms | map(attribute="name") | join(", ")) if game.platforms.count() else "Unknown" }}</span>
     </p>
     {% if game.rating %}
     <p class="info">

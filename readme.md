@@ -39,7 +39,7 @@ Bugs and Feature Requests
 Feature Requests
 ----------------
 
-* User management (change email address, forgot password)
+* User management (change email address, name, password, forgot password)
 * Whenever tags are displayed, make them links to bring up all games that have plays with that tag
 * For games not in Giant Bomb, provide a way to link them to Giant Bomb?
 
