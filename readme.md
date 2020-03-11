@@ -39,8 +39,23 @@ Bugs and Feature Requests
 Feature Requests
 ----------------
 
+* Polishes:
+    * Sort "interested" games by release date (desc)
+    * On Details page, the "add play" row should be at the bottom (not top) of the table
+    * Whenever tags are displayed, make them links to bring up all games that have plays
+      with that tag
+    * Allow user to select sort order for plays and games
+    * Add some way to view only games completed in a specific year (like a Goodreads
+      reading challenge)
+    * Search should autofocus (at least on the search page), and should remain populated
+      with the most recent search
+    * Instead of a dropdown, each of the five stars should be clickable to set the rating
+      to its level (with zero stars having low opacity and showing "No Rating" behind it)
+* Add a "played" status for games that don't really define completion (racing games,
+  fighting games, etc.)
+* Define a `Play.is_completed` attribute (status is "played", "completed", or "100%") and
+  add that filter to Plays screen
 * User management (change email address, name, password, forgot password)
-* Whenever tags are displayed, make them links to bring up all games that have plays with that tag
 * For games not in Giant Bomb, provide a way to link them to Giant Bomb?
 
 Known Bugs
