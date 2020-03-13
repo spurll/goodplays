@@ -87,12 +87,11 @@ th { font-weight: bold; }
 
 input[type="search"] {
     width: 350;
-    padding: 4px 5px;
+    padding: 3px 4px;
 }
 
 .small-screen input[type="search"] {
     width: auto;
-    padding: 1px 4px 2px;
 }
 
 .small-screen #current-user, .medium-screen #current-user {
@@ -106,7 +105,7 @@ input[type="search"] {
 }
 
 .small-screen #user {
-    padding: 13px 5px;
+    padding: 14px 5px;
 }
 
 .flex-container {
@@ -369,6 +368,10 @@ img.art.small {
     max-width: 64px;
 }
 
+.small-screen img.art:not(.small) {
+    max-width: 128px;
+}
+
 .small-screen img.art.small {
     max-height: 32px;
     max-width: 32px;
@@ -396,6 +399,7 @@ input, textarea {
     background-color: transparent;
     border: solid 1px #cccccc;
     padding: 2px 4px;
+    font-size: inherit;
 }
 
 select {
@@ -403,6 +407,7 @@ select {
     background-color: transparent;
     border: solid 1px #cccccc;
     padding: 1px;
+    font-size: inherit;
 }
 
 select option { background-color: #222222; }

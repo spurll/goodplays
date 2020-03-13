@@ -56,6 +56,7 @@ Feature Requests
 * Define a `Play.is_completed` attribute (status is "played", "completed", or "100%") and
   add that filter to Plays screen
 * User management (change email address, name, password, forgot password)
+* Allow users to make their plays public (what would this look like?)
 * For games not in Giant Bomb, provide a way to link them to Giant Bomb?
 
 Known Bugs
