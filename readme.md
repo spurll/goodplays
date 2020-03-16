@@ -40,7 +40,6 @@ Feature Requests
 ----------------
 
 * Polishes:
-    * Sort "interested" games by release date (desc)
     * On Details page, the "add play" row should be at the bottom (not top) of the table
     * Whenever tags are displayed, make them links to bring up all games that have plays
       with that tag

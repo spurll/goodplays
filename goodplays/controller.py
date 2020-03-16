@@ -125,7 +125,7 @@ def plays(user, status=None, page=1):
     if status == Status.interested:
         query = query.filter_by(status=status) \
             .join(Play.game) \
-            .order_by(Game.name.asc())
+            .order_by(Game.released.desc(), Game.name.asc())
 
     elif status in (Status.playing, Status.abandoned):
         query = query.filter_by(status=status).order_by(Play.started.desc())
