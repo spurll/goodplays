@@ -158,6 +158,8 @@ h2 {
     border-left: 1px solid #cccccc;
     border-top: 1px solid #cccccc;
     border-right: 1px solid #cccccc;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
 }
 
 .tabs h1 li:not(.selected) {
@@ -333,13 +335,15 @@ td.empty {
     display: none;
 }
 
-a:link, a:visited, a:active {
+a {
     text-decoration: none;
+}
+
+a:link, a:visited, a:active {
     color: #ffffff;
 }
 
 a:hover {
-    text-decoration: none;
     color: #cccccc;
 }
 
