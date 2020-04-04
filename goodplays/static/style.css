@@ -253,7 +253,7 @@ h1 .selected, h2 .selected {
     width: 60%;
 }
 
-.login form a.button, .signup form a.button {
+.login form input[type="submit"], .signup form input[type="submit"] {
     float: right;
 }
 
@@ -412,6 +412,20 @@ select {
     border: solid 1px #cccccc;
     padding: 1px;
     font-size: inherit;
+}
+
+button, input[type="submit"], input[type="reset"] {
+    color: #ffffff;
+    background-color: transparent;
+    border-color: #ffffff;
+    cursor: pointer;
+    font-size: 16px;
+    padding: 3px 5px;
+}
+
+button:hover, input[type="submit"]:hover, input[type="reset"]:hover {
+    color: #cccccc;
+    border-color: #cccccc;
 }
 
 select option { background-color: #222222; }

@@ -1,17 +1,6 @@
 {% extends "base.html" %}
 {% block content %}
 
-<script type="text/javascript">
-    $(document).ready(() => {
-        // Submit on enter (required since there's no "submit" input element)
-        $('#login-form input').keydown((e) => {
-            if (e.keyCode == 13) {
-                $('#login-form').submit();
-            }
-        });
-    });
-</script>
-
 <h1>Log In</h1>
 
 <div class="login">
@@ -22,7 +11,7 @@
         <div class="password">{{ form.password.label }}{{ form.password }}</div>
         <div class="submit">
             {{ form.remember }}{{ form.remember.label }}
-            <a href="#" class="button" onclick="$('#login-form').submit()">Log In</a>
+            <input type="submit" value="Log In" />
         </div>
     </form>
 </div>
