@@ -41,11 +41,11 @@ table:not(.ui-datepicker-calendar) tr:nth-child(even) {
     border-color: #444444;
 }
 
-td { font-size: 85%; padding: 5px; }
+td { font-size: 14px; padding: 5px; }
 th { font-weight: bold; }
 
-.small-screen td { font-size: 65%; padding: 5px; }
-.small-screen th { font-size: 65%; padding: 5px; }
+.small-screen td { font-size: 10px; padding: 5px; }
+.small-screen th { font-size: 10px; padding: 5px; }
 
 .ui-datepicker { background-color: #111111; }
 .ui-state-highlight { background-color: #dddddd !important; border-color: #000000 !important; color: #000000 !important; }
@@ -122,7 +122,7 @@ input[type="search"] {
 .flex-box:last-child > span { margin-left: auto; }
 
 .small-screen {
-    font-size: 70%;
+    font-size: 12px;
 }
 
 #content {
@@ -134,13 +134,21 @@ input[type="search"] {
 
 h1 {
     text-align: center;
-    font-size: 140%;
+    font-size: 18px;
     padding: 5px 0 10px;
+}
+
+.small-screen h1 {
+    font-size: 14px;
 }
 
 h2 {
     text-align: center;
-    font-size: 100%;
+    font-size: 16px;
+}
+
+.small-screen h2 {
+    font-size: 10px;
 }
 
 :not(.tabs) h1, :not(.tabs) h2 {
@@ -404,6 +412,7 @@ input, textarea {
     border: solid 1px #cccccc;
     padding: 2px 4px;
     font-size: inherit;
+    border-radius: 0;
 }
 
 select {
@@ -412,6 +421,10 @@ select {
     border: solid 1px #cccccc;
     padding: 1px;
     font-size: inherit;
+    border-radius: 0;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
 }
 
 button, input[type="submit"], input[type="reset"] {
@@ -421,11 +434,16 @@ button, input[type="submit"], input[type="reset"] {
     cursor: pointer;
     font-size: 16px;
     padding: 3px 5px;
+    border-radius: 0;
 }
 
 button:hover, input[type="submit"]:hover, input[type="reset"]:hover {
     color: #cccccc;
     border-color: #cccccc;
+}
+
+.small-screen button, .small-screen input[type="submit"], .small-screen input[type="reset"] {
+    font-size: 12px;
 }
 
 select option { background-color: #222222; }
