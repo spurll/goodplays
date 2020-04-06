@@ -44,6 +44,9 @@ table:not(.ui-datepicker-calendar) tr:nth-child(even) {
 td { font-size: 14px; padding: 5px; }
 th { font-weight: bold; }
 
+td input, td select { font-size: 13px; }
+.small-screen td input, .small-screen td select { font-size: 10px; }
+
 .small-screen td { font-size: 10px; padding: 5px; }
 .small-screen th { font-size: 10px; padding: 5px; }
 
@@ -419,7 +422,7 @@ select {
     color: #ffffff;
     background-color: transparent;
     border: solid 1px #cccccc;
-    padding: 1px;
+    padding: 2px 4px;
     font-size: inherit;
     border-radius: 0;
     appearance: none;
