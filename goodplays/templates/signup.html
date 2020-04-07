@@ -3,7 +3,7 @@
 
 <script type="text/javascript">
     function submit(e) {
-        const invalid = $('p.invalid-message');
+        const invalid = $('p.invalid');
         invalid.empty();
 
         if (!check_length('#email')) {
@@ -83,7 +83,7 @@
             <input type="submit" value="Sign Up" />
         </div>
     </form>
-    <p class="invalid-message"></p>
+    <p class="invalid"></p>
 </div>
 
 <div class="login">

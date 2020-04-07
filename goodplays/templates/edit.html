@@ -61,7 +61,7 @@
             <span>{{ form.platforms }}</span>
         </p>
         <p class="info links">
-            <span><a class="button" href="#" onclick="$('#form').submit()">Save Details</a></span>
+            <span><input type="submit" value="Save Details" /></span>
             {% if game.name %}
             <span><a class="button" href={{ url_for('details', id=game.id) }}>Discard Changes</a></span>
             {% endif %}
