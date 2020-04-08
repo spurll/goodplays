@@ -3,6 +3,8 @@ Goodplays
 
 A web application that tracks games played.
 
+![Screenshot](/screenshots/plays.png?raw=true)
+
 Usage
 =====
 
@@ -20,8 +22,8 @@ Requirements
 Configuration
 -------------
 
-You'll need to create a `config.py` file, which specifies details such as which LDAP
-server to use. A sample configuration file can be found at `sample_config.py`.
+You'll need to create a `config.py` file, which specifies configuration details, such as
+authentication information. A sample configuration file can be found at `sample_config.py`.
 
 Starting the Server
 -------------------
@@ -61,7 +63,7 @@ Feature Requests
 Known Bugs
 ----------
 
-* Sign up and other user management functions are not supported for LDAP
+* Sign up and other user management functions are not supported via LDAP
 
 License Information
 ===================
