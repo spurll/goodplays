@@ -25,6 +25,7 @@ td input, td select {
 }
 
 #title {
+    font-weight: normal;
     padding: 10px 20px;
     height: 37px;
     line-height: 37px;
