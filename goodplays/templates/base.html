@@ -4,7 +4,7 @@
         <meta name="viewport" content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no'>
 
         {% if title %}
-        <title>{{title}}</title>
+        <title>{{ title }}</title>
         {% endif %}
 
         <link rel="stylesheet" type="text/css" href={{ url_for('static', filename='common.css') }} />
@@ -14,46 +14,7 @@
 
         <script type="text/javascript" src={{ url_for('static', filename='jquery-3.1.0.min.js') }} ></script>
         <script type="text/javascript" src={{ url_for('static', filename='jquery-ui-1.12.1.min.js') }} ></script>
-
-        <script>
-            $(document).ready(function() {
-                resizeContent();
-                resizeBuffer();
-            });
-
-            $(window).resize(function() {
-                resizeContent();
-                resizeBuffer();
-            });
-
-            $(window).on('orientationchange', function() {
-                resizeContent();
-                resizeBuffer();
-            });
-
-            function resizeBuffer() {
-                // Resizes the title buffer which pushes content down below the floating title bar.
-                $('#title-buffer').height($('#title-bar').outerHeight());
-            }
-
-            function resizeContent() {
-                const width = $(window).width();
-
-                if (width < 700) {
-                    // Moves and resizes the links and login information information on a smaller screen.
-                    $('body').addClass('small-screen');
-                    $('body').removeClass('medium-screen');
-                }
-                else if (width < 900) {
-                    $('body').addClass('medium-screen');
-                    $('body').removeClass('small-screen');
-                }
-                else {
-                    // Moves and resizes the links and login information information on a bigger (or horizontal) screen.
-                    $('body').removeClass('small-screen medium-screen');
-                }
-            }
-        </script>
+        <script type="text/javascript" src={{ url_for('static', filename='resize.js') }} ></script>
     </head>
 
     <body>
@@ -76,8 +37,8 @@
                 <span>
                     {% if not hide_user %}
                     {% if user and user.is_authenticated %}
-                    <span id="current-user">Logged in as {{user.name}}.</span>
-                    <span><a class="button" title="Logged in as {{user.name}}." href={{ url_for('logout') }}>Log Out</a></span>
+                    <span id="current-user">Logged in as {{ user.name }}.</span>
+                    <span><a class="button" title="Logged in as {{ user.name }}." href={{ url_for('logout') }}>Log Out</a></span>
                     {% else %}
                     <a class="button" href={{ url_for('login', next=url_for(request.endpoint, **dict(request.view_args))) }}>Log In</a>
                     {% endif %}

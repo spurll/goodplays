@@ -20,20 +20,17 @@ td input, td select {
     font-size: 10px;
 }
 
-div#title-buffer {
-    height: 36px;
-}
-
 div#title {
     font-weight: normal;
-    padding: 10px 20px;
-    height: 36px;
-    line-height: 36px;
+    padding-left: 20px;
     justify-content: left;
 }
 
 .small-screen div#title {
     padding: 10px 5px;
+    font-size: 18px;
+    height: 22px;
+    line-height: 22px;
 }
 
 div#search {
@@ -54,6 +51,10 @@ input[type="search"] {
 
 .small-screen #user {
     padding: 14px 5px;
+}
+
+.small-screen h1 {
+    font-size: 14px;
 }
 
 .small-screen h2 {
