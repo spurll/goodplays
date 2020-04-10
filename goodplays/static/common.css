@@ -263,13 +263,6 @@ textarea, input[type="text"], input[type="password"], input[type="number"] {
 }
 
 
-.small-screen {
-	width: auto;
-	margin: auto;
-	float: none;
-	padding: 2px;
-}
-
 .small-screen #current-user, .medium-screen #current-user {
     display: none;
 }
@@ -286,7 +279,11 @@ textarea, input[type="text"], input[type="password"], input[type="number"] {
     font-size: 14px;
 }
 
-.small-screen textarea, .small-screen input[type="text"], .small-screen input[type="password"], .small-screen input[type="number"] {
+.small-screen textarea, .small-screen input[type="text"], .small-screen input[type="password"], .small-screen input[type="number"], .small-screen select {
+    font-size: 10px;
+}
+
+.small-screen button, .small-screen input[type="submit"], .small-screen input[type="reset"] {
     font-size: 12px;
 }
 

@@ -215,10 +215,6 @@ form {
     margin: 0;
 }
 
-.small-screen button, .small-screen input[type="submit"], .small-screen input[type="reset"] {
-    font-size: 12px;
-}
-
 select option { background-color: #222222; }
 
 .info input[type="text"], .info textarea, .info select {
