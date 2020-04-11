@@ -24,6 +24,7 @@ div#title-bar {
 }
 
 div#title {
+	color: #ffffff;
 	margin: auto;
 	font-size: 22px;
 	font-weight: bold;
@@ -142,6 +143,10 @@ p.invalid {
     text-align: center;
 }
 
+.code {
+    font-family: monospace;
+}
+
 
 p {
 	margin: 5px;
@@ -219,6 +224,7 @@ button, input[type="submit"], input[type="reset"] {
     font-size: 16px;
     padding: 3px 5px;
     border-radius: 0;
+    font-family: inherit;
 }
 
 button:hover, input[type="submit"]:hover, input[type="reset"]:hover {
@@ -236,14 +242,22 @@ input, textarea {
 }
 
 textarea {
+    width: 100%;
+    font-size: 14px;
     font-family: unset;
+}
+
+input[type="text"], input[type="password"], input[type="number"], input[type="search"] {
+    width: 100%;
+    font-size: 14px;
+    font-family: inherit;
 }
 
 select {
     color: #ffffff;
     background-color: transparent;
     font-size: 14px;
-    font-family: unset;
+    font-family: inherit;
     border: solid 1px #cccccc;
     border-radius: 0;
     appearance: none;
@@ -256,11 +270,6 @@ select:not([multiple]) {
 }
 
 select option { background-color: #222222; }
-
-textarea, input[type="text"], input[type="password"], input[type="number"] {
-    width: 100%;
-    font-size: 14px;
-}
 
 
 .small-screen #current-user, .medium-screen #current-user {

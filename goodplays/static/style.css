@@ -43,10 +43,12 @@ div#search {
 input[type="search"] {
     width: 350;
     padding: 3px 4px;
+    font-size: 16px;
 }
 
 .small-screen input[type="search"] {
     width: auto;
+    font-size: 12px;
 }
 
 .small-screen #user {
