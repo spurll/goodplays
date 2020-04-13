@@ -1,43 +1,43 @@
 body {
     font-family: "Lato", "Helvetica Neue", "Helvetica", sans-serif;
     color: #cccccc;
-	background-color: #222222;
-	overflow-y: auto;
-	margin: 0px;
+    background-color: #222222;
+    overflow-y: auto;
+    margin: 0px;
 }
 
 div#title-buffer {
-	width: 100%;
-	height: 56px;
-	top: 0px;
-	position: static;
-	z-index: 500;
+    width: 100%;
+    height: 56px;
+    top: 0px;
+    position: static;
+    z-index: 500;
 }
 
 div#title-bar {
-	width: 100%;
-	top: 0px;
-	position: fixed;
-	background-color: #111111;
-	border-bottom: solid #444444;
+    width: 100%;
+    top: 0px;
+    position: fixed;
+    background-color: #111111;
+    border-bottom: solid #444444;
     display: flex;
 }
 
 div#title {
-	color: #ffffff;
-	margin: auto;
-	font-size: 22px;
-	font-weight: bold;
+    color: #ffffff;
+    margin: auto;
+    font-size: 22px;
+    font-weight: bold;
     height: 56px;
     line-height: 56px;
-	text-align: center;
+    text-align: center;
     justify-content: center;
     white-space: nowrap;
 }
 
 div#links {
     padding: 10px 20px;
-	text-align: left;
+    text-align: left;
     white-space: nowrap;
 }
 
@@ -61,14 +61,14 @@ div#user {
 .flex-box:last-child > span { margin-left: auto; }
 
 #content {
-	width: 100%;
-	max-width: 700px;
-	margin: auto;
-	padding-top: 10px;
+    width: 100%;
+    max-width: 700px;
+    margin: auto;
+    padding-top: 10px;
 }
 
 #footer {
-	width: 100%;
+    width: 100%;
 }
 
 
@@ -149,8 +149,8 @@ p.invalid {
 
 
 p {
-	margin: 5px;
-	text-align: center;
+    margin: 5px;
+    text-align: center;
 }
 
 h1, h2, h3 {
@@ -158,8 +158,8 @@ h1, h2, h3 {
 }
 
 h1 {
-	font-size: 18px;
-	padding: 5px 0 10px;
+    font-size: 18px;
+    padding: 5px 0 10px;
 }
 
 h2 {
@@ -167,11 +167,11 @@ h2 {
 }
 
 table {
-	width: 100%;
-	margin-top: 5px;
-	margin-bottom: 10px;
-	border: 0px;
-	border-spacing: 0px;
+    width: 100%;
+    margin-top: 5px;
+    margin-bottom: 10px;
+    border: 0px;
+    border-spacing: 0px;
 }
 
 table:not(.ui-datepicker-calendar) tr:nth-child(even) {

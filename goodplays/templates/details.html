@@ -237,8 +237,8 @@
             <td class="tags">{{ add_form.tags(form="add_form") }}</td>
             <td class="comments">{{ add_form.comments(form="add_form") }}</td>
             <td class="rating">{{ add_form.rating(form="add_form")}}</td>
-            <td class="save icon"><a id="submit_add" href="javascript:$('#add_form').submit()"><img class="icon" src={{ url_for('static', filename='save.png') }} title="Save" /></a></td>
-            <td class="clear icon"><a id="clear_add" href="javascript:$('#add_form')[0].reset()"><img class="icon" src={{ url_for('static', filename='delete.png') }} title="Clear" /></a></td>
+            <td class="save icon"><a id="submit_add" href="javascript:$('#add_form').submit()"><img class="icon" src="{{ url_for('static', filename='save.png') }}" title="Save" /></a></td>
+            <td class="clear icon"><a id="clear_add" href="javascript:$('#add_form')[0].reset()"><img class="icon" src="{{ url_for('static', filename='delete.png') }}" title="Clear" /></a></td>
         </tr>
         <tr id="edit-play" hidden="true">
             <td class="started">{{ edit_form.started(form="edit_form") }}</td>
@@ -247,8 +247,8 @@
             <td class="tags">{{ edit_form.tags(form="edit_form") }}</td>
             <td class="comments">{{ edit_form.comments(form="edit_form") }}</td>
             <td class="rating">{{ edit_form.rating(form="edit_form")}}</td>
-            <td class="save icon"><a id="submit_edit" href="javascript:$('#edit_form').submit()"><img class="icon" src={{ url_for('static', filename='save.png') }} title="Save" /></a></td>
-            <td class="cancel icon"><a id="cancel_edit" href="javascript:cancelEdit()"><img class="icon" src={{ url_for('static', filename='delete.png') }} title="Cancel" /></a></td>
+            <td class="save icon"><a id="submit_edit" href="javascript:$('#edit_form').submit()"><img class="icon" src="{{ url_for('static', filename='save.png') }}" title="Save" /></a></td>
+            <td class="cancel icon"><a id="cancel_edit" href="javascript:cancelEdit()"><img class="icon" src="{{ url_for('static', filename='delete.png') }}" title="Cancel" /></a></td>
         </tr>
         <tr id="edit-buffer" hidden="true"></tr>
         {% if plays %}
@@ -260,8 +260,8 @@
             <td class="tags">{{ play.tags | map(attribute='name') | join(", ") }}</td>
             <td class="comments">{{ play.comments }}</td>
             <td class="rating">{{ play.stars }}</td>
-            <td class="edit icon"><a id="edit_{{ play.id }}" href="javascript:editPlay({{ play.id }})"><img class="icon" src={{ url_for('static', filename='edit.png') }} title="Edit" /></a></td>
-            <td class="delete icon"><a id="delete_{{ play.id }}" href="javascript:deletePlay({{ play.id }})"><img class="icon" src={{ url_for('static', filename='delete.png') }} title="Delete" /></a></td>
+            <td class="edit icon"><a id="edit_{{ play.id }}" href="javascript:editPlay({{ play.id }})"><img class="icon" src="{{ url_for('static', filename='edit.png') }}" title="Edit" /></a></td>
+            <td class="delete icon"><a id="delete_{{ play.id }}" href="javascript:deletePlay({{ play.id }})"><img class="icon" src="{{ url_for('static', filename='delete.png') }}" title="Delete" /></a></td>
         </tr>
         {% endfor %}
         {% endif %}
