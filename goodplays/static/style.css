@@ -107,6 +107,10 @@ div.tabs {
     margin-right: 0;
 }
 
+.tabs h2 ul {
+    flex-wrap: wrap;
+}
+
 .tabs h2 li {
     padding: 5px;
     margin-left: 0;
@@ -123,6 +127,7 @@ div.tabs {
 
 .tabs a.button {
     margin-top: 0;
+    margin-left: 5px;
     float: right;
 }
 

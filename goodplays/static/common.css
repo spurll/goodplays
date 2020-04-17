@@ -238,7 +238,6 @@ input, textarea {
     font-size: inherit;
     padding: 2px 4px;
     border: solid 1px #cccccc;
-    border-radius: 0;
 }
 
 textarea {
@@ -251,6 +250,12 @@ input[type="text"], input[type="password"], input[type="number"], input[type="se
     width: 100%;
     font-size: 14px;
     font-family: inherit;
+    border-radius: 0;
+}
+
+input[type="text"], input[type="search"] {
+    -webkit-border-radius: 0;
+    -webkit-appearance: none;
 }
 
 select {
