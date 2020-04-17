@@ -35,7 +35,7 @@ def games():
         user=current_user,
         games=g,
         giantbomb=gb,
-        sort=sort,
+        sort=sort if not search else None,
         page=page,
         search=search,
         more=len(g) == controller.PAGE_SIZE,

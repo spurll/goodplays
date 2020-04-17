@@ -10,7 +10,6 @@
             <li class="selected"><a href="{{ url_for('plays') }}">Plays</a></li>
             <li>&nbsp;</li>
         </ul>
-        <a class="toggle-filters" href="javascript:toggleFilters()"></a>
     </h1>
     <h2 id="filters">
         <ul>
@@ -24,6 +23,7 @@
             {% endfor %}
         </ul>
     </h2>
+    <a class="toggle-filters" href="javascript:toggleFilters()"></a>
 </div>
 
 <table id="latest">
