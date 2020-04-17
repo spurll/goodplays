@@ -1,33 +1,36 @@
 {% extends "base.html" %}
 {% block content %}
 
+<script type="text/javascript" src="{{ url_for('static', filename='toggle.js') }}"></script>
+
 <div class="tabs">
     <h1>
         <ul>
-            <li class="selected"><a href={{ url_for('games') }}>Games</a></li>
-            <li><a href={{ url_for('plays') }}>Plays</a></li>
+            <li class="selected"><a href="{{ url_for('games') }}">Games</a></li>
+            <li><a href="{{ url_for('plays') }}">Plays</a></li>
 			<li>&nbsp;</li>
         </ul>
     </h1>
-    {% if can_add %}
-    <a class="button right" href={{ url_for('add') }}>New Game</a>
-    {% endif %}
-    <h2>
+    <h2 id="filters">
+        {% if can_add %}
+        <a class="button" href="{{ url_for('add') }}">New Game</a>
+        {% endif %}
         <ul>
             <li class={{ 'selected' if sort == 'added' else '' }}>
-                <a href={{ url_for('games', sort='added') }}>Recently Added</a>
+                <a href="{{ url_for('games', sort='added') }}">Recently Added</a>
             </li>
             <li class={{ 'selected' if sort == 'released' else '' }}>
-                <a href={{ url_for('games', sort='released') }}>Recently Released</a>
+                <a href="{{ url_for('games', sort='released') }}">Recently Released</a>
             </li>
             <li class={{ 'selected' if sort == 'name' else '' }}>
-                <a href={{ url_for('games', sort='name') }}>Alphabetical</a>
+                <a href="{{ url_for('games', sort='name') }}">Alphabetical</a>
             </li>
             {% if search %}
             <li class="selected">Search: {{ search }}</li>
             {% endif %}
         </ul>
     </h2>
+    <a class="toggle-filters" href="javascript:toggleFilters()"></a>
 </div>
 
 <table id="games">
@@ -49,8 +52,8 @@
 
         {% for game in games %}
         <tr id={{ game.id }}>
-            <td class="art"><img class="art small" src={{ game.image_url if game.image_url else url_for('static', filename='default.png') }} /></td>
-            <td class="name"><a href={{ url_for('details', id=game.id) }}>{{ game.name }}</a></td>
+            <td class="art"><img class="art small" src="{{ game.image_url if game.image_url else url_for('static', filename='default.png') }}" /></td>
+            <td class="name"><a href="{{ url_for('details', id=game.id) }}">{{ game.name }}</a></td>
             <td class="released">{{ game.released if game.released else "" }}</td>
             <td class="platforms">{{ game.platforms | map(attribute="abbreviation") | join(", ") }}</td>
             <td class="rating">{{ game.stars }}</td>
@@ -86,14 +89,14 @@
     <tbody>
         {% for game, in_db in giantbomb %}
         <tr id={{ game.gb_id }}>
-            <td class="art"><img class="art small" src={{ game.image_url if game.image_url else url_for('static', filename='default.png') }} /></td>
-            <td class="name"><a href={{ game.gb_url }}>{{ game.name }}</a></td>
+            <td class="art"><img class="art small" src="{{ game.image_url if game.image_url else url_for('static', filename='default.png') }}" /></td>
+            <td class="name"><a href="{{ game.gb_url }}">{{ game.name }}</a></td>
             <td class="released">{{ game.released if game.released }}</td>
             <td class="platforms">{{ game.platforms | map(attribute="abbreviation") | join(", ") }}</td>
             <td class="rating">{{ game.stars | safe }}</td>
             <td class="add">
                 {% if not in_db %}
-                <a href={{ url_for('add_gb', gb_id=game.gb_id) }}><img class="icon" src={{ url_for('static', filename='add.png') }} title="Import from Giant Bomb" /></a>
+                <a href="{{ url_for('add_gb', gb_id=game.gb_id) }}"><img class="icon" src="{{ url_for('static', filename='add.png') }}" title="Import from Giant Bomb" /></a>
                 {% endif %}
             </td>
         </tr>

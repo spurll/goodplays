@@ -107,6 +107,17 @@ div.tabs {
     margin-right: 0;
 }
 
+.toggle-filters {
+    float: right;
+    font-size: 10px;
+    margin-top: -15px;
+    padding: 3px;
+}
+
+h2#filters ul {
+    margin: 0 auto;
+}
+
 .tabs h2 ul {
     flex-wrap: wrap;
 }
@@ -119,6 +130,10 @@ div.tabs {
 
 .small-screen .tabs h2 li {
     margin-right: 5px;
+}
+
+.small-screen #filters {
+    display: none;
 }
 
 .tabs h1 span {

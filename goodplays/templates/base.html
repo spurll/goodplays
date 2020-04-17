@@ -27,7 +27,7 @@
             <div id="search" class="flex-box">
                 {% if not hide_search %}
                 <form id="search-form" action={{ url_for('search') }} method="GET" name="search">
-                    <input type="search" name="query" placeholder="Search for a game..." />
+                    <input type="search" name="query" value="{{ search if search else '' }}" placeholder="Search for a game..." />
                     <input type="submit" value="Search" />
                 </form>
                 {% endif %}

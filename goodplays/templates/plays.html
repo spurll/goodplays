@@ -1,22 +1,25 @@
 {% extends "base.html" %}
 {% block content %}
 
+<script type="text/javascript" src="{{ url_for('static', filename='toggle.js') }}"></script>
+
 <div class="tabs">
     <h1>
         <ul>
-            <li><a href={{ url_for('games') }}>Games</a></li>
-            <li class="selected"><a href={{ url_for('plays') }}>Plays</a></li>
+            <li><a href="{{ url_for('games') }}">Games</a></li>
+            <li class="selected"><a href="{{ url_for('plays') }}">Plays</a></li>
             <li>&nbsp;</li>
         </ul>
+        <a class="toggle-filters" href="javascript:toggleFilters()"></a>
     </h1>
-    <h2>
+    <h2 id="filters">
         <ul>
             <li class={{ 'selected' if status == None else '' }}>
-                <a href={{ url_for('plays') }}>All</a>
+                <a href="{{ url_for('plays') }}">All</a>
             </li>
             {% for s in statuses %}
             <li class={{ 'selected' if s['selected'] else '' }}>
-                <a href={{ url_for('plays', status=s['name']) }}>{{ s['pretty'] }}</a>
+                <a href="{{ url_for('plays', status=s['name']) }}">{{ s['pretty'] }}</a>
             </li>
             {% endfor %}
         </ul>
@@ -43,8 +46,8 @@
 
         {% for play in plays %}
         <tr id={{ play.id }}>
-            <td class="art"><img class="art small" src={{ play.game.image_url if play.game.image_url else url_for('static', filename='default.png')}} /></td>
-            <td class="name"><a href={{ url_for('details', id=play.game.id) }}>{{ play.game.name }}</a></td>
+            <td class="art"><img class="art small" src="{{ play.game.image_url if play.game.image_url else url_for('static', filename='default.png') }}" /></td>
+            <td class="name"><a href="{{ url_for('details', id=play.game.id) }}">{{ play.game.name }}</a></td>
             <td class="started">{{ play.started if play.started else "" }}</td>
             <td class="finished">{{ play.finished if play.finished else "" }}</td>
             <td class="status">{{ play.status.pretty() }}</td>
@@ -56,11 +59,11 @@
 
 <div class="pages">
     {% if page > 1 %}
-    <div id="previous"><a class="button" href={{ url_for('plays', status=status, page=page - 1) }}>Previous Page</a></div>
+    <div id="previous"><a class="button" href="{{ url_for('plays', status=status, page=page - 1) }}">Previous Page</a></div>
     {% endif %}
 
     {% if more %}
-    <div id="next"><a class="button" href={{ url_for('plays', status=status, page=page + 1) }}>Next Page</a></div>
+    <div id="next"><a class="button" href="{{ url_for('plays', status=status, page=page + 1) }}">Next Page</a></div>
     {% endif %}
 </div>
 
