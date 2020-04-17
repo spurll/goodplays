@@ -16,46 +16,28 @@ def index():
     return redirect(url_for('plays' if logged_in else 'games'))
 
 
-@app.route('/search')
-def search():
-    """
-    Search the DB for a game.
-    """
-    query = request.args.get('query')
-
-    if not query:
-        return redirect(url_for('games'))
-
-    g = controller.search(query)
-    gb = controller.search_gb(query)
-
-    return render_template(
-        'games.html',
-        title=f'Search: {query} | Goodplays',
-        user=current_user,
-        search=query,
-        games=g,
-        giantbomb=gb
-    )
-
-
 @app.route('/games')
 def games():
-    """
-    Shows the 20 most recent games added to the DB
-    """
     sort = request.args.get('sort', 'added')
     page = int(request.args.get('page', '1'))
+    search = request.args.get('search')
 
-    g = controller.games(sort, page)
+    if (search):
+        g = controller.search(search)
+        gb = controller.search_gb(search)
+    else:
+        g = controller.games(sort, page)
+        gb = None
 
     return render_template(
         'games.html',
-        title='Goodplays',
+        title=(f'Search: {search} | ' if search else '') + 'Goodplays',
         user=current_user,
         games=g,
+        giantbomb=gb,
         sort=sort,
         page=page,
+        search=search,
         more=len(g) == controller.PAGE_SIZE,
         can_add = current_user.is_authenticated
     )
@@ -64,9 +46,6 @@ def games():
 @app.route('/plays')
 @login_required
 def plays():
-    """
-    Displays a user's 20 most recent plays
-    """
     status = Status.coerce(request.args.get('status'))
     page = int(request.args.get('page', '1'))
 
