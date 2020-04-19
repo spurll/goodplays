@@ -132,8 +132,7 @@ def edit(id):
         return redirect(url_for('details', id=id))
 
     elif form.errors:
-        print(form.errors)
-        flash(form.errors)
+        flash_errors(form)
 
     return render_template(
         'edit.html',
@@ -180,8 +179,7 @@ def add_play(game_id):
         )
 
     else:
-        print(form.errors)
-        flash(form.errors)
+        flash_errors(form)
 
     return redirect(url_for('details', id=game_id))
 
@@ -234,8 +232,7 @@ def edit_play():
         )
 
     else:
-        print(form.errors)
-        flash(form.errors)
+        flash_errors(form)
 
     return redirect(url_for('details', id=play.game.id))
 
@@ -280,8 +277,7 @@ def signup():
             flash(f'Signup failed: {r.text}.')
 
     elif form.errors:
-        print(form.errors)
-        flash(form.errors)
+        flash_errors(form)
 
     return render_template(
         'signup.html',
@@ -334,4 +330,16 @@ def logout():
 @lm.user_loader
 def load_user(id):
     return User.query.get(id)
+
+
+def flash_errors(form):
+    for field, messages in form.errors.items():
+        label = getattr(getattr(getattr(form, field), 'label'), 'text', '')
+        label = label.replace(':', '')
+        error = ', '.join(messages)
+
+        message = f'Error in {label}: {error}' if label else 'Error: {error}'
+
+        flash(message)
+        print(message)
 

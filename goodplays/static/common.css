@@ -126,14 +126,16 @@ p.invalid {
     padding-top: 10px;
 }
 
+.pages #previous, .pages #next {
+    width: 120px;
+}
+
 .pages #previous {
-    width: 70px;
     float: left;
     text-align: left;
 }
 
 .pages #next {
-    width: 70px;
     float: right;
     text-align: right;
 }
@@ -299,6 +301,10 @@ select option { background-color: #222222; }
 
 .small-screen button, .small-screen input[type="submit"], .small-screen input[type="reset"] {
     font-size: 12px;
+}
+
+.small-screen .pages #previous, .small-screen .pages #next {
+    width: 90px;
 }
 
 
