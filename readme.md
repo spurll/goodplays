@@ -46,14 +46,15 @@ Feature Requests
     * On Details page, the "add play" row should be at the bottom (not top) of the table
     * Whenever tags are displayed, make them links to bring up all games that have plays
       with that tag
-    * Allow user to select sort order for plays and games
-    * Add some way to view only games completed in a specific year (like a Goodreads
-      reading challenge)
-    * Search should autofocus (at least on the search page)
+    * Allow user to select sort order for plays and games, and this preference should
+      persist (cookie?)
+    * Add group by (including group by year completed), and this preference should persist
+      (cookie?); this allows for something like a Goodreads reading challenge
     * Instead of a dropdown, each of the five stars should be clickable to set the rating
       to its level (with zero stars having low opacity and showing "No Rating" behind it)
+    * On pages with... pages, display the current page number and total number of pages
 * Add a "played" status for games that don't really define completion (racing games,
-  fighting games, etc.)
+  fighting games, Animal Crossing, etc.)
 * Define a `Play.is_completed` attribute (status is "played", "completed", or "100%") and
   add that filter to Plays screen
 * User management (change email address, name, password, forgot password)
