@@ -7,6 +7,11 @@ p.info span.label {
     font-weight: bold;
 }
 
+pre.info {
+    font-family: inherit;
+    white-space: pre-line;
+}
+
 table#plays {
     padding-top: 10px;
 }

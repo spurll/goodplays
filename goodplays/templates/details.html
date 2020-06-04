@@ -176,9 +176,7 @@
 
 <div id="game">
     <img class="art" src="{{ game.image_url if game.image_url else url_for('static', filename='default.png') }}" />
-    <p class="info">
-        <span>{{ game.description }}</span>
-    </p>
+    <pre class="info">{{ game.description }}</pre>
     <p class="info">
         <span class="label">Released:</span>
         <span>{{ game.released if game.released else "Unknown" }}</span>
