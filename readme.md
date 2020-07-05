@@ -57,6 +57,11 @@ Feature Requests
   fighting games, Animal Crossing, etc.)
 * Define a `Play.is_completed` attribute (status is "played", "completed", or "100%") and
   add that filter to Plays screen
+* Proper game favouriting (with a star? too close to rating?)
+    * show a symbol (dark grey or white) indicating whether faved or not in tables and
+      details page
+    * allow faving in tables and on details page
+    * filters to show just faved
 * User management (change email address, name, password, forgot password)
 * Allow users to make their plays public (what would this look like?)
 * For games not in Giant Bomb, provide a way to link them to Giant Bomb?

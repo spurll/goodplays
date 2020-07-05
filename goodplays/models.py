@@ -8,7 +8,7 @@ class Status(Enum):
     default = 0
     interested = 1
     playing = 2
-    placeholder = 3
+    played = 3
     completed = 4
     hundred = 5
     abandoned = 6
@@ -20,8 +20,8 @@ class Status(Enum):
     @classmethod
     def in_use(cls):
         return [
-            cls.interested, cls.playing, cls.completed, cls.hundred,
-            cls.abandoned
+            cls.interested, cls.playing, cls.played, cls.completed,
+            cls.hundred, cls.abandoned
         ]
 
     @classmethod
@@ -31,6 +31,10 @@ class Status(Enum):
 
     def pretty(self):
         return '100%' if self == Status.hundred else self.name.capitalize()
+
+    @property
+    def is_completed(self):
+        return self in (Status.played, status.completed, status.hundred)
 
     def __str__(self):
         return str(self.name)
@@ -177,6 +181,7 @@ class Play(db.Model):
     rating = db.Column(db.Integer)
     status = db.Column(db.Enum(Status))
     comments = db.Column(db.String)
+    fave = db.Column(db.Boolean)
     tags = db.relationship(
         'Tag',
         back_populates='plays',
@@ -185,6 +190,10 @@ class Play(db.Model):
     )
     game_id = db.Column(db.Integer, db.ForeignKey('Game.id'))
     user_id = db.Column(db.Integer, db.ForeignKey('User.id'))
+
+    @property
+    def completed(self):
+        return self.status.is_completed
 
     @property
     def stars(self):
