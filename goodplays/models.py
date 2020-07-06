@@ -14,15 +14,19 @@ class Status(Enum):
     abandoned = 6
 
     @classmethod
-    def choices(cls):
-        return [(item, item.pretty()) for item in cls.in_use()]
-
-    @classmethod
     def in_use(cls):
         return [
             cls.interested, cls.playing, cls.played, cls.completed,
             cls.hundred, cls.abandoned
         ]
+
+    @classmethod
+    def filters(cls):
+        return [cls.interested, cls.playing, cls.completed, cls.abandoned]
+
+    @classmethod
+    def choices(cls):
+        return [(item, item.pretty()) for item in cls.in_use()]
 
     @classmethod
     def coerce(cls, item):
@@ -181,7 +185,12 @@ class Play(db.Model):
     rating = db.Column(db.Integer)
     status = db.Column(db.Enum(Status))
     comments = db.Column(db.String)
-    fave = db.Column(db.Boolean)
+    fave = db.Column(
+        db.Boolean,
+        nullable=False,
+        default=False,
+        server_default=db.false()
+    )
     tags = db.relationship(
         'Tag',
         back_populates='plays',

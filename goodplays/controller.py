@@ -122,16 +122,19 @@ def games(sort='added', page=1):
 def plays(user, status=None, page=1):
     query = user.plays
 
-    if status == Status.interested:
+    if status in (Status.playing, Status.abandoned):
+        query = query.filter_by(status=status).order_by(Play.started.desc())
+
+    # Special case: Status.completed represents played, completed, and hundred
+    elif status == Status.completed:
+        query = query.filter(Play.status.in_(
+            (Status.played, Status.completed, Status.hundred)
+        )).order_by(Play.finished.desc())
+
+    elif status is not None:
         query = query.filter_by(status=status) \
             .join(Play.game) \
             .order_by(Game.released.desc(), Game.name.asc())
-
-    elif status in (Status.playing, Status.abandoned):
-        query = query.filter_by(status=status).order_by(Play.started.desc())
-
-    elif status in (Status.completed, Status.hundred):
-        query = query.filter_by(status=status).order_by(Play.finished.desc())
 
     else:
         query = user.plays.order_by(Play.started.desc(), Play.finished.desc())

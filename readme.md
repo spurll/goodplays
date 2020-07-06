@@ -55,13 +55,13 @@ Feature Requests
     * On pages with... pages, display the current page number and total number of pages
 * Add a "played" status for games that don't really define completion (racing games,
   fighting games, Animal Crossing, etc.)
-* Define a `Play.is_completed` attribute (status is "played", "completed", or "100%") and
-  add that filter to Plays screen
 * Proper game favouriting (with a star? too close to rating?)
     * show a symbol (dark grey or white) indicating whether faved or not in tables and
       details page
     * allow faving in tables and on details page
     * filters to show just faved
+    * Add "fave" on games, too (just sees if any of the plays are faved)
+    * Basically only interact with faves on games, not plays (store play-by-play tho)
 * User management (change email address, name, password, forgot password)
 * Allow users to make their plays public (what would this look like?)
 * For games not in Giant Bomb, provide a way to link them to Giant Bomb?

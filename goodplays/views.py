@@ -39,7 +39,7 @@ def games():
         page=page,
         search=search,
         more=len(g) == controller.PAGE_SIZE,
-        can_add = current_user.is_authenticated
+        can_add=current_user.is_authenticated
     )
 
 
@@ -53,7 +53,7 @@ def plays():
 
     statuses = [
         {'name': s, 'pretty': s.pretty(), 'selected': status == s}
-        for s in Status.in_use()
+        for s in Status.filters()
     ]
 
     return render_template(
