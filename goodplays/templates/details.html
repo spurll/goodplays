@@ -148,15 +148,15 @@
             }
         })
 
-        // When status is set to Completed (or 100%), set finished to today
+        // When status is set to Completed (or Played or 100%), set finished to today
         addStatus.change((e) => {
-            if ((addStatus.val() === "completed" || addStatus.val() === "hundred") && !addFinished.val()) {
+            if ((addStatus.val() === "completed" || addStatus.val() === "hundred" || addStatus.val() === "played") && !addFinished.val()) {
                 addFinished.val(today())
             }
         })
 
         editStatus.change((e) => {
-            if ((editStatus.val() === "completed" || editStatus.val() === "hundred") && !editFinished.val()) {
+            if ((editStatus.val() === "completed" || editStatus.val() === "hundred" || addStatus.val() === "played") && !editFinished.val()) {
                 editFinished.val(today())
             }
         })
