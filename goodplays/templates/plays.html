@@ -52,10 +52,9 @@
             <td class="finished">{{ play.finished if play.finished else "" }}</td>
             <td class="status">{{ play.status.pretty() }}</td>
             <td class="rating">
+                {% if play.rating %}
                 {% for i in range(2, 12, 2) %}
-                {% if not play.rating %}
-                <img class="star none" src="{{ url_for('static', filename='star-empty.png') }}" />
-                {% elif play.rating >= i %}
+                {% if play.rating >= i %}
                 <img class="star full" src="{{ url_for('static', filename='star-full-y.png') }}" />
                 {% elif play.rating >= i - 1 %}
                 <img class="star half" src="{{ url_for('static', filename='star-half-y.png') }}" />
@@ -63,6 +62,7 @@
                 <img class="star empty" src="{{ url_for('static', filename='star-empty-y.png') }}" />
                 {% endif %}
                 {% endfor %}
+                {% endif %}
             </td>
         </tr>
         {% endfor %}

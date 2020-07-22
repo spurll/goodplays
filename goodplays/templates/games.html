@@ -57,10 +57,9 @@
             <td class="released">{{ game.released if game.released else "" }}</td>
             <td class="platforms">{{ game.platforms | map(attribute="abbreviation") | join(", ") }}</td>
             <td class="rating">
+                {% if game.rating %}
                 {% for i in range(2, 12, 2) %}
-                {% if not game.rating %}
-                <img class="star none" src="{{ url_for('static', filename='star-empty.png') }}" />
-                {% elif game.rating >= i %}
+                {% if game.rating >= i %}
                 <img class="star full" src="{{ url_for('static', filename='star-full-y.png') }}" />
                 {% elif game.rating >= i - 1 %}
                 <img class="star half" src="{{ url_for('static', filename='star-half-y.png') }}" />
@@ -68,6 +67,7 @@
                 <img class="star empty" src="{{ url_for('static', filename='star-empty-y.png') }}" />
                 {% endif %}
                 {% endfor %}
+                {% endif %}
             </td>
         </tr>
         {% endfor %}
