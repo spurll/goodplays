@@ -37,8 +37,8 @@
 
         const type = rating > 0 ? "star" : "star none";
 
-        // Allow the user to click on a full star to make it a half star
-        const linkTarget = rating === target ? target - 1 : target;
+        // Allow the user to click on a full star to make it a half star (or none)
+        const linkTarget = rating === target ? target - 1 : target === 2 && rating === 1 ? 0 : target;
 
         const img = `<img class="${type}" src="${src}" />`
 
@@ -237,7 +237,7 @@
         <span class="label">Rating:</span>
         <span class="rating">
             {% for i in range(2, 12, 2) %}
-            {% if game.rating is none %}
+            {% if not game.rating %}
             <img class="star none" src="{{ url_for('static', filename='star-empty.png') }}" />
             {% elif game.rating >= i %}
             <img class="star full" src="{{ url_for('static', filename='star-full-y.png') }}" />
@@ -318,7 +318,7 @@
             <td class="rating">
                 <input type="hidden" value="{{ play.rating }}" name="{{ play.id }}" />
                 {% for i in range(2, 12, 2) %}
-                {% if play.rating is none %}
+                {% if not play.rating %}
                 <img class="star none" src="{{ url_for('static', filename='star-empty.png') }}" />
                 {% elif play.rating >= i %}
                 <img class="star full" src="{{ url_for('static', filename='star-full-y.png') }}" />

@@ -53,7 +53,7 @@
             <td class="status">{{ play.status.pretty() }}</td>
             <td class="rating">
                 {% for i in range(2, 12, 2) %}
-                {% if play.rating is none %}
+                {% if not play.rating %}
                 <img class="star none" src="{{ url_for('static', filename='star-empty.png') }}" />
                 {% elif play.rating >= i %}
                 <img class="star full" src="{{ url_for('static', filename='star-full-y.png') }}" />
