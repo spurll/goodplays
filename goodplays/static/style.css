@@ -168,6 +168,25 @@ td.name {
 
 td.rating {
     text-align: center;
+    white-space: nowrap;
+    font-size: 0;
+}
+
+span.rating {
+    font-size: 0;
+}
+
+img.star {
+    width: 16px;
+    vertical-align: bottom;
+}
+
+img.star.none {
+    opacity: 0.5;
+}
+
+img.heart {
+    width: 24px;
 }
 
 td.released, td.started, td.finished {

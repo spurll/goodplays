@@ -41,14 +41,7 @@ class AddPlayForm(FlaskForm):
         choices=Status.choices())
     tags = TextField('Tags', id='add-tags')
     comments = TextField('Comments', id='add-comments')
-    rating = SelectField('Rating', id='add-rating', coerce=int, choices=[
-        (0, ''),
-        (2, u'\u2605' + u'\u2606' * 4),
-        (4, u'\u2605' * 2 + u'\u2606' * 3),
-        (6, u'\u2605' * 3 + u'\u2606' * 2),
-        (8, u'\u2605' * 4 + u'\u2606' * 1),
-        (10, u'\u2605' * 5),
-    ])
+    rating = HiddenField('Rating', id='add-rating')
 
 
 class EditPlayForm(FlaskForm):
@@ -61,12 +54,5 @@ class EditPlayForm(FlaskForm):
         choices=Status.choices())
     tags = TextField('Tags', id='edit-tags')
     comments = TextField('Comments', id='edit-comments')
-    rating = SelectField('Rating', id='edit-rating', coerce=int, choices=[
-        (0, ''),
-        (2, u'\u2605' + u'\u2606' * 4),
-        (4, u'\u2605' * 2 + u'\u2606' * 3),
-        (6, u'\u2605' * 3 + u'\u2606' * 2),
-        (8, u'\u2605' * 4 + u'\u2606' * 1),
-        (10, u'\u2605' * 5),
-    ])
+    rating = HiddenField('Rating', id='edit-rating')
 

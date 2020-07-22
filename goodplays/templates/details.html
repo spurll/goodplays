@@ -2,13 +2,14 @@
 {% block content %}
 
 <script type="text/javascript">
+    const NONE = "{{ url_for('static', filename='star-empty.png') }}";
+    const EMPTY = "{{ url_for('static', filename='star-empty-y.png') }}";
+    const HALF = "{{ url_for('static', filename='star-half-y.png') }}";
+    const FULL = "{{ url_for('static', filename='star-full-y.png') }}";
+
     function convertStatus(status) {
         if (status === "100%") return "hundred";
         return status.toLowerCase();
-    }
-
-    function convertStars(stars) {
-        return (stars.match(/★/g) || []).length * 2
     }
 
     function today() {
@@ -21,24 +22,56 @@
         return `${year}-${month}-${day}`
     }
 
+    function star(id, rating, target) {
+        let src = NONE;
+
+        if (rating >= target) {
+            src = FULL;
+        }
+        else if (rating >= target - 1) {
+            src = HALF;
+        }
+        else if (rating > 0) {
+            src = EMPTY;
+        }
+
+        const type = rating > 0 ? "star" : "star none";
+
+        // Allow the user to click on a full star to make it a half star
+        const linkTarget = rating === target ? target - 1 : target;
+
+        const img = `<img class="${type}" src="${src}" />`
+
+        return `<a href="javascript:setRating('${id}', ${linkTarget})">${img}</a>`;
+    }
+
     function editPlay(id) {
-        // Hide the row with this ID (but show all other hidden rows first!)
         const displayRow = $(`tr#${id}`);
+        const editRow = $("tr#edit-play");
+        const bufferRow = $("tr#edit-buffer");
+
+        // Hide the row with this ID (but show all other hidden rows first!)
         $("tr").show();
         displayRow.hide();
 
         // Set the edit row's values
+        let rating = parseInt(displayRow.find('.rating input[type="hidden"]').val());
         $("#edit-id").val(id);
         $("#edit-started").val(displayRow.find(".started").text());
         $("#edit-finished").val(displayRow.find(".finished").text());
         $("#edit-status").val(convertStatus(displayRow.find(".status").text()));
         $("#edit-tags").val(displayRow.find(".tags").text());
         $("#edit-comments").val(displayRow.find(".comments").text());
-        $("#edit-rating").val(convertStars(displayRow.find(".rating").text()));
+        $("#edit-rating").val(rating);
+
+        // Remove all existing stars/links (if any) and replace them
+        const ratingElement = editRow.find(".rating");
+        ratingElement.find("a").remove();
+        for (let i = 2; i <= 10; i += 2) {
+            ratingElement.append(star("edit-play", rating, i));
+        }
 
         // Move the edit row (and buffer row, to ensure highlights don't change)
-        const editRow = $("tr#edit-play");
-        const bufferRow = $("tr#edit-buffer");
         displayRow.after(bufferRow);
         bufferRow.after(editRow);
         editRow.show();
@@ -55,6 +88,20 @@
         const editRow = $(`tr#edit-play`);
         editRow.hide();
         $('#edit_form')[0].reset();
+    }
+
+    function setRating(id, rating) {
+        const ratingElement = $(`tr#${id} .rating`);
+
+        // Set the hidden input to the appropriate value
+        ratingElement.find('input[type="hidden"]').val(rating);
+
+        // Update the appropriate star images
+        ratingElement.find("a").remove();
+
+        for (let i = 2; i <= 10; i += 2) {
+            ratingElement.append(star(id, rating, i));
+        }
     }
 
     function deleteGame() {
@@ -188,7 +235,19 @@
     {% if game.rating %}
     <p class="info">
         <span class="label">Rating:</span>
-        <span>{{ game.stars }}</span>
+        <span class="rating">
+            {% for i in range(2, 12, 2) %}
+            {% if game.rating is none %}
+            <img class="star none" src="{{ url_for('static', filename='star-empty.png') }}" />
+            {% elif game.rating >= i %}
+            <img class="star full" src="{{ url_for('static', filename='star-full-y.png') }}" />
+            {% elif game.rating >= i - 1 %}
+            <img class="star half" src="{{ url_for('static', filename='star-half-y.png') }}" />
+            {% else %}
+            <img class="star empty" src="{{ url_for('static', filename='star-empty-y.png') }}" />
+            {% endif %}
+            {% endfor %}
+        </span>
     </p>
     {% endif %}
     <p class="info links">
@@ -207,11 +266,13 @@
 
 {% if user and user.is_authenticated %}
 <form id="add_form" action="{{ url_for('add_play', game_id=game.id) }}" method="POST" autocomplete="off">
-    {{ add_form.hidden_tag() }}
+    {{ add_form.id }}
+    {{ add_form.csrf_token }}
 </form>
 
 <form id="edit_form" action="{{ url_for('edit_play') }}" method="POST" autocomplete="off">
-    {{ edit_form.hidden_tag() }}
+    {{ edit_form.id }}
+    {{ edit_form.csrf_token }}
 </form>
 
 <table id="plays">
@@ -228,23 +289,20 @@
         </tr>
     </thead>
     <tbody>
-        <tr id="new-play">
-            <td class="started">{{ add_form.started(form="add_form") }}</td>
-            <td class="finished">{{ add_form.finished(form="add_form") }}</td>
-            <td class="status">{{ add_form.status(form="add_form") }}</td>
-            <td class="tags">{{ add_form.tags(form="add_form") }}</td>
-            <td class="comments">{{ add_form.comments(form="add_form") }}</td>
-            <td class="rating">{{ add_form.rating(form="add_form")}}</td>
-            <td class="save icon"><a id="submit_add" href="javascript:$('#add_form').submit()"><img class="icon" src="{{ url_for('static', filename='save.png') }}" title="Save" /></a></td>
-            <td class="clear icon"><a id="clear_add" href="javascript:$('#add_form')[0].reset()"><img class="icon" src="{{ url_for('static', filename='delete.png') }}" title="Clear" /></a></td>
-        </tr>
         <tr id="edit-play" hidden="true">
             <td class="started">{{ edit_form.started(form="edit_form") }}</td>
             <td class="finished">{{ edit_form.finished(form="edit_form") }}</td>
             <td class="status">{{ edit_form.status(form="edit_form") }}</td>
             <td class="tags">{{ edit_form.tags(form="edit_form") }}</td>
             <td class="comments">{{ edit_form.comments(form="edit_form") }}</td>
-            <td class="rating">{{ edit_form.rating(form="edit_form")}}</td>
+            <td class="rating">
+                {{ edit_form.rating(form="edit_form")}}
+                {% for i in range(2, 12, 2) %}
+                <a href="javascript:setRating('edit-play', {{ i }})">
+                    <img class="star none" src="{{ url_for('static', filename='star-empty.png') }}" />
+                </a>
+                {% endfor %}
+            </td>
             <td class="save icon"><a id="submit_edit" href="javascript:$('#edit_form').submit()"><img class="icon" src="{{ url_for('static', filename='save.png') }}" title="Save" /></a></td>
             <td class="cancel icon"><a id="cancel_edit" href="javascript:cancelEdit()"><img class="icon" src="{{ url_for('static', filename='delete.png') }}" title="Cancel" /></a></td>
         </tr>
@@ -257,12 +315,42 @@
             <td class="status">{{ play.status.pretty() }}</td>
             <td class="tags">{{ play.tags | map(attribute='name') | join(", ") }}</td>
             <td class="comments">{{ play.comments }}</td>
-            <td class="rating">{{ play.stars }}</td>
+            <td class="rating">
+                <input type="hidden" value="{{ play.rating }}" name="{{ play.id }}" />
+                {% for i in range(2, 12, 2) %}
+                {% if play.rating is none %}
+                <img class="star none" src="{{ url_for('static', filename='star-empty.png') }}" />
+                {% elif play.rating >= i %}
+                <img class="star full" src="{{ url_for('static', filename='star-full-y.png') }}" />
+                {% elif play.rating >= i - 1 %}
+                <img class="star half" src="{{ url_for('static', filename='star-half-y.png') }}" />
+                {% else %}
+                <img class="star empty" src="{{ url_for('static', filename='star-empty-y.png') }}" />
+                {% endif %}
+                {% endfor %}
+            </td>
             <td class="edit icon"><a id="edit_{{ play.id }}" href="javascript:editPlay({{ play.id }})"><img class="icon" src="{{ url_for('static', filename='edit.png') }}" title="Edit" /></a></td>
             <td class="delete icon"><a id="delete_{{ play.id }}" href="javascript:deletePlay({{ play.id }})"><img class="icon" src="{{ url_for('static', filename='delete.png') }}" title="Delete" /></a></td>
         </tr>
         {% endfor %}
         {% endif %}
+        <tr id="new-play">
+            <td class="started">{{ add_form.started(form="add_form") }}</td>
+            <td class="finished">{{ add_form.finished(form="add_form") }}</td>
+            <td class="status">{{ add_form.status(form="add_form") }}</td>
+            <td class="tags">{{ add_form.tags(form="add_form") }}</td>
+            <td class="comments">{{ add_form.comments(form="add_form") }}</td>
+            <td class="rating">
+                {{ add_form.rating(form="add_form")}}
+                {% for i in range(2, 12, 2) %}
+                <a href="javascript:setRating('new-play', {{ i }})">
+                    <img class="star none" src="{{ url_for('static', filename='star-empty.png') }}" />
+                </a>
+                {% endfor %}
+            </td>
+            <td class="save icon"><a id="submit_add" href="javascript:$('#add_form').submit()"><img class="icon" src="{{ url_for('static', filename='save.png') }}" title="Save" /></a></td>
+            <td class="clear icon"><a id="clear_add" href="javascript:setRating('new-play', 0); $('#add_form')[0].reset()"><img class="icon" src="{{ url_for('static', filename='delete.png') }}" title="Clear" /></a></td>
+        </tr>
     </tbody>
 </table>
 {% endif %}

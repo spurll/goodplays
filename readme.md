@@ -41,27 +41,23 @@ Bugs and Feature Requests
 Feature Requests
 ----------------
 
+* Favouriting:
+    * show a grey/light pink heart indicating whether faved or not in tables and
+      details page
+    * allow faving in tables and on details page
+    * filters to show just faved
+    * Add "fave" on games table, too (just sees if any of the plays are faved)
+    * Basically only interact with faves on games, not plays (store play-by-play tho)
 * Polishes:
     * More/less toggles should be in line with filters when they are visible (not below)
-    * On Details page, the "add play" row should be at the bottom (not top) of the table
     * Whenever tags are displayed, make them links to bring up all games that have plays
       with that tag
     * Allow user to select sort order for plays and games, and this preference should
       persist (cookie?)
     * Add group by (including group by year completed), and this preference should persist
       (cookie?); this allows for something like a Goodreads reading challenge
-    * Instead of a dropdown, each of the five stars should be clickable to set the rating
-      to its level (with zero stars having low opacity and showing "No Rating" behind it)
     * On pages with... pages, display the current page number and total number of pages
-* Add a "played" status for games that don't really define completion (racing games,
-  fighting games, Animal Crossing, etc.)
-* Proper game favouriting (with a star? too close to rating?)
-    * show a symbol (dark grey or white) indicating whether faved or not in tables and
-      details page
-    * allow faving in tables and on details page
-    * filters to show just faved
-    * Add "fave" on games, too (just sees if any of the plays are faved)
-    * Basically only interact with faves on games, not plays (store play-by-play tho)
+* Allow admins to upload images in addition to providing links
 * User management (change email address, name, password, forgot password)
 * Allow users to make their plays public (what would this look like?)
 * For games not in Giant Bomb, provide a way to link them to Giant Bomb?

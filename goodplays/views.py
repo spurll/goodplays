@@ -173,7 +173,7 @@ def add_play(game_id):
             started=form.started.data,
             finished=form.finished.data,
             status=form.status.data,
-            rating=form.rating.data,
+            rating=int(form.rating.data) if form.rating.data else None,
             comments=form.comments.data,
             tags=controller.map_tags(form.tags.data.split(','))
         )
@@ -226,7 +226,7 @@ def edit_play():
             started=form.started.data,
             finished=form.finished.data,
             status=form.status.data,
-            rating=form.rating.data,
+            rating=int(form.rating.data) if form.rating.data else None,
             comments=form.comments.data,
             tags=controller.map_tags(form.tags.data.split(','))
         )
