@@ -186,7 +186,11 @@ img.star.none {
 }
 
 img.heart {
-    width: 24px;
+    width: 18px;
+}
+
+img.heart.empty {
+    opacity: 0.5;
 }
 
 td.released, td.started, td.finished {

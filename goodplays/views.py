@@ -158,6 +158,23 @@ def add_gb(gb_id):
     return redirect(url_for('details', id=game.id))
 
 
+@app.route('/fave/<int:id>')
+@login_required
+def fave(id):
+    """
+    Favourites a play
+    """
+    play = controller.play(id)
+
+    if not play:
+        flash(f'No play with ID {id} was found.')
+        return redirect(request.args.get('next') or url_for('plays'))
+
+    controller.fave(play)
+
+    return redirect(request.args.get('next') or url_for('plays'))
+
+
 @app.route('/add-play/<int:game_id>', methods=['POST'])
 @login_required
 def add_play(game_id):
@@ -175,7 +192,8 @@ def add_play(game_id):
             status=form.status.data,
             rating=int(form.rating.data) if form.rating.data else None,
             comments=form.comments.data,
-            tags=controller.map_tags(form.tags.data.split(','))
+            tags=controller.map_tags(form.tags.data.split(',')),
+            fave=form.fave.data == 'true'
         )
 
     else:
@@ -228,7 +246,8 @@ def edit_play():
             status=form.status.data,
             rating=int(form.rating.data) if form.rating.data else None,
             comments=form.comments.data,
-            tags=controller.map_tags(form.tags.data.split(','))
+            tags=controller.map_tags(form.tags.data.split(',')),
+            fave=form.fave.data == 'true',
         )
 
     else:

@@ -42,6 +42,7 @@ class AddPlayForm(FlaskForm):
     tags = TextField('Tags', id='add-tags')
     comments = TextField('Comments', id='add-comments')
     rating = HiddenField('Rating', id='add-rating')
+    fave = HiddenField('Fave', id='add-fave')
 
 
 class EditPlayForm(FlaskForm):
@@ -55,4 +56,5 @@ class EditPlayForm(FlaskForm):
     tags = TextField('Tags', id='edit-tags')
     comments = TextField('Comments', id='edit-comments')
     rating = HiddenField('Rating', id='edit-rating')
+    fave = HiddenField('Fave', id='edit-fave')
 

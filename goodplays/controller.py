@@ -13,6 +13,10 @@ def game(id):
     return Game.query.get(id)
 
 
+def play(id):
+    return Play.query.get(id)
+
+
 def game_plays(user, game_id):
     if not user.is_authenticated:
         return None
@@ -269,13 +273,19 @@ def edit_game(game, name, released, image_url, description, platforms):
     db.session.commit()
 
 
-def edit_play(play, started, finished, status, rating, comments, tags):
+def edit_play(play, started, finished, status, rating, comments, tags, fave):
     play.started = started
     play.finished = finished
     play.status = status
     play.rating = rating
     play.comments = comments
     play.tags = tags
+    play.fave = fave
+    db.session.commit()
+
+
+def fave_play(play, fave):
+    play.fave = fave
     db.session.commit()
 
 

@@ -40,9 +40,21 @@
         // Allow the user to click on a full star to make it a half star (or none)
         const linkTarget = rating === target ? target - 1 : target === 2 && rating === 1 ? 0 : target;
 
-        const img = `<img class="${type}" src="${src}" />`
+        const img = `<img class="${type}" src="${src}" />`;
 
         return `<a href="javascript:setRating('${id}', ${linkTarget})">${img}</a>`;
+    }
+
+    function heart(id, fave) {
+        const src = fave
+            ? "{{ url_for('static', filename='heart-full-p.png') }}"
+            : "{{ url_for('static', filename='heart-empty.png') }}";
+
+        const type = fave ? "heart" : "heart empty";
+
+        const img = `<img class="${type}" src="${src}" />`;
+
+        return `<a href="javascript:setFave('${id}', ${!fave})">${img}</a>`;
     }
 
     function editPlay(id) {
@@ -56,7 +68,9 @@
 
         // Set the edit row's values
         let rating = parseInt(displayRow.find('.rating input[type="hidden"]').val());
+        let fave = displayRow.find('.fave input[type="hidden"]').val().toLowerCase() === 'true';
         $("#edit-id").val(id);
+        $("#edit-fave").val(fave);
         $("#edit-started").val(displayRow.find(".started").text());
         $("#edit-finished").val(displayRow.find(".finished").text());
         $("#edit-status").val(convertStatus(displayRow.find(".status").text()));
@@ -64,12 +78,17 @@
         $("#edit-comments").val(displayRow.find(".comments").text());
         $("#edit-rating").val(rating);
 
-        // Remove all existing stars/links (if any) and replace them
+        // Remove any existing rating stars and replace them
         const ratingElement = editRow.find(".rating");
         ratingElement.find("a").remove();
         for (let i = 2; i <= 10; i += 2) {
             ratingElement.append(star("edit-play", rating, i));
         }
+
+        // Remove existing fave heart and replace it
+        const faveElement = editRow.find(".fave");
+        faveElement.find("a").remove();
+        faveElement.append(heart("edit-play", fave));
 
         // Move the edit row (and buffer row, to ensure highlights don't change)
         displayRow.after(bufferRow);
@@ -102,6 +121,17 @@
         for (let i = 2; i <= 10; i += 2) {
             ratingElement.append(star(id, rating, i));
         }
+    }
+
+    function setFave(id, fave) {
+        const faveElement = $(`tr#${id} .fave`);
+
+        // Set the hidden input to the appropriate value
+        faveElement.find('input[type="hidden"]').val(fave.toString());
+
+        // Update the appropriate heart image
+        faveElement.find("a").remove();
+        faveElement.append(heart(id, fave));
     }
 
     function deleteGame() {
@@ -278,6 +308,7 @@
 <table id="plays">
     <thead>
         <tr>
+            <th class="fave"></th>
             <th class="started">Started</th>
             <th class="finished">Finished</th>
             <th class="status">Status</th>
@@ -290,6 +321,12 @@
     </thead>
     <tbody>
         <tr id="edit-play" hidden="true">
+            <td class="fave">
+                {{ edit_form.fave(form="edit_form") }}
+                <a href="javascript:setFave('edit-play', true)">
+                    <img class="heart empty" src="{{ url_for('static', filename='heart-empty.png') }}" />
+                </a>
+            </td>
             <td class="started">{{ edit_form.started(form="edit_form") }}</td>
             <td class="finished">{{ edit_form.finished(form="edit_form") }}</td>
             <td class="status">{{ edit_form.status(form="edit_form") }}</td>
@@ -310,13 +347,20 @@
         {% if plays %}
         {% for play in plays %}
         <tr id="{{ play.id }}">
+            <td class="fave">
+                <input type="hidden" value="{{ play.fave }}" name="fave_{{ play.id }}" />
+                <img
+                    class="heart {{ 'full' if play.fave else 'empty' }}"
+                    src="{{ url_for('static', filename='heart-full-p.png' if play.fave else 'heart-empty.png') }}"
+                />
+            </td>
             <td class="started">{{ play.started if play.started else "" }}</td>
             <td class="finished">{{ play.finished if play.finished else "" }}</td>
             <td class="status">{{ play.status.pretty() }}</td>
             <td class="tags">{{ play.tags | map(attribute='name') | join(", ") }}</td>
             <td class="comments">{{ play.comments }}</td>
             <td class="rating">
-                <input type="hidden" value="{{ play.rating }}" name="{{ play.id }}" />
+                <input type="hidden" value="{{ play.rating }}" name="rating_{{ play.id }}" />
                 {% for i in range(2, 12, 2) %}
                 {% if not play.rating %}
                 <img class="star none" src="{{ url_for('static', filename='star-empty.png') }}" />
@@ -335,6 +379,12 @@
         {% endfor %}
         {% endif %}
         <tr id="new-play">
+            <td class="fave">
+                {{ add_form.fave(form="add_form") }}
+                <a href="javascript:setFave('new-play', true)">
+                    <img class="heart empty" src="{{ url_for('static', filename='heart-empty.png') }}" />
+                </a>
+            </td>
             <td class="started">{{ add_form.started(form="add_form") }}</td>
             <td class="finished">{{ add_form.finished(form="add_form") }}</td>
             <td class="status">{{ add_form.status(form="add_form") }}</td>
