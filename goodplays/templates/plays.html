@@ -13,8 +13,11 @@
     </h1>
     <h2 id="filters">
         <ul>
-            <li class={{ 'selected' if status == None else '' }}>
+            <li class={{ 'selected' if status == None and not fave else '' }}>
                 <a href="{{ url_for('plays') }}">All</a>
+            </li>
+            <li class={{ 'selected' if fave else '' }}>
+                <a href="{{ url_for('plays', fave=1) }}">Favourites</a>
             </li>
             {% for s in statuses %}
             <li class={{ 'selected' if s['selected'] else '' }}>
@@ -29,6 +32,7 @@
 <table id="latest">
     <thead>
         <tr>
+            <th class="fave"></th>
             <th class="art"></th>
             <th class="name">Name</th>
             <th class="started">Started</th>
@@ -40,13 +44,24 @@
     <tbody>
         {% if not plays %}
         <tr>
-            <td class="empty" colspan="6">No records found!</td>
+            <td class="empty" colspan="7">No records found!</td>
         </tr>
         {% endif %}
 
         {% for play in plays %}
         <tr id={{ play.id }}>
-            <td class="art"><img class="art small" src="{{ play.game.image_url if play.game.image_url else url_for('static', filename='default.png') }}" /></td>
+            <td class="fave">
+                <img
+                    class="heart {{ 'empty' if not play.fave else '' }}"
+                    src="{{ url_for('static', filename='heart-full-p.png' if play.fave else 'heart-empty.png') }}"
+                />
+            </td>
+            <td class="art">
+                <img
+                    class="art small"
+                    src="{{ play.game.image_url if play.game.image_url else url_for('static', filename='default.png') }}"
+                />
+            </td>
             <td class="name"><a href="{{ url_for('details', id=play.game.id) }}">{{ play.game.name }}</a></td>
             <td class="started">{{ play.started if play.started else "" }}</td>
             <td class="finished">{{ play.finished if play.finished else "" }}</td>

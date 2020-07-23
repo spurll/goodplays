@@ -46,10 +46,11 @@ def games():
 @app.route('/plays')
 @login_required
 def plays():
+    fave = bool(request.args.get('fave'))
     status = Status.coerce(request.args.get('status'))
     page = int(request.args.get('page', '1'))
 
-    p = controller.plays(current_user, status, page)
+    p = controller.plays(current_user, fave, status, page)
 
     statuses = [
         {'name': s, 'pretty': s.pretty(), 'selected': status == s}
@@ -63,6 +64,7 @@ def plays():
         plays=p,
         status=status,
         statuses=statuses,
+        fave=fave,
         page=page,
         more=len(p) == controller.PAGE_SIZE
     )

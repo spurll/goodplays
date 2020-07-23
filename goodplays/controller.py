@@ -123,10 +123,15 @@ def games(sort='added', page=1):
         .all()
 
 
-def plays(user, status=None, page=1):
+def plays(user, fave=None, status=None, page=1):
     query = user.plays
 
-    if status in (Status.playing, Status.abandoned):
+    if fave:
+        query = query.filter_by(fave=True) \
+            .join(Play.game) \
+            .order_by(Game.released.desc(), Game.name.asc())
+
+    elif status in (Status.playing, Status.abandoned):
         query = query.filter_by(status=status).order_by(Play.started.desc())
 
     # Special case: Status.completed represents played, completed, and hundred

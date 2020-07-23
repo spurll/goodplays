@@ -41,10 +41,6 @@ Bugs and Feature Requests
 Feature Requests
 ----------------
 
-* Favouriting:
-    * show a grey/light pink heart indicating whether faved or not in tables
-    * filters to show just faved
-    * Add "fave" on games table, too (just sees if any of the plays are faved)
 * Polishes:
     * More/less toggles should be in line with filters when they are visible (not below)
     * Whenever tags are displayed, make them links to bring up all games that have plays
