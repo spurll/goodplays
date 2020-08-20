@@ -48,6 +48,7 @@ def games():
 def plays():
     fave = bool(request.args.get('fave'))
     status = Status.coerce(request.args.get('status'))
+    group = request.args.get('group')
     page = int(request.args.get('page', '1'))
 
     p = controller.plays(current_user, fave, status, page)
@@ -58,13 +59,14 @@ def plays():
     ]
 
     return render_template(
-        'plays.html',
+        'plays.html' if not group else 'grouped.html',
         title='Goodplays',
         user=current_user,
         plays=p,
         status=status,
         statuses=statuses,
         fave=fave,
+        group=group,
         page=page,
         more=len(p) == controller.PAGE_SIZE
     )

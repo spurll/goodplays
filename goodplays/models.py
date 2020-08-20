@@ -201,6 +201,10 @@ class Play(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('User.id'))
 
     @property
+    def year(self):
+        return self.finished.year if self.finished else None
+
+    @property
     def completed(self):
         return self.status.is_completed
 

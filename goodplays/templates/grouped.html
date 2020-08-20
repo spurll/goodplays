@@ -13,24 +13,28 @@
     </h1>
     <h2 id="filters">
         <ul>
-            <li class={{ 'selected' if status == None and not fave else '' }}>
+            <li>
                 <a href="{{ url_for('plays') }}">All</a>
             </li>
-            <li class={{ 'selected' if fave else '' }}>
+            <li>
                 <a href="{{ url_for('plays', fave=1) }}">Favourites</a>
             </li>
             {% for s in statuses %}
-            <li class={{ 'selected' if s['selected'] else '' }}>
+            <li>
                 <a href="{{ url_for('plays', status=s['name']) }}">{{ s['pretty'] }}</a>
             </li>
             {% endfor %}
-            <li>
+            <li class="selected">
                 <a href="{{ url_for('plays', status='completed', group='year') }}">By Year</a>
             </li>
         </ul>
     </h2>
     <a class="toggle-filters" href="javascript:toggleFilters()"></a>
 </div>
+
+{% if plays %}
+<h1>{{ plays[0].year or "Unknown" }}</h1>
+{% endif %}
 
 <table>
     <thead>
@@ -52,6 +56,28 @@
         {% endif %}
 
         {% for play in plays %}
+
+        {% if loop.previtem and loop.previtem.year != play.year %}
+    </tbody>
+</table>
+
+<h1>{{ play.year or "Unknown" }}</h1>
+
+<table>
+    <thead>
+        <tr>
+            <th class="fave"></th>
+            <th class="art"></th>
+            <th class="name">Name</th>
+            <th class="started">Started</th>
+            <th class="finished">Finished</th>
+            <th class="status">Status</th>
+            <th class="rating">Rating</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% endif %}
+
         <tr id={{ play.id }}>
             <td class="fave">
                 <img
@@ -89,11 +115,11 @@
 
 <div class="pages">
     {% if page > 1 %}
-    <div id="previous"><a class="button" href="{{ url_for('plays', status=status, page=page - 1) }}">Previous Page</a></div>
+    <div id="previous"><a class="button" href="{{ url_for('plays', status=status, group=group, page=page - 1) }}">Previous Page</a></div>
     {% endif %}
 
     {% if more %}
-    <div id="next"><a class="button" href="{{ url_for('plays', status=status, page=page + 1) }}">Next Page</a></div>
+    <div id="next"><a class="button" href="{{ url_for('plays', status=status, group=group, page=page + 1) }}">Next Page</a></div>
     {% endif %}
 </div>
 
