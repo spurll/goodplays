@@ -47,8 +47,6 @@ Feature Requests
       with that tag
     * Allow user to select sort order for plays and games, and this preference should
       persist (cookie?)
-    * Add group by (including group by year completed), and this preference should persist
-      (cookie?); this allows for something like a Goodreads reading challenge
     * On pages with... pages, display the current page number and total number of pages
 * Allow admins to upload images in addition to providing links
 * User management (change email address, name, password, forgot password)
