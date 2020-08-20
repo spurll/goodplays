@@ -2,10 +2,10 @@
 {% block content %}
 
 <script type="text/javascript">
-    const NONE = "{{ url_for('static', filename='star-empty.png') }}";
-    const EMPTY = "{{ url_for('static', filename='star-empty-y.png') }}";
-    const HALF = "{{ url_for('static', filename='star-half-y.png') }}";
-    const FULL = "{{ url_for('static', filename='star-full-y.png') }}";
+    const NONE = "{{ url_for('static', filename='star-empty.svg') }}";
+    const EMPTY = "{{ url_for('static', filename='star-empty-y.svg') }}";
+    const HALF = "{{ url_for('static', filename='star-half-y.svg') }}";
+    const FULL = "{{ url_for('static', filename='star-full-y.svg') }}";
 
     function convertStatus(status) {
         if (status === "100%") return "hundred";
@@ -40,19 +40,19 @@
         // Allow the user to click on a full star to make it a half star (or none)
         const linkTarget = rating === target ? target - 1 : target === 2 && rating === 1 ? 0 : target;
 
-        const img = `<img class="${type}" src="${src}" />`;
+        const img = `<object class="${type}" type="image/svg+xml" data="${src}">Star</object>`;
 
         return `<a href="javascript:setRating('${id}', ${linkTarget})">${img}</a>`;
     }
 
     function heart(id, fave) {
         const src = fave
-            ? "{{ url_for('static', filename='heart-full-p.png') }}"
-            : "{{ url_for('static', filename='heart-empty.png') }}";
+            ? "{{ url_for('static', filename='heart-full-p.svg') }}"
+            : "{{ url_for('static', filename='heart-empty.svg') }}";
 
         const type = fave ? "heart" : "heart empty";
 
-        const img = `<img class="${type}" src="${src}" />`;
+        const img = `<object class="${type}" type="image/svg+xml" data="${src}">Heart</object>`;
 
         return `<a href="javascript:setFave('${id}', ${!fave})">${img}</a>`;
     }
@@ -268,13 +268,13 @@
         <span class="rating">
             {% for i in range(2, 12, 2) %}
             {% if not game.rating %}
-            <img class="star none" src="{{ url_for('static', filename='star-empty.png') }}" />
+            <object class="star none" type="image/svg+xml" data="{{ url_for('static', filename='star-empty.svg') }}">Star</object>
             {% elif game.rating >= i %}
-            <img class="star full" src="{{ url_for('static', filename='star-full-y.png') }}" />
+            <object class="star full" type="image/svg+xml" data="{{ url_for('static', filename='star-full-y.svg') }}">Star</object>
             {% elif game.rating >= i - 1 %}
-            <img class="star half" src="{{ url_for('static', filename='star-half-y.png') }}" />
+            <object class="star half" type="image/svg+xml" data="{{ url_for('static', filename='star-half-y.svg') }}">Star</object>
             {% else %}
-            <img class="star empty" src="{{ url_for('static', filename='star-empty-y.png') }}" />
+            <object class="star empty" type="image/svg+xml" data="{{ url_for('static', filename='star-empty-y.svg') }}">Star</object>
             {% endif %}
             {% endfor %}
         </span>
@@ -324,7 +324,7 @@
             <td class="fave">
                 {{ edit_form.fave(form="edit_form") }}
                 <a href="javascript:setFave('edit-play', true)">
-                    <img class="heart empty" src="{{ url_for('static', filename='heart-empty.png') }}" />
+                    <object class="heart empty" type="image/svg+xml" data="{{ url_for('static', filename='heart-empty.svg') }}">Heart</object>
                 </a>
             </td>
             <td class="started">{{ edit_form.started(form="edit_form") }}</td>
@@ -336,7 +336,7 @@
                 {{ edit_form.rating(form="edit_form")}}
                 {% for i in range(2, 12, 2) %}
                 <a href="javascript:setRating('edit-play', {{ i }})">
-                    <img class="star none" src="{{ url_for('static', filename='star-empty.png') }}" />
+                    <object class="star none" type="image/svg+xml" data="{{ url_for('static', filename='star-empty.svg') }}">Star</object>
                 </a>
                 {% endfor %}
             </td>
@@ -349,10 +349,13 @@
         <tr id="{{ play.id }}">
             <td class="fave">
                 <input type="hidden" value="{{ play.fave }}" name="fave_{{ play.id }}" />
-                <img
+                <object
                     class="heart {{ 'full' if play.fave else 'empty' }}"
-                    src="{{ url_for('static', filename='heart-full-p.png' if play.fave else 'heart-empty.png') }}"
-                />
+                    type="image/svg+xml"
+                    data="{{ url_for('static', filename='heart-full-p.svg' if play.fave else 'heart-empty.svg') }}"
+                >
+                Heart
+                </object>
             </td>
             <td class="started">{{ play.started if play.started else "" }}</td>
             <td class="finished">{{ play.finished if play.finished else "" }}</td>
@@ -363,13 +366,13 @@
                 <input type="hidden" value="{{ play.rating }}" name="rating_{{ play.id }}" />
                 {% for i in range(2, 12, 2) %}
                 {% if not play.rating %}
-                <img class="star none" src="{{ url_for('static', filename='star-empty.png') }}" />
+                <object class="star none" type="image/svg+xml" data="{{ url_for('static', filename='star-empty.svg') }}">Star</object>
                 {% elif play.rating >= i %}
-                <img class="star full" src="{{ url_for('static', filename='star-full-y.png') }}" />
+                <object class="star full" type="image/svg+xml" data="{{ url_for('static', filename='star-full-y.svg') }}">Star</object>
                 {% elif play.rating >= i - 1 %}
-                <img class="star half" src="{{ url_for('static', filename='star-half-y.png') }}" />
+                <object class="star half" type="image/svg+xml" data="{{ url_for('static', filename='star-half-y.svg') }}">Star</object>
                 {% else %}
-                <img class="star empty" src="{{ url_for('static', filename='star-empty-y.png') }}" />
+                <object class="star empty" type="image/svg+xml" data="{{ url_for('static', filename='star-empty-y.svg') }}">Star</object>
                 {% endif %}
                 {% endfor %}
             </td>
@@ -382,7 +385,7 @@
             <td class="fave">
                 {{ add_form.fave(form="add_form") }}
                 <a href="javascript:setFave('new-play', true)">
-                    <img class="heart empty" src="{{ url_for('static', filename='heart-empty.png') }}" />
+                    <object class="heart empty" type="image/svg+xml" data="{{ url_for('static', filename='heart-empty.svg') }}">Heart</object>
                 </a>
             </td>
             <td class="started">{{ add_form.started(form="add_form") }}</td>
@@ -394,7 +397,7 @@
                 {{ add_form.rating(form="add_form")}}
                 {% for i in range(2, 12, 2) %}
                 <a href="javascript:setRating('new-play', {{ i }})">
-                    <img class="star none" src="{{ url_for('static', filename='star-empty.png') }}" />
+                    <object class="star none" type="image/svg+xml" data="{{ url_for('static', filename='star-empty.svg') }}">Star</object>
                 </a>
                 {% endfor %}
             </td>
@@ -407,7 +410,7 @@
 
 {% if game.gb_id %}
 <div class="footer">
-    <object class="gb-logo" type="image/svg+xml" data={{ url_for('static', filename='gb.svg') }}>Giant Bomb Logo</object>
+    <object class="gb-logo" type="image/svg+xml" data="{{ url_for('static', filename='gb.svg') }}">Giant Bomb Logo</object>
     <span>Some content on this page provided by <a href="https://www.giantbomb.com/">Giant Bomb</a> via their excellent <a href="https://www.giantbomb.com/api/">API</a>. Thanks!</span>
 </div>
 {% endif %}

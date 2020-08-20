@@ -176,21 +176,8 @@ span.rating {
     font-size: 0;
 }
 
-img.star {
-    width: 16px;
+object.star {
     vertical-align: bottom;
-}
-
-img.star.none {
-    opacity: 0.5;
-}
-
-img.heart {
-    width: 18px;
-}
-
-img.heart.empty {
-    opacity: 0.5;
 }
 
 td.released, td.started, td.finished {
@@ -230,6 +217,11 @@ img.art.small {
 img.icon {
     width: 24px;
     height: 24px;
+}
+
+object {
+    /* Required for <a> tags around <object> tags to function */
+    pointer-events: none;
 }
 
 object.gb-logo {
