@@ -54,10 +54,13 @@
         {% for play in plays %}
         <tr id={{ play.id }}>
             <td class="fave">
-                <img
+                <object
                     class="heart {{ 'empty' if not play.fave else '' }}"
-                    src="{{ url_for('static', filename='heart-full-p.png' if play.fave else 'heart-empty.png') }}"
-                />
+                    type="image/svg+xml"
+                    data="{{ url_for('static', filename='heart-full-p.svg' if play.fave else 'heart-empty.svg') }}"
+                >
+                    Heart
+                </object>
             </td>
             <td class="art">
                 <img
@@ -73,11 +76,11 @@
                 {% if play.rating %}
                 {% for i in range(2, 12, 2) %}
                 {% if play.rating >= i %}
-                <img class="star full" src="{{ url_for('static', filename='star-full-y.png') }}" />
+                <object class="star full" type="image/svg+xml" data="{{ url_for('static', filename='star-full-y.svg') }}">Star</object>
                 {% elif play.rating >= i - 1 %}
-                <img class="star half" src="{{ url_for('static', filename='star-half-y.png') }}" />
+                <object class="star half" type="image/svg+xml" data="{{ url_for('static', filename='star-half-y.svg') }}">Star</object>
                 {% else %}
-                <img class="star empty" src="{{ url_for('static', filename='star-empty-y.png') }}" />
+                <object class="star empty" type="image/svg+xml" data="{{ url_for('static', filename='star-empty-y.svg') }}">Star</object>
                 {% endif %}
                 {% endfor %}
                 {% endif %}
