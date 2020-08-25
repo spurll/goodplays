@@ -42,7 +42,7 @@
 
         const img = `<object class="${type}" type="image/svg+xml" data="${src}">Star</object>`;
 
-        return `<a href="javascript:setRating('${id}', ${linkTarget})">${img}</a>`;
+        return `<a href="javascript:setRating('${id}', ${linkTarget})" class="object-link">${img}</a>`;
     }
 
     function heart(id, fave) {
@@ -54,7 +54,7 @@
 
         const img = `<object class="${type}" type="image/svg+xml" data="${src}">Heart</object>`;
 
-        return `<a href="javascript:setFave('${id}', ${!fave})">${img}</a>`;
+        return `<a href="javascript:setFave('${id}', ${!fave})" class="object-link">${img}</a>`;
     }
 
     function editPlay(id) {
@@ -323,7 +323,7 @@
         <tr id="edit-play" hidden="true">
             <td class="fave">
                 {{ edit_form.fave(form="edit_form") }}
-                <a href="javascript:setFave('edit-play', true)">
+                <a href="javascript:setFave('edit-play', true)" class="object-link">
                     <object class="heart empty" type="image/svg+xml" data="{{ url_for('static', filename='heart-empty.svg') }}">Heart</object>
                 </a>
             </td>
@@ -335,7 +335,7 @@
             <td class="rating">
                 {{ edit_form.rating(form="edit_form")}}
                 {% for i in range(2, 12, 2) %}
-                <a href="javascript:setRating('edit-play', {{ i }})">
+                <a href="javascript:setRating('edit-play', {{ i }})" class="object-link">
                     <object class="star none" type="image/svg+xml" data="{{ url_for('static', filename='star-empty.svg') }}">Star</object>
                 </a>
                 {% endfor %}
@@ -384,7 +384,7 @@
         <tr id="new-play">
             <td class="fave">
                 {{ add_form.fave(form="add_form") }}
-                <a href="javascript:setFave('new-play', true)">
+                <a href="javascript:setFave('new-play', true)" class="object-link">
                     <object class="heart empty" type="image/svg+xml" data="{{ url_for('static', filename='heart-empty.svg') }}">Heart</object>
                 </a>
             </td>
@@ -396,7 +396,7 @@
             <td class="rating">
                 {{ add_form.rating(form="add_form")}}
                 {% for i in range(2, 12, 2) %}
-                <a href="javascript:setRating('new-play', {{ i }})">
+                <a href="javascript:setRating('new-play', {{ i }})" class="object-link">
                     <object class="star none" type="image/svg+xml" data="{{ url_for('static', filename='star-empty.svg') }}">Star</object>
                 </a>
                 {% endfor %}

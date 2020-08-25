@@ -219,6 +219,11 @@ img.icon {
     height: 24px;
 }
 
+a.object-link {
+    /* Required for <a> tags around <object> tags to have nonzero height */
+    display: inline-block;
+}
+
 object {
     /* Required for <a> tags around <object> tags to function */
     pointer-events: none;
