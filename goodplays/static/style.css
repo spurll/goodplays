@@ -162,11 +162,22 @@ h1 .selected, h2 .selected {
     clear: left;
 }
 
+object.heart {
+    width: 18px;
+    height: 18px;
+}
+
+object.star {
+    width: 16px;
+    height: 16px;
+}
+
 td.name {
     font-weight: bold;
 }
 
 td.rating {
+    width: 80px;
     text-align: center;
     white-space: nowrap;
     font-size: 0;
