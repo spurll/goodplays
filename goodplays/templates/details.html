@@ -76,7 +76,7 @@
         $("#edit-status").val(convertStatus(displayRow.find(".status").text()));
         $("#edit-tags").val(displayRow.find(".tags").text());
         $("#edit-comments").val(displayRow.find(".comments").text());
-        $("#edit-rating").val(rating);
+        $("#edit-rating").val(isNan(rating) ? null : rating);
 
         // Remove any existing rating stars and replace them
         const ratingElement = editRow.find(".rating");
