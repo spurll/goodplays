@@ -199,7 +199,7 @@ td.released, td.started, td.finished {
 body:not(.small-screen) td.released,
 body:not(.small-screen) td.started,
 body:not(.small-screen) td.finished {
-    width: 80px;
+    width: 83px;
 }
 
 td.art {
