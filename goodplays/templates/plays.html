@@ -55,6 +55,7 @@
         <tr id={{ play.id }}>
             <td class="fave">
                 <object
+                    name="heart-{{ play.id }}"
                     class="heart {{ 'empty' if not play.fave else '' }}"
                     type="image/svg+xml"
                     data="{{ url_for('static', filename='heart-full-p.svg' if play.fave else 'heart-empty.svg') }}"
@@ -76,11 +77,11 @@
                 {% if play.rating %}
                 {% for i in range(2, 12, 2) %}
                 {% if play.rating >= i %}
-                <object class="star full" type="image/svg+xml" data="{{ url_for('static', filename='star-full-y.svg') }}">Star</object>
+                <object name="star-{{ play.id }}-{{ i // 2 }}" class="star full" type="image/svg+xml" data="{{ url_for('static', filename='star-full-y.svg') }}">Star</object>
                 {% elif play.rating >= i - 1 %}
-                <object class="star half" type="image/svg+xml" data="{{ url_for('static', filename='star-half-y.svg') }}">Star</object>
+                <object name="star-{{ play.id }}-{{ i // 2 }}" class="star half" type="image/svg+xml" data="{{ url_for('static', filename='star-half-y.svg') }}">Star</object>
                 {% else %}
-                <object class="star empty" type="image/svg+xml" data="{{ url_for('static', filename='star-empty-y.svg') }}">Star</object>
+                <object name="star-{{ play.id }}-{{ i // 2 }}" class="star empty" type="image/svg+xml" data="{{ url_for('static', filename='star-empty-y.svg') }}">Star</object>
                 {% endif %}
                 {% endfor %}
                 {% endif %}
