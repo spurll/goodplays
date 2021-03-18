@@ -7,6 +7,11 @@ from goodplays.gb import GiantBomb
 
 GB = GiantBomb(app.config.get('GB_API_KEY'))
 PAGE_SIZE = app.config.get('PAGE_SIZE', 20)
+LOWER_TITLE = [
+    'a', 'an', 'the', 'and', 'as', 'at', 'atop', 'but', 'by', 'for', 'from',
+    'in', 'into', 'of', 'off', 'on', 'onto', 'out', 'over', 'per', 'to', 'up',
+    'via', 'with'
+]
 
 
 def game(id):
@@ -357,3 +362,14 @@ def release_date(gb):
             gb.get('expected_release_month') and
             gb.get('expected_release_year')) else None
 
+
+def titlecase(str):
+    """
+    Capitalizes each word, except those in a proscribed list (e.g., articles,
+    short prepositions, etc.). Note: all whitespace is replaced by single space
+    characters.
+    """
+    return ' '.join(
+        w.capitalize() if i == 0 or w not in LOWER_TITLE else w
+        for i, w in enumerate(str.split())
+    ) if str else str

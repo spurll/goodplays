@@ -13,7 +13,7 @@
     </h1>
     <h2 id="filters">
         {% if can_add %}
-        <a class="button" href="{{ url_for('add') }}">New Game</a>
+        <a class="button" href="{{ url_for('add', name=search) }}">New Game</a>
         {% endif %}
         <ul>
             <li class={{ 'selected' if sort == 'added' else '' }}>

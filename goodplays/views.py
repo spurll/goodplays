@@ -102,7 +102,8 @@ def add():
     """
     Adds a new game to the database.
     """
-    game = controller.new_game(current_user)
+    name = controller.titlecase(request.args.get('name'))
+    game = controller.new_game(current_user, name=name)
     return redirect(url_for('edit', id=game.id))
 
 
