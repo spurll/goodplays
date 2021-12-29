@@ -1,3 +1,5 @@
+import os
+import requests
 from datetime import datetime, date
 
 from goodplays import app, db
@@ -323,6 +325,38 @@ def link_platform(platform, gb_id, update=False):
     else:
         db.session.add(platform)
         db.session.commit()
+
+
+def import_image(game):
+    """
+    Import a game's hotlinked cover image
+    """
+    if game.current_image_is_local:
+        return
+
+    # Set headers before making the request
+    headers = {'User-Agent': 'goodplays'}
+    response = requests.get(game.image_url, stream=True)
+
+    if response.status_code != 200:
+        print(f'Unable to import: server returned {response.status_code}')
+        return
+
+    # If there is an existing image, delete it
+    if game.image_file:
+        os.remove(game.local_image_path)
+
+    _, ext = os.path.splitext(game.image_url)
+    game.image_file = f'{game.id}{ext}'
+
+    with open(game.local_image_path, 'wb') as handle:
+        for block in response.iter_content(1024):
+            handle.write(block)
+
+    # Update game URL
+    game.image_url = game.local_image_url
+
+    db.session.commit()
 
 
 def update_game(game):

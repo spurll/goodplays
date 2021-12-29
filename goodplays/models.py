@@ -1,7 +1,13 @@
+from os import path
 from datetime import date
 from enum import Enum
+from flask import url_for
 
 from goodplays import app, db
+
+
+LOCAL_IMAGE_DIR = path.join(path.abspath(path.dirname(__file__)),
+    'static', 'img')
 
 
 class Status(Enum):
@@ -128,6 +134,7 @@ class Game(db.Model):
     gb_id = db.Column(db.Integer, unique=True)
     gb_url = db.Column(db.String)
     image_url = db.Column(db.String)
+    image_file = db.Column(db.String)
     platforms = db.relationship(
         'Platform',
         back_populates='games',
@@ -156,6 +163,20 @@ class Game(db.Model):
     def stars(self):
         return u'\u2605' * round(self.rating / 2) + \
             u'\u2606' * (5 - round(self.rating / 2)) if self.rating else ''
+
+    @property
+    def local_image_url(self):
+        return url_for('static', filename=f'img/{self.image_file}') \
+            if self.image_file else None
+
+    @property
+    def local_image_path(self):
+        return path.join(LOCAL_IMAGE_DIR, self.image_file) \
+            if self.image_file else None
+
+    @property
+    def current_image_is_local(self):
+        return self.local_image_url == self.image_url
 
     def __repr__(self):
         year = f' ({self.year})' if self.year else ''

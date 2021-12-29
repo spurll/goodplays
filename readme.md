@@ -15,9 +15,14 @@ Requirements
 * flask-login
 * flask-wtf
 * flask-sqlalchemy
-* sqlalchemy 1.1
+* sqlalchemy<1.4.0 (sqlalchemy==1.3.24)
+* werkzeug<1.0.0 (werkzeug==0.16.1)
 * requests
 * ldap3
+
+SQLAlchemy version 1.4.0 and Werkzeug version 1.0.0 changed a few bits around, and some of
+the dependencies (flask-sqlalchemy, specifically) haven't caught up yet, as of this
+writing.
 
 Configuration
 -------------

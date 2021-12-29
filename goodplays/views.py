@@ -261,6 +261,23 @@ def edit_play():
     return redirect(url_for('details', id=play.game.id))
 
 
+@app.route('/import-image/<int:id>')
+@login_required
+def import_image(id):
+    """
+    Import's a game's hotlinked cover image
+    """
+    game = controller.game(id)
+
+    if not game:
+        flash(f'Unable to import image for game with ID {id}.')
+        return redirect(url_for('games'))
+
+    controller.import_image(game)
+
+    return redirect(url_for('details', id=game.id))
+
+
 @app.route('/update/<int:id>')
 @login_required
 def update(id):

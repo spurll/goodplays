@@ -291,6 +291,9 @@
         <span><a class="button" href="{{ url_for('update', id=game.id) }}">Refresh Data</a></span>
         <span><a class="button" href="{{ game.gb_url }}">View on Giant Bomb</a></span>
         {% endif %}
+        {% if can_edit and game.image_url and not game.current_image_is_local %}
+        <span><a class="button" href="{{ url_for('import_image', id=game.id) }}">Import Hotlinked Image</a></span>
+        {% endif %}
         {% if can_edit %}
         <span><a class="button" href="{{ url_for('edit', id=game.id) }}">Edit</a></span>
         {% endif %}
