@@ -40,6 +40,16 @@ If you're having trouble configuring your sever, I wrote a
 [blog post](http://blog.spurll.com/2015/02/configuring-flask-uwsgi-and-nginx.html)
 explaining how you can get Flask, uWSGI, and Nginx working together.
 
+Adding Platforms
+----------------
+
+> Hey, why isn't Playdate (for example) listed in the list of platforms when I edit a game?
+
+If you want to add a game from a platform that isn't in the database yet, the easiest way
+to do that is to add a game from GiantBomb that is on that platform, then restart
+Goodplays with `sudo service uwsgi restart` (assuming you're running it with uWSGI). After
+restarting, the new platform should appear in the platform list.
+
 Bugs and Feature Requests
 =========================
 
