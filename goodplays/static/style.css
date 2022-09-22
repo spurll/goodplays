@@ -269,6 +269,55 @@ svg#gb-logo {
     max-width: 32px;
 }
 
+div.hltb {
+    border: 1px solid #cccccc;
+    padding: 3px 5px;
+    white-space: nowrap;
+    display: inline-block;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    width: 412;
+}
+
+div.hltb a p {
+    margin: 5px auto;
+}
+
+div.hltb a p:first-child {
+    font-size: 10px;
+}
+
+div.hltb a p:last-child {
+    font-weight: bold;
+}
+
+div.hltb ul {
+    list-style: none;
+    padding-left: 0;
+    margin: 5px;
+    display: flex;
+    justify-content: space-between;
+}
+
+div.hltb ul li {
+    padding: 5px;
+    margin: auto;
+    display: inline-block;
+}
+
+div.hltb ul li p {
+    margin: auto;
+}
+
+div.hltb ul li p:first-child {
+    font-weight: bold;
+}
+
+div.hltb ul li p:last-child {
+    font-size: 8px;
+    text-transform: uppercase;
+}
+
 form {
     margin: 0;
 }

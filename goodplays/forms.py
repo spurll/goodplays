@@ -24,6 +24,7 @@ class SignupForm(FlaskForm):
 class EditGameForm(FlaskForm):
     name = TextField('Name', validators=[Required()])
     image_url = TextField('Image URL')
+    hltb_id = TextField('HLTB ID')
     description = TextAreaField('Description')
     released = DateField('Released', format='%Y-%m-%d',
         validators=[Optional()])

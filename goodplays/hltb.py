@@ -1,5 +1,6 @@
 from datetime import datetime, timedelta
 from time import sleep
+from difflib import SequenceMatcher
 import requests, json
 
 
@@ -64,7 +65,13 @@ def search(name):
         return {}, f'Request to {url} returned {r.status_code}'
 
     data = r.json().get('data')
-    return data and HLTB(data[0]), ""   # Just use the first one I guess
+
+    # Find the best match for the game title from HLTB's list
+    game = data and max(data, key=lambda x:
+        SequenceMatcher(None, name.lower(), x.get('game_name', '').lower()
+    ).ratio())
+
+    return data and HLTB(game), ""
 
 
 def details(game_id):

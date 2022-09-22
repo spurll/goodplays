@@ -303,11 +303,13 @@
     </p>
     {% if hltb %}
     <div class="hltb">
-        <a href="{{hltb.url}}">HowLongToBeat {{hltb.name}}</a>
-        <span style="hours"><span>{{hltb.main_hours}}</span><span>Main Story</span></span>
-        <span style="hours"><span>{{hltb.extra_hours}}</span><span>Main + Extras</span></span>
-        <span style="hours"><span>{{hltb.comp_hours}}</span><span>Completionist</span></span>
-        <span style="hours"><span>{{hltb.all_hours}}</span><span>All Styles</span></span>
+        <a href="{{ hltb.url }}"><p>HowLongToBeat</p><p>{{ hltb.name }}</p></a></p>
+        <ul>
+            <li><p>{{ hltb.main_hours }}</p><p>Main Story</p></li>
+            <li><p>{{ hltb.extra_hours }}</p><p>Main + Extras</p></li>
+            <li><p>{{ hltb.comp_hours }}</p><p>Completionist</p></li>
+            <li><p>{{ hltb.all_hours }}</p><p>All Styles</p></li>
+        </ul>
     </div>
     {% endif %}
 </div>

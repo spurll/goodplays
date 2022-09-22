@@ -300,12 +300,13 @@ def delete_game(game):
         db.session.commit()
 
 
-def edit_game(game, name, released, image_url, description, platforms):
+def edit_game(game, name, released, image_url, description, platforms, hltb_id):
     game.name = name
     game.released = released
     game.image_url = image_url
     game.description = description
     game.platforms = platforms
+    game.hltb_id = hltb_id
     db.session.commit()
 
 

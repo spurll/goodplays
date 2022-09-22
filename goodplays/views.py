@@ -120,6 +120,7 @@ def edit(id):
     form = EditGameForm(
         name=game.name,
         image_url=game.image_url,
+        hltb_id=game.hltb_id,
         description=game.description,
         released=game.released,
         platforms=[p.id for p in game.platforms]
@@ -131,6 +132,7 @@ def edit(id):
             name=form.name.data,
             released=form.released.data,
             image_url=form.image_url.data,
+            hltb_id=form.hltb_id.data and int(form.hltb_id.data) or None,
             description=form.description.data,
             platforms=controller.map_platforms(form.platforms.data)
         )
