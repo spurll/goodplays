@@ -5,8 +5,10 @@ from datetime import datetime, date
 from goodplays import app, db
 from goodplays.models import User, Game, Play, Platform, Tag, Status
 from goodplays.gb import GiantBomb
+from goodplays.hltb import HLTB, search as hltb_search, details as hltb_details
 
 
+HLTB = app.config.get('SHOW_HLTB')
 GB = GiantBomb(app.config.get('GB_API_KEY'))
 PAGE_SIZE = app.config.get('PAGE_SIZE', 20)
 LOWER_TITLE = [
@@ -22,6 +24,28 @@ def game(id):
 
 def play(id):
     return Play.query.get(id)
+
+
+def hltb(game):
+    if not HLTB: return None
+
+    if game.hltb_id:
+        hltb_game, error = hltb_details(game.hltb_id)
+
+        if error:
+            print(error)
+
+        return hltb_game
+
+    hltb_game, error = hltb_search(game.name)
+
+    if error:
+        print(error)
+    elif hltb_game:
+        game.hltb_id = hltb_game.id
+        db.session.commit()
+
+    return hltb_game
 
 
 def game_plays(user, game_id):

@@ -301,6 +301,15 @@
         <span><a class="button" href="javascript:deleteGame()">Delete</a></span>
         {% endif %}
     </p>
+    {% if hltb %}
+    <div class="hltb">
+        <a href="{{hltb.url}}">HowLongToBeat {{hltb.name}}</a>
+        <span style="hours"><span>{{hltb.main_hours}}</span><span>Main Story</span></span>
+        <span style="hours"><span>{{hltb.extra_hours}}</span><span>Main + Extras</span></span>
+        <span style="hours"><span>{{hltb.comp_hours}}</span><span>Completionist</span></span>
+        <span style="hours"><span>{{hltb.all_hours}}</span><span>All Styles</span></span>
+    </div>
+    {% endif %}
 </div>
 
 {% if user and user.is_authenticated %}

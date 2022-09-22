@@ -84,5 +84,7 @@ JQuery and JQuery UI elements included under the [MIT "Expat" License](https://o
 
 Search makes use of [Giant Bomb's API](https://www.giantbomb.com/api/). Thanks, [Giant Bomb](https://www.giantbomb.com/)!
 
+HowLongToBeat integration was inspired by (but does not make use of) ScrappyCocco's [HowLongToBeat Python API](https://github.com/ScrappyCocco/HowLongToBeat-PythonAPI).
+
 Remember: [GitHub is not my CV](https://blog.jcoglan.com/2013/11/15/why-github-is-not-your-cv/).
 

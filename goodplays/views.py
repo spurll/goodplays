@@ -91,6 +91,7 @@ def details(id):
         add_form=AddPlayForm(),
         edit_form=EditPlayForm(),
         plays=controller.game_plays(current_user, game.id),
+        hltb=controller.hltb(game),
         can_edit=current_user.is_authenticated,
         can_delete=current_user.is_authenticated and not game.plays.count(),
     )
