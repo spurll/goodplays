@@ -274,9 +274,12 @@ div.hltb {
     padding: 3px 5px;
     white-space: nowrap;
     display: inline-block;
-    margin-top: 5px;
-    margin-bottom: 5px;
+    margin: 5px auto;
     width: 412;
+}
+
+.small-screen div.hltb {
+    width: 400;
 }
 
 div.hltb a p {
@@ -289,6 +292,7 @@ div.hltb a p:first-child {
 
 div.hltb a p:last-child {
     font-weight: bold;
+    font-size: 16px;
 }
 
 div.hltb ul {
@@ -311,6 +315,10 @@ div.hltb ul li p {
 
 div.hltb ul li p:first-child {
     font-weight: bold;
+}
+
+.small-screen div.hltb ul li p:first-child {
+    font-size: 14px;
 }
 
 div.hltb ul li p:last-child {

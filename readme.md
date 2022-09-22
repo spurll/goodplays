@@ -1,9 +1,11 @@
 Goodplays
 =========
 
+![Screenshot](/screenshots/plays.png?raw=true)
+
 A web application that tracks games played.
 
-![Screenshot](/screenshots/plays.png?raw=true)
+![Details](/screenshots/hltb.png?raw=true)
 
 Usage
 =====
@@ -56,6 +58,8 @@ Bugs and Feature Requests
 Feature Requests
 ----------------
 
+* For games not in Giant Bomb, provide a way to link them to Giant Bomb (`gb_id` field,
+  editable just like `hltb_id`)
 * Polishes:
     * More/less toggles should be in line with filters when they are visible (not below)
     * Whenever tags are displayed, make them links to bring up all games that have plays
@@ -66,7 +70,6 @@ Feature Requests
 * Allow admins to upload images in addition to providing links
 * User management (change email address, name, password, forgot password)
 * Allow users to make their plays public (what would this look like?)
-* For games not in Giant Bomb, provide a way to link them to Giant Bomb?
 
 Known Bugs
 ----------
