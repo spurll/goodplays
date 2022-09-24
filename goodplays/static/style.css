@@ -331,6 +331,10 @@ form {
 }
 
 select option { background-color: #222222; }
+select option:checked {
+    color: #222222;
+    background-color: #dddddd;
+}
 
 .info input[type="text"], .info textarea, .info select {
     width: 300px;

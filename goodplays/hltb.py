@@ -35,11 +35,13 @@ class HLTB():
 
     @property
     def extra_hours(self):
-        return 'Unknown' if self.no_data else hours(self.extra)
+        return 'Unknown' if self.no_data or self.extra < self.main \
+            else hours(self.extra)
 
     @property
     def comp_hours(self):
-        return 'Unknown' if self.no_data else hours(self.comp)
+        return 'Unknown' if self.no_data or self.comp < self.main \
+            else hours(self.comp)
 
     @property
     def all_hours(self):
