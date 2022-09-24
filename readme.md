@@ -5,7 +5,7 @@ Goodplays
 
 A web application that tracks games played.
 
-![Details](/screenshots/hltb.png?raw=true)
+![Details](/screenshots/details.png?raw=true)
 
 Usage
 =====
