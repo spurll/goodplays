@@ -23,3 +23,6 @@ ADMIN_USERS = ['USER.ID.HERE']
 
 # Giant Bomb API
 GB_API_KEY = 'YOUR_API_KEY'     # Visit https://www.giantbomb.com/api/
+
+# HowLongToBeat
+SHOW_HLTB = True
