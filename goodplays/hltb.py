@@ -1,11 +1,14 @@
 from datetime import datetime, timedelta
 from time import sleep
 from difflib import SequenceMatcher
-import requests, json
+import requests, json, re
 
 
 SEARCH_URL = 'https://howlongtobeat.com/api/search'
 DETAILS_URL = 'https://howlongtobeat.com/api/game/{id}'
+DETAILS_HTML_URL = 'https://howlongtobeat.com/game/{id}'
+
+PROPS = r'<script id="__NEXT_DATA__" type="application/json">(.+)</script>'
 
 HEADERS = {
     'User-Agent': 'goodplays',
@@ -76,7 +79,9 @@ def search(name):
     return data and HLTB(game), ""
 
 
-def details(game_id):
+# Unfortunately HLTB seems to have removed (or just moved) their game details
+# API, so this function no longer works; use the new details function instead
+def details_old(game_id):
     url = DETAILS_URL.format(id=game_id)
     r = requests.get(url, headers=HEADERS)
 
@@ -84,5 +89,25 @@ def details(game_id):
         return {}, f'Request to {url} returned {r.status_code}'
 
     data = r.json().get('data', {}).get('game')
+    return data and HLTB(data[0]), ""
+
+
+# Though we can't get the JSON via the API anymore, that JSON is still supplied
+# to the main HTML page in props, and remains highly parsable!
+def details(game_id):
+    url = DETAILS_HTML_URL.format(id=game_id)
+    r = requests.get(url, headers=HEADERS)
+
+    if r.status_code != 200:
+        return {}, f'Request to {url} returned {r.status_code}'
+
+    x = re.search(PROPS, r.text)
+    data = json.loads(x.group(1)) \
+        .get('props', {}) \
+        .get('pageProps', {}) \
+        .get('game', {}) \
+        .get('data', {}) \
+        .get('game', {})
+
     return data and HLTB(data[0]), ""
 
