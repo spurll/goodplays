@@ -176,8 +176,12 @@ class Game(db.Model):
             if self.image_file else None
 
     @property
+    def image_url_is_data(self):
+        return 'data:image' in self.image_url
+
+    @property
     def current_image_is_local(self):
-        return self.local_image_url == self.image_url
+        return self.local_image_url == self.image_url or self.image_url_is_data
 
     def __repr__(self):
         year = f' ({self.year})' if self.year else ''
