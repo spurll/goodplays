@@ -169,9 +169,6 @@
         const editFinished = $("input#edit-finished");
         const editStatus = $("select#edit-status");
 
-        // Enable JQuery UI's date picker.
-        dates.datepicker({dateFormat: "yy-mm-dd"});
-
         // Submit on enter, reset on escape
         addInputs.keydown((e) => {
             if (e.keyCode == 13) {

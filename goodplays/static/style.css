@@ -330,18 +330,26 @@ form {
     margin: 0;
 }
 
+select {
+    min-height: 22px;
+}
+
 select option { background-color: #222222; }
 select option:checked {
     color: #222222;
     background-color: #dddddd;
 }
 
-.info input[type="text"], .info textarea, .info select {
+.info input[type="text"], input[type="date"], .info textarea, .info select {
     width: 300px;
 }
 
 td input {
     width: 100%;
+}
+
+input::-webkit-date-and-time-value {
+    min-height: 18px;
 }
 
 #edit p.info span.label {
