@@ -340,7 +340,7 @@ select option:checked {
     background-color: #dddddd;
 }
 
-.info input[type="text"], input[type="date"], .info textarea, .info select {
+.info input[type="text"], .info input[type="date"], .info textarea, .info select {
     width: 300px;
 }
 
@@ -349,7 +349,7 @@ td input {
 }
 
 input::-webkit-date-and-time-value {
-    min-height: 18px;
+    min-height: 16px;
 }
 
 #edit p.info span.label {
