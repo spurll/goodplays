@@ -371,7 +371,7 @@ def import_image(game):
         return
 
     # If there is an existing image, delete it
-    if game.image_file:
+    if game.image_file and os.path.isfile(game.image_file):
         os.remove(game.local_image_path)
 
     _, ext = os.path.splitext(game.image_url)
