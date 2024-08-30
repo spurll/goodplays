@@ -1,11 +1,11 @@
 import os
 import requests
 from datetime import datetime, date
+from howlongtobeatpy import HowLongToBeat
 
 from goodplays import app, db
 from goodplays.models import User, Game, Play, Platform, Tag, Status
 from goodplays.gb import GiantBomb
-from goodplays.hltb import HLTB, search as hltb_search, details as hltb_details
 
 
 HLTB = app.config.get('SHOW_HLTB')
@@ -30,22 +30,28 @@ def hltb(game):
     if not HLTB: return None
 
     if game.hltb_id:
-        hltb_game, error = hltb_details(game.hltb_id)
-
-        if error:
-            print(error)
+        hltb_game = hltb_details(game.hltb_id)
 
         return hltb_game
 
-    hltb_game, error = hltb_search(game.name)
+    hltb_game = hltb_search(game.name)
 
-    if error:
-        print(error)
-    elif hltb_game:
-        game.hltb_id = hltb_game.id
+    if hltb_game:
+        game.hltb_id = hltb_game.game_id
         db.session.commit()
 
     return hltb_game
+
+
+def hltb_search(name):
+    results = HowLongToBeat().search(name)
+
+    if results is not None and len(results) > 0:
+        return max(results, key=lambda x: x.similarity)
+
+
+def hltb_details(game_id):
+    return HowLongToBeat().search_from_id(game_id)
 
 
 def game_plays(user, game_id):
@@ -435,3 +441,4 @@ def titlecase(str):
         w.capitalize() if i == 0 or w not in LOWER_TITLE else w
         for i, w in enumerate(str.split())
     ) if str else str
+

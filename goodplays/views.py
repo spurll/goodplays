@@ -83,6 +83,8 @@ def details(id):
         flash(f"Unable to find game with ID {id}.")
         return redirect(url_for('index'))
 
+    hltb = controller.hltb(game)
+
     return render_template(
         'details.html',
         title=f'{game.name} | Goodplays',
@@ -91,7 +93,7 @@ def details(id):
         add_form=AddPlayForm(),
         edit_form=EditPlayForm(),
         plays=controller.game_plays(current_user, game.id),
-        hltb=controller.hltb(game),
+        hltb=_format_hltb(hltb) if hltb else None,
         can_edit=current_user.is_authenticated,
         can_delete=current_user.is_authenticated and not game.plays.count(),
     )
@@ -388,4 +390,25 @@ def flash_errors(form):
 
         flash(message)
         print(message)
+
+
+def _format_hltb(hltb):
+    if not hltb: return None
+
+    return {
+        'name': hltb.game_name,
+        'url': hltb.game_web_link,
+        'hours': [
+            _hours(hltb.main_story),
+            _hours(hltb.main_extra),
+            _hours(hltb.completionist),
+            _hours(hltb.all_styles)
+        ]
+    }
+
+
+def _hours(i):
+    if not i: return 'Unknown'
+    return ('< 1' if i < 1 else str(round(i))) + \
+        ' hour' + ('' if i < 2 else 's')
 
