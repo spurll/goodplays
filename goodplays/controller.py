@@ -44,14 +44,22 @@ def hltb(game):
 
 
 def hltb_search(name):
-    results = HowLongToBeat().search(name)
+    results = None
+
+    try:
+        results = HowLongToBeat().search(name)
+    except Exception as e:
+        print(f"Unexpected HowLongToBeat error: {e}")
 
     if results is not None and len(results) > 0:
         return max(results, key=lambda x: x.similarity)
 
 
 def hltb_details(game_id):
-    return HowLongToBeat().search_from_id(game_id)
+    try:
+        return HowLongToBeat().search_from_id(game_id)
+    except Exception as e:
+        print(f"Unexpected HowLongToBeat error: {e}")
 
 
 def game_plays(user, game_id):
