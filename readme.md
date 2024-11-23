@@ -18,7 +18,7 @@ Requirements
 * flask-sqlalchemy
 * requests
 * ldap3
-* howlongtybeatpy
+* howlongtobeatpy
 
 Configuration
 -------------
