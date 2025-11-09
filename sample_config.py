@@ -24,5 +24,8 @@ ADMIN_USERS = ['USER.ID.HERE']
 # Giant Bomb API
 GB_API_KEY = 'YOUR_API_KEY'     # Visit https://www.giantbomb.com/api/
 
+# Steam API
+STEAM_API_KEY = 'YOUR_API_KEY'  # Visit https://steamcommunity.com/dev/apikey
+
 # HowLongToBeat
 SHOW_HLTB = True

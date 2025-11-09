@@ -10,6 +10,9 @@ from goodplays.gb import GiantBomb
 
 HLTB = app.config.get('SHOW_HLTB')
 GB = GiantBomb(app.config.get('GB_API_KEY'))
+GB_URL_PATTERN = r'https://www.giantbomb.com/[^/]+/\d+-(\d+)'
+STEAM_URL_PATTERN = r'https://store.steampowered.com/app/(\d+)'
+HLTB_URL_PATTERN = r'https://howlongtobeat.com/game/(\d+)'
 PAGE_SIZE = app.config.get('PAGE_SIZE', 20)
 LOWER_TITLE = [
     'a', 'an', 'the', 'and', 'as', 'at', 'atop', 'but', 'by', 'for', 'from',
@@ -60,6 +63,30 @@ def hltb_details(game_id):
         return HowLongToBeat().search_from_id(game_id)
     except Exception as e:
         print(f"Unexpected HowLongToBeat error: {e}")
+
+
+def parse_hltb_id(s):
+    if s.isdigit():
+        return int(s)
+
+    matches = re.search(HLTB_URL_PATTERN, s)
+    return matches.group(1) if matches else None
+
+
+def parse_gb_id(s):
+    if s.isdigit():
+        return int(s)
+
+    matches = re.search(GB_URL_PATTERN, s)
+    return matches.group(1) if matches else None
+
+
+def parse_steam_id(s):
+    if s.isdigit():
+        return int(s)
+
+    matches = re.search(STEAM_URL_PATTERN, s)
+    return matches.group(1) if matches else None
 
 
 def game_plays(user, game_id):

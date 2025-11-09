@@ -31,6 +31,7 @@ class EditGameForm(FlaskForm):
     name = StringField('Name', validators=[DataRequired()])
     image_url = StringField('Image URL')
     gb_id = StringField('GB ID')
+    steam_id = StringField('Steam ID')
     hltb_id = StringField('HLTB ID')
     description = TextAreaField('Description')
     released = DateField('Released', format='%Y-%m-%d',

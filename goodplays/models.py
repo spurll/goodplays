@@ -133,6 +133,8 @@ class Game(db.Model):
     added = db.Column(db.Date, default=date.today)
     gb_id = db.Column(db.Integer, unique=True)
     gb_url = db.Column(db.String)
+    steam_id = db.Column(db.Integer)
+    steam_url = db.Column(db.String)
     hltb_id = db.Column(db.Integer)
     image_url = db.Column(db.String)
     image_file = db.Column(db.String)
