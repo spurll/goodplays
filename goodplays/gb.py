@@ -45,11 +45,7 @@ class GiantBomb():
 
     def request(self, url, **kwargs):
         headers = {'User-Agent': 'goodplays'}
-        payload = {
-            'api_key': self.api_key,
-            'format': 'json',
-            **kwargs
-        }
+        payload = {'api_key': self.api_key, 'format': 'json', **kwargs}
 
         if not self.rate_limit(url):
             return {}, 'Too many requests! Please obey the speed limit!'

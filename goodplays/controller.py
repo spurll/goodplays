@@ -1,15 +1,18 @@
 import os
 import requests
+import re
 from datetime import datetime, date
 from howlongtobeatpy import HowLongToBeat
 
 from goodplays import app, db
 from goodplays.models import User, Game, Play, Platform, Tag, Status
 from goodplays.gb import GiantBomb
+from goodplays.steam import Steam
 
 
 HLTB = app.config.get('SHOW_HLTB')
 GB = GiantBomb(app.config.get('GB_API_KEY'))
+Steam = Steam(app.config.get('STEAM_API_KEY'))
 GB_URL_PATTERN = r'https://www.giantbomb.com/[^/]+/\d+-(\d+)'
 STEAM_URL_PATTERN = r'https://store.steampowered.com/app/(\d+)'
 HLTB_URL_PATTERN = r'https://howlongtobeat.com/game/(\d+)'
@@ -130,6 +133,15 @@ def existing_or_parse_platform(gb):
     return existing if existing else parse_gb_platform(gb)
 
 
+def steam_platforms(windows=False, mac=False, linux=False):
+    return [
+        p for p in platforms()
+        if (windows and p.name == 'PC')
+        or (mac and p.name == 'Mac')
+        or (linux and p.name == 'Linux')
+    ]
+
+
 def parse_gb_game(gb):
     if not gb: return None
 
@@ -149,7 +161,7 @@ def parse_gb_game(gb):
     return Game(
         name=gb.get('name'),
         description=gb.get('deck'),
-        released=release_date(gb),
+        released=gb_release_date(gb),
         gb_id=gb.get('id'),
         gb_url=gb.get('site_detail_url'),
         image_url=gb.get('image', {}).get('small_url'),
@@ -175,6 +187,22 @@ def parse_gb_platform(gb):
         gb_id=gb.get('id'),
         gb_url=gb.get('site_detail_url'),
         image_url=gb.get('image', {}).get('small_url')
+    )
+
+
+def parse_steam_game(steam):
+    if not steam: return None
+
+    steam_id = steam.get('steam_appid')
+
+    return Game(
+        name=steam.get('name'),
+        description=steam.get('short_description'),
+        released=steam_release_date(steam),
+        steam_id=steam_id,
+        steam_url=f'https://store.steampowered.com/app/{steam_id}/',
+        image_url=steam.get('header_image'),
+        platforms=steam_platforms(**steam.get(platforms, {}))
     )
 
 
@@ -342,7 +370,8 @@ def delete_game(game):
 
 
 def edit_game(
-    game, name, released, image_url, description, platforms, gb_id, hltb_id
+    game, name, released, image_url, description, platforms, gb_id, steam_id,
+    hltb_id
 ):
     game.name = name
     game.released = released
@@ -350,6 +379,7 @@ def edit_game(
     game.description = description
     game.platforms = platforms
     game.gb_id = gb_id
+    game.steam_id = steam_id
     game.hltb_id = hltb_id
     db.session.commit()
 
@@ -377,23 +407,24 @@ def link_game(game, gb_id, update=False):
     game.gb_id = gb_id
 
     if update:
-        update_game(game)
+        update_gb(game)
     else:
         db.session.add(game)
         db.session.commit()
 
 
-def link_platform(platform, gb_id, update=False):
-    """
-    Link a platform to the Giant Bomb database.
-    """
-    platform.gb_id = gb_id
-
-    if update:
-        update_game(platform)
-    else:
-        db.session.add(platform)
-        db.session.commit()
+# Seems to be unused, and isn't fully implemented
+# def link_platform(platform, gb_id, update=False):
+#    """
+#    Link a platform to the Giant Bomb database.
+#    """
+#    platform.gb_id = gb_id
+#
+#    if update:
+#        update_gb_platform(platform)
+#    else:
+#        db.session.add(platform)
+#        db.session.commit()
 
 
 def import_image(game):
@@ -428,7 +459,7 @@ def import_image(game):
     db.session.commit()
 
 
-def update_game(game):
+def update_gb(game):
     """
     Update a game by fetching its data from the Giant Bomb database.
     """
@@ -442,7 +473,7 @@ def update_game(game):
 
     game.name = gb.get('name') or game.name
     game.description = gb.get('deck') or game.description
-    game.released = release_date(gb) or game.released
+    game.released = gb_release_date(gb) or game.released
     game.gb_url = gb.get('site_detail_url') or game.gb_url
     game.image_url = gb.get('image', {}).get('small_url') or game.image_url
     game.platforms = platforms or game.platforms
@@ -452,7 +483,32 @@ def update_game(game):
     return game
 
 
-def release_date(gb):
+def update_steam(game):
+    """
+    Update a game by fetching its data from Steam.
+    """
+    steam, error = Steam.game(game.steam_id)
+
+    if error:
+        print(error)
+        return
+
+    game.name=steam.get('name') or game.name
+    game.description=steam.get('short_description') or game.description
+    game.released=steam_release_date(steam) or game.released
+    game.steam_url=(f'https://store.steampowered.com/app/{game.steam_id}/'
+        or game.steam_url)
+    game.image_url=steam.get('header_image') or game.image_url
+    game.platforms=list(set(
+        list(game.platforms) + steam_platforms(**steam.get('platforms', {}))
+    ))
+
+    db.session.commit()
+
+    return game
+
+
+def gb_release_date(gb):
     if gb.get('original_release_date'):
         return datetime.strptime(
             gb['original_release_date'], '%Y-%m-%d').date()
@@ -464,6 +520,15 @@ def release_date(gb):
             gb.get('expected_release_day') and
             gb.get('expected_release_month') and
             gb.get('expected_release_year')) else None
+
+
+def steam_release_date(steam):
+    # God, I hate this, but Steam doesn't use a consistent string date format
+    try:
+        return datetime.strptime(
+            steam['release_date']['date'], '%d %b, %Y').date()
+    except:
+        return None
 
 
 def titlecase(str):

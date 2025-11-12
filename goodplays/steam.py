@@ -1,0 +1,58 @@
+from datetime import datetime, timedelta
+from time import sleep
+import requests
+
+
+# TODO: Cache responses, if necessary.
+
+
+class Steam():
+    def __init__(self, api_key):
+        self.api_key = api_key
+        self.history = []
+
+    def request(self, url, **kwargs):
+        headers = {'User-Agent': 'goodplays'}
+        payload = {'api_key': self.api_key, 'format': 'json', **kwargs}
+
+        if not self.rate_limit(url):
+            return {}, 'Too many requests! Please obey the speed limit!'
+
+        r = requests.get(url, params=payload, headers=headers)
+
+        if r.status_code != 200:
+            return {}, f'Request to {url} returned {r.status_code}'
+
+        return r.json(), ""
+
+    def rate_limit(self, url):
+        now = datetime.utcnow()
+        one_hour_ago = now - timedelta(hours=1)
+        milliseconds_ago = now - timedelta(milliseconds=200)
+
+        # Make sure we don't make more than 200 requests in an hour
+        if len(self.history) >= 200 and self.history[0] >= one_hour_ago:
+            return False
+
+        # Make sure that requests are at least 200 milliseconds apart
+        if self.history and self.history[-1] >= milliseconds_ago:
+            sleep((self.history[-1] - milliseconds_ago).total_seconds())
+
+        self.history.append(now)
+
+        # Keep a record of the last 200 requests
+        if len(self.history) > 200:
+            self.history.pop(0)
+
+        return True
+
+    def game(self, game_id):
+        results, error = self.request(
+            'https://store.steampowered.com/api/appdetails', appids=(game_id)
+        )
+
+        results = results.get(str(game_id), {})
+
+        return results.get('data'), error or (
+            'Unknown error' if not results.get('success') else ''
+        )

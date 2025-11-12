@@ -137,8 +137,8 @@ def edit(id):
             released=form.released.data,
             image_url=form.image_url.data,
             gb_id=controller.parse_gb_id(form.gb_id.data),
-            steam_id=form.parse_steam_id(form.steam_id.data),
-            hltb_id=form.parse_hltb_id(form.hltb_id.data),
+            steam_id=controller.parse_steam_id(form.steam_id.data),
+            hltb_id=controller.parse_hltb_id(form.hltb_id.data),
             description=form.description.data,
             platforms=controller.map_platforms(form.platforms.data)
         )
@@ -287,14 +287,30 @@ def import_image(id):
     return redirect(url_for('details', id=game.id))
 
 
-@app.route('/update/<int:id>')
+@app.route('/update_gb/<int:id>')
 @login_required
-def update(id):
+def update_gb(id):
     """
     Updates a game with data from Giant Bomb
     """
     game = controller.game(id)
-    controller.update_game(game)
+    controller.update_gb(game)
+
+    if not game:
+        flash(f'Unable to update game with ID {id}.')
+        return redirect(url_for('games'))
+
+    return redirect(url_for('details', id=game.id))
+
+
+@app.route('/update_steam/<int:id>')
+@login_required
+def update_steam(id):
+    """
+    Updates a game with data from Steam
+    """
+    game = controller.game(id)
+    controller.update_steam(game)
 
     if not game:
         flash(f'Unable to update game with ID {id}.')

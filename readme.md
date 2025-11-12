@@ -52,6 +52,8 @@ Bugs and Feature Requests
 Feature Requests
 ----------------
 
+* Clean up details page with Steam and Giant Bomb sections and logos
+* Add search and import from steam as well (using https://api.steampowered.com/ISteamApps/GetAppList/v0002/?key=STEAMKEY&format=json)
 * Polishes:
     * More/less toggles should be in line with filters when they are visible (not below)
     * Whenever tags are displayed, make them links to bring up all games that have plays
@@ -66,6 +68,7 @@ Feature Requests
 Known Bugs
 ----------
 
+* There is something weird/wrong with controller.link\_platform, so it's been removed (I don't think it was used anyway?)
 * Sign up and other user management functions are not supported via LDAP
 
 License Information

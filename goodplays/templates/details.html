@@ -284,19 +284,13 @@
     </p>
     {% endif %}
     <p class="info links">
-        {% if game.gb_id %}
-        <span><a class="button" href="{{ url_for('update', id=game.id) }}">Refresh Data</a></span>
-        <span><a class="button" href="{{ game.gb_url }}">View on Giant Bomb</a></span>
-        {% endif %}
-        {% if can_edit and game.image_url and not game.current_image_is_local %}
-        <span><a class="button" href="{{ url_for('import_image', id=game.id) }}">Import Hotlinked Image</a></span>
-        {% endif %}
-        {% if can_edit %}
-        <span><a class="button" href="{{ url_for('edit', id=game.id) }}">Edit</a></span>
-        {% endif %}
-        {% if can_delete %}
-        <span><a class="button" href="javascript:deleteGame()">Delete</a></span>
-        {% endif %}
+        {% if game.steam_id %}<span><a class="button" href="{{ url_for('update_steam', id=game.id) }}">Refresh Data from Steam</a></span>{% endif %}
+        {% if game.steam_url %}<span><a class="button" href="{{ game.steam_url }}">View on Steam</a></span>{% endif %}
+        {% if game.gb_id %}<span><a class="button" href="{{ url_for('update_gb', id=game.id) }}">Refresh Data from Giant Bomb</a></span>{% endif %}
+        {% if game.gb_url %}<span><a class="button" href="{{ game.gb_url }}">View on Giant Bomb</a></span>{% endif %}
+        {% if can_edit and game.image_url and not game.current_image_is_local %}<span><a class="button" href="{{ url_for('import_image', id=game.id) }}">Import Hotlinked Image</a></span>{% endif %}
+        {% if can_edit %}<span><a class="button" href="{{ url_for('edit', id=game.id) }}">Edit</a></span>{% endif %}
+        {% if can_delete %}<span><a class="button" href="javascript:deleteGame()">Delete</a></span>{% endif %}
     </p>
     {% if hltb %}
     <div class="hltb">
