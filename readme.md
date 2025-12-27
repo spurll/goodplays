@@ -68,6 +68,7 @@ Feature Requests
 Known Bugs
 ----------
 
+* GiantBomb is now independent (congrats!), but a secondary effect of this is that their API recently went offline due to a tech stack migration; will work on getting the integration working again once it returns: https://giantbomb.com/api
 * There is something weird/wrong with controller.link\_platform, so it's been removed (I don't think it was used anyway?)
 * Sign up and other user management functions are not supported via LDAP
 
